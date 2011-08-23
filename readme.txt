@@ -9,10 +9,11 @@ You need an Infomaniak VOD account to use this plugin.
 
 == Description ==
 
-Attention : Ce plugin est encore en cours de developpement, il est fortement déconseillé de l'utiliser dans une environnement de production.
+Attention : Ce plugin est encore en cours de développement, il est fortement déconseillé de l'utiliser dans un environnement de production.
 
-Ce plugin vous permet de gérer facilement les interactions entre votre espace VOD infomaniak et votre blog.
-Il vous permet en toute simplicité de récupérer et gérer l'ensemble de vos vidéos directement. Il offre également de nombreuses autres options :
+Ce plugin vous permet de gérer facilement les interactions entre votre espace VOD et votre blog.
+Il vous permet en toute simplicité de récupérer et de gérer l'ensemble de vos vidéos. 
+Il offre également de nombreuses autres options :
 
 * Mise à jour automatique lors de l'ajout de nouvelles vidéos
 * Récupération automatique des players existants
@@ -22,12 +23,12 @@ Il vous permet en toute simplicité de récupérer et gérer l'ensemble de vos v
 
 == Installation ==
 
-Il est nécéssaire pour utiliser ce plugin d'avoir un compte VOD. 
+Il est nécéssaire pour utiliser ce plugin d'avoir un compte VOD sur notre interface d'administration http://statslive.infomaniak.ch/
 Pour installer ce plugin, il vous est nécéssaire de :
 
 1. Envoyer le repertoire `vod` dans le dossier `/wp-content/plugins/`.
 1. L'activer dans le menu plugins de wordpress.
-1. Veuillez-vous rendre dans Gestion VOD -> Configuration afin de configurer votre compte.
+1. De se rendre dans Gestion VOD -> Configuration afin de configurer votre compte afin les identifiants fournis
 
 == Changelog ==
 

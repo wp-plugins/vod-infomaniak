@@ -34,44 +34,28 @@ class EasyVod
 	}
 
 	function add_filters_and_hooks() {
-		wp_enqueue_script( 'jquery-ui-dialog' );
-		wp_enqueue_script( 'jquery-ui-tabs' );
-		wp_enqueue_style( 'vvq-jquery-ui', plugins_url('/vod-infomaniak/css/jquery-ui.css'), array(), $this->version, 'screen' );
+		register_activation_hook(__FILE__, array(&$this, 'install_db') );
+		wp_register_style('ui-tabs', plugins_url('vod-infomaniak/css/jquery.ui.tabs.css'));
 		
 		add_action( 'admin_footer', array(&$this, 'buildForm') );
-
-		if ($this->options['posts'] == 'on')  
-		{
-			add_filter('the_content', array(&$this, 'check'), 100);
-			add_filter('the_excerpt', array(&$this, 'check'), 100);
-		}
-		
-		if ($this->options['comments'] == 'on') 
-		{
-			add_filter('comment_text', array(&$this, 'check'), 100);
-		}
-		
-		add_action('admin_menu', array($this, 'add_menu_items'));
-		register_activation_hook(__FILE__, array(&$this, 'install_db') );
-
-		add_filter('mce_external_plugins', array(&$this, 'mce_register') );
-		add_filter('mce_buttons', array(&$this, 'mce_add_button'), 0);
-		
-		// Add Admin Page
+		add_action( 'admin_menu', array(&$this, 'add_menu_items'));
 		add_action( 'wp_ajax_importvod', array(&$this, 'printLastImport') );
 		add_action( 'wp_ajax_vodsearchvideo', array(&$this, 'searchVideo') );
 		add_action( 'wp_ajax_vodsearchplaylist', array(&$this, 'searchPlaylist') );
+		add_action( 'template_redirect', 'vod_template_redirect');
 
-		add_filter('query_vars', 'vod_query_vars');
-		add_action('template_redirect', 'vod_template_redirect');
-
-		//Register
-		wp_register_style('ui-tabs', plugins_url('/vod-infomaniak/css/jquery.ui.tabs.css'));
+		add_filter('the_content', array(&$this, 'check'), 100);
+		add_filter('the_excerpt', array(&$this, 'check'), 100);
+		add_filter( 'mce_external_plugins', array(&$this, 'mce_register') );
+		add_filter( 'mce_buttons', array(&$this, 'mce_add_button'), 0);
+		add_filter( 'query_vars', 'vod_query_vars');
 
 		//On load Css et Js
-		wp_enqueue_script("jquery-ui-tabs");
-		wp_enqueue_script( 'suggest' );	
-		wp_enqueue_style('ui-tabs');
+		wp_enqueue_script( 'jquery-ui-dialog' );
+		wp_enqueue_script( 'jquery-ui-tabs' );
+		wp_enqueue_script( 'suggest' );
+		wp_enqueue_style( 'vod-jquery-ui', plugins_url('vod-infomaniak/css/jquery-ui.css'), array(), $this->version, 'screen' );
+		wp_enqueue_style( 'ui-tabs' );
 	}
 	
 	function install_db() {
@@ -81,6 +65,20 @@ class EasyVod
 		}
 	}
 
+	function add_menu_items() {
+		if (function_exists('add_menu_page')) {
+			add_menu_page('Gestion VOD', 'Gestion VOD', 8, __FILE__, array(&$this,'vod_management_menu'));
+		}
+
+		if (function_exists('add_submenu_page')) {
+			add_submenu_page(__FILE__,'Gestionnaire', 'Gestionnaire', 8, __FILE__, array(&$this,'vod_management_menu'));
+			add_submenu_page(__FILE__,'Importer une video', 'Importer une video', 8, 'import', array(&$this,'vod_upload_menu'));
+			add_submenu_page(__FILE__,'Implementation', 'Implementation', 8, 'implementation', array(&$this,'vod_implementation_menu'));
+			add_submenu_page(__FILE__,'Playlist', 'Playlist', 8, 'Playlist', array(&$this,'vod_playlist_menu'));
+			add_submenu_page(__FILE__,'Configuration', 'Configuration', 8, 'configuration', array(&$this,'vod_admin_menu'));
+		}		
+	}
+	
 	function searchPlaylist() {
 		$aResult = $this->db->search_playlist($_REQUEST['q'], 12);
 		foreach( $aResult as $oPlaylist ){
@@ -106,20 +104,6 @@ class EasyVod
 			echo "( Ajout: ".date("j F Y ", strtotime($oVideo->dUpload)).", Durée: $str )</span>\n";
 		}
 		die();
-	}
-
-	function add_menu_items() {
-		if (function_exists('add_menu_page')) {
-			add_menu_page('Gestion VOD', 'Gestion VOD', 8, __FILE__, array(&$this,'vod_management_menu'));
-		}
-
-		if (function_exists('add_submenu_page')) {
-			add_submenu_page(__FILE__,'Gestionnaire', 'Gestionnaire', 8, __FILE__, array(&$this,'vod_management_menu'));
-			add_submenu_page(__FILE__,'Importer une video', 'Importer une video', 8, 'import', array(&$this,'vod_upload_menu'));
-			add_submenu_page(__FILE__,'Implementation', 'Implementation', 8, 'implementation', array(&$this,'vod_implementation_menu'));
-			add_submenu_page(__FILE__,'Playlist', 'Playlist', 8, 'Playlist', array(&$this,'vod_playlist_menu'));
-			add_submenu_page(__FILE__,'Configuration', 'Configuration', 8, 'configuration', array(&$this,'vod_admin_menu'));
-		}		
 	}
 
 	function check($the_content, $side = 0) {
@@ -192,11 +176,8 @@ class EasyVod
 
 	function get_options() {
 		$options = array(
-			'posts'		=> 'on',
-			'comments'	=> 'off',
-			'img'		=> 'off',
-			'width'		=> 425,
-			'height'	=> 344,
+			'width'		=> 480,
+			'height'	=> 360,
 			'template'	=> '{video}',
 			'loop'		=> 0,
 			'autoplay'	=> 0,
@@ -229,7 +210,7 @@ class EasyVod
 	}
 	 
 	function mce_register($plugin_array) {
-		$plugin_array["vodplugin"] = plugins_url('/vod-infomaniak/js/editor_plugin.js');
+		$plugin_array["vodplugin"] = plugins_url('vod-infomaniak/js/editor_plugin.js');
 		return $plugin_array;
 	}
 
@@ -240,9 +221,6 @@ class EasyVod
 			EasyVod_Display::buildForm( $this->options, $aPlayers );
 		}
 	}
-
-	// This function always return FALSE (who woulda guessed?)
-	function ReturnFalse() { return FALSE; }
 
 	function checkAutoUpdate(){
 		$gmtime = time() - (int)substr(date('O'),0,3)*60*60;

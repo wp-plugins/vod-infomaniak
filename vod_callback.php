@@ -45,7 +45,6 @@ if( $aOptions['vod_api_callbackKey'] == $_REQUEST['key'] ){
 	}
 	
 	$db->insert_video($iVideo, $iFolder, $sFileName, $sServerCode, $sPath, $sExtension, $iDuration, $dUpload );
-	echo "Insert Video : $iVideo";	
 }
 die();
 ?>
