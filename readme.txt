@@ -4,11 +4,16 @@ Tags: video, manage
 Requires at least: 2.8.6
 Tested up to: 3.2.1
 
-Here is a short description of the plugin.  This should be no more than 150 characters.  No markup here.
+Insert and Manage Infomaniak VOD's videos in posts, comments and RSS feeds with ease and full customization.
+You need an Infomaniak VOD account to use this plugin.
 
 == Description ==
 
-Ce plugin vous permet de gérer facilement les interactions entre votre espace VOD infomaniak et votre blog. Il vous permet en toute simplicité de récupérer et gérer l'ensemble de vos vidéos directement. Il offre également de nombreuses autres options :
+Attention : Ce plugin est encore en cours de developpement, il est fortement déconseillé de l'utiliser dans une environnement de production.
+
+Ce plugin vous permet de gérer facilement les interactions entre votre espace VOD infomaniak et votre blog.
+Il vous permet en toute simplicité de récupérer et gérer l'ensemble de vos vidéos directement. Il offre également de nombreuses autres options :
+
 * Mise à jour automatique lors de l'ajout de nouvelles vidéos
 * Récupération automatique des players existants
 * Possibilité d'uploader les fichiers depuis l'interface d'admin
@@ -17,10 +22,12 @@ Ce plugin vous permet de gérer facilement les interactions entre votre espace V
 
 == Installation ==
 
+Il est nécéssaire pour utiliser ce plugin d'avoir un compte VOD. 
 Pour installer ce plugin, il vous est nécéssaire de :
-1. Envoyer le repertoire `vod` dans le dossier `/wp-content/plugins/`
-2. L'activer dans le menu plugins de wordpress
-3. Veuillez-vous rendre dans Gestion VOD -> Configuration afin de configurer votre compte.
+
+1. Envoyer le repertoire `vod` dans le dossier `/wp-content/plugins/`.
+1. L'activer dans le menu plugins de wordpress.
+1. Veuillez-vous rendre dans Gestion VOD -> Configuration afin de configurer votre compte.
 
 == Changelog ==
 

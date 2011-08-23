@@ -234,11 +234,9 @@ class EasyVod
 	}
 
 	function buildForm() {
-		if ( empty($this->options['vod_api_connected']) || $this->options['vod_api_connected'] == 'off' ) {
-			echo "<h2>Problème de configuration</h2><p>Veuillez-vous rendre dans Gestion VOD -> Configuration afin de configurer votre compte.</p>";
-		} else {
+		if ( !empty($this->options['vod_api_connected']) && $this->options['vod_api_connected'] == 'on' ) {
+			require_once("vod.template.php");
 			$aPlayers = $this->db->get_players();
-			require_once("vod.template.php");	
 			EasyVod_Display::buildForm( $this->options, $aPlayers );
 		}
 	}
