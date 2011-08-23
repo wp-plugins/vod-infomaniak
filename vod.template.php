@@ -205,23 +205,23 @@ class EasyVod_Display
 			$sTab .= "</tr></thead><tbody>";
 			foreach( $aLastImport as $oImport ){ 
 				$sTab .= "<tr>";
-				$sTab .= " <td><img src='../wp-content/plugins/vod/img/videofile.png'/>". $oImport['sFileName'] ."</td>";
+				$sTab .= " <td><img src='../wp-content/plugins/vod-infomaniak/img/videofile.png'/>". $oImport['sFileName'] ."</td>";
 				$sTab .= " <td>". $oImport['dDateCreation'] ."</td>";
 				$sTab .= " <td>";
 				if( $oImport['sProcessState'] == "OK" ){
-					$sTab .= " <img src='../wp-content/plugins/vod/img/ico-tick.png'/> Ok";
+					$sTab .= " <img src='../wp-content/plugins/vod-infomaniak/img/ico-tick.png'/> Ok";
 
 				}else if( $oImport['sProcessState'] == "WARNING"){
-					$sTab .= "<img src='../wp-content/plugins/vod/img/ico-tick.png'/> Ok (des alertes sont apparues)";
+					$sTab .= "<img src='../wp-content/plugins/vod-infomaniak/img/ico-tick.png'/> Ok (des alertes sont apparues)";
 
 				}else if( $oImport['sProcessState'] == "DOWNLOAD"){
-					$sTab .= "<img src='../wp-content/plugins/vod/img/ico-download.png'/> Téléchargement en cours";
+					$sTab .= "<img src='../wp-content/plugins/vod-infomaniak/img/ico-download.png'/> Téléchargement en cours";
 
 				}else if( $oImport['sProcessState'] == 'WAITING' || $oImport['sProcessState'] == 'QUEUE' || $oImport['sProcessState'] == 'PROCESSING'){
-					$sTab .= "<img src='../wp-content/plugins/vod/img/ajax-loader.gif'/> En cours de conversion";
+					$sTab .= "<img src='../wp-content/plugins/vod-infomaniak/img/ajax-loader.gif'/> En cours de conversion";
 
 				}else{
-					$sTab .= "<img src='../wp-content/plugins/vod/img/ico-exclamation-yellow.png'/> Erreurs";
+					$sTab .= "<img src='../wp-content/plugins/vod-infomaniak/img/ico-exclamation-yellow.png'/> Erreurs";
 				}
 				$sTab .= " </td>";
 				$sTab .= " <td width='50%'>". $oImport['sLog'] ."</td>";
@@ -305,7 +305,7 @@ class EasyVod_Display
 				update_info = function(){
 					if( iAjaxDecompte >= 0 ){
 						iAjaxDecompte -= 1;
-						jQuery('#tabImportRefresh').html("<span style='font-style:italic;color: #666666;'><img src='../wp-content/plugins/vod/img/ico-refresh.png' style='vertical-align:bottom;'/> Mise à jour dans "+ (iAjaxDecompte*1+1) +" secondes</span>");
+						jQuery('#tabImportRefresh').html("<span style='font-style:italic;color: #666666;'><img src='../wp-content/plugins/vod-infomaniak/img/ico-refresh.png' style='vertical-align:bottom;'/> Mise à jour dans "+ (iAjaxDecompte*1+1) +" secondes</span>");
 					}
 					setTimeout('update_info();', 1000);
 				}
@@ -358,7 +358,7 @@ class EasyVod_Display
 
 		<p>
 			<label style="font-weight: bold">Dossier d'envoi :</label>
-			<span><img src="../wp-content/plugins/vod/img/ico-folder-open-16x16.png" style="vertical-align:bottom"/> <?php echo $oFolder->sName; ?> ( '<?php echo $oFolder->sPath; ?>' )</span>
+			<span><img src="../wp-content/plugins/vod-infomaniak/img/ico-folder-open-16x16.png" style="vertical-align:bottom"/> <?php echo $oFolder->sName; ?> ( '<?php echo $oFolder->sPath; ?>' )</span>
 		</p>
 		<p>
 			<label style="font-weight: bold">Limites :</label>
@@ -413,7 +413,7 @@ class EasyVod_Display
 			<input type="hidden" name="iFolder" value="<?php echo $oFolder->iFolder; ?>"/>
 			<p>
 				<label style="font-weight: bold">Dossier d'envoi :</label>
-				<span><img src="../wp-content/plugins/vod/img/ico-folder-open-16x16.png" style="vertical-align:bottom"/> <?php echo $oFolder->sName; ?> ( '<?php echo $oFolder->sPath; ?>' )</span>
+				<span><img src="../wp-content/plugins/vod-infomaniak/img/ico-folder-open-16x16.png" style="vertical-align:bottom"/> <?php echo $oFolder->sName; ?> ( '<?php echo $oFolder->sPath; ?>' )</span>
 			</p>
 			<p>
 				<label style="font-weight: bold">Limites :</label>
@@ -525,10 +525,10 @@ class EasyVod_Display
 				?>
 				<tr>
 					<td>
-						<img src="../wp-content/plugins/vod/img/videofile.png"/>
+						<img src="../wp-content/plugins/vod-infomaniak/img/videofile.png"/>
 						<a href="javascript:; return false;" onclick="openVodPopup('<?php echo $oVideo->iVideo; ?>', '<?php echo $oVideo->sName; ?>','<?php echo $oVideo->sPath.$oVideo->sServerCode."', '".strtolower($oVideo->sExtension);?>'); return false;"><?php echo $oVideo->sName; ?></a>
 					</td>
-					<td><img src="../wp-content/plugins/vod/img/ico-folder-open-16x16.png"/> <?php echo $oVideo->sPath; ?></td>
+					<td><img src="../wp-content/plugins/vod-infomaniak/img/ico-folder-open-16x16.png"/> <?php echo $oVideo->sPath; ?></td>
 					<td><?php echo $oVideo->dUpload; ?></td>
 					<td> </td>
 				</tr>
@@ -541,7 +541,7 @@ class EasyVod_Display
 					jQuery( "#dialog-modal-name").val( title );
 					jQuery( "#dialog-modal-url").val( "http://vod.infomaniak.com/redirect/"+urlComplete+"."+sExtension );
 					jQuery( "#dialog-modal-balise").val( "[vod]"+url+"."+sExtension+"[/vod]" );
-					jQuery( "#dialog-modal-href").attr( "href", "https://statslive.infomaniak.com/vod/videoDetail.php?iVodCode=<?php echo $aOptions['vod_api_icodeservice'];?>&iFileCode="+iVideo );
+					jQuery( "#dialog-modal-href").attr( "href", "https://statslive.infomaniak.com/vod-infomaniak/videoDetail.php?iVodCode=<?php echo $aOptions['vod_api_icodeservice'];?>&iFileCode="+iVideo );
 					jQuery( "#dialog-modal-video").attr( "src", "http://vod.infomaniak.com/iframe.php?url="+urlComplete+"."+sExtension+"&player=576&vod=214&preloadImage="+urlComplete+".jpg" );
 
 					jQuery( "#dialog-modal-vod").dialog({
@@ -654,11 +654,11 @@ class EasyVod_Display
 		$iPageTotal = floor(($iTotal-1) / $iLimit) + 1; 
  		
 		if (($iCurrentPage != 1) && ($iCurrentPage)) {
-			$page_list .= "  <a href=\" ".$_SERVER['PHP_SELF']."?page=vod/vod.class.php&p=1\" title=\"First Page\">«</a> ";
+			$page_list .= "  <a href=\" ".$_SERVER['PHP_SELF']."?page=vod-infomaniak/vod.class.php&p=1\" title=\"First Page\">«</a> ";
 		} 
 
 		if (($iCurrentPage-1) > 0) {
-			$page_list .= "<a href=\" ".$_SERVER['PHP_SELF']."?page=vod/vod.class.php&p=".($iCurrentPage-1)."\" title=\"Previous Page\"><</a> ";
+			$page_list .= "<a href=\" ".$_SERVER['PHP_SELF']."?page=vod-infomaniak/vod.class.php&p=".($iCurrentPage-1)."\" title=\"Previous Page\"><</a> ";
 		} 
 		
 		for ($i=1; $i<=$iPageTotal; $i++) {
@@ -666,7 +666,7 @@ class EasyVod_Display
 				if ($i == $iCurrentPage) {
 					$page_list .= "<b>".$i."</b>";
 				} else {
-					$page_list .= "<a href=\" ".$_SERVER['PHP_SELF']."?page=vod/vod.class.php&p=".$i."\" title=\"Page ".$i."\">".$i."</a>";
+					$page_list .= "<a href=\" ".$_SERVER['PHP_SELF']."?page=vod-infomaniak/vod.class.php&p=".$i."\" title=\"Page ".$i."\">".$i."</a>";
 				} 
 				$page_list .= " ";
 			}else if ( $i == 3 || $i == $iPageTotal-2 ){
@@ -675,11 +675,11 @@ class EasyVod_Display
 		} 
 
 		if (($iCurrentPage+1) <= $iPageTotal) {
-			$page_list .= "<a href=\"".$_SERVER['PHP_SELF']."?page=vod/vod.class.php&p=".($iCurrentPage+1)."\" title=\"Next Page\">></a> ";
+			$page_list .= "<a href=\"".$_SERVER['PHP_SELF']."?page=vod-infomaniak/vod.class.php&p=".($iCurrentPage+1)."\" title=\"Next Page\">></a> ";
 		} 
 
 		if (($iCurrentPage != $iPageTotal) && ($iPageTotal != 0)) {
-			$page_list .= "<a href=\"".$_SERVER['PHP_SELF']."?page=vod/vod.class.php&p=".$iPageTotal."\" title=\"Last Page\">»</a> ";
+			$page_list .= "<a href=\"".$_SERVER['PHP_SELF']."?page=vod-infomaniak/vod.class.php&p=".$iPageTotal."\" title=\"Last Page\">»</a> ";
 		}
 		$page_list .= "</td>\n"; 
 		

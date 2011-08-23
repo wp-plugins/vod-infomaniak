@@ -36,7 +36,7 @@ class EasyVod
 	function add_filters_and_hooks() {
 		wp_enqueue_script( 'jquery-ui-dialog' );
 		wp_enqueue_script( 'jquery-ui-tabs' );
-		wp_enqueue_style( 'vvq-jquery-ui', plugins_url('/vod/css/jquery-ui.css'), array(), $this->version, 'screen' );
+		wp_enqueue_style( 'vvq-jquery-ui', plugins_url('/vod-infomaniak/css/jquery-ui.css'), array(), $this->version, 'screen' );
 		
 		add_action( 'admin_footer', array(&$this, 'buildForm') );
 
@@ -66,7 +66,7 @@ class EasyVod
 		add_action('template_redirect', 'vod_template_redirect');
 
 		//Register
-		wp_register_style('ui-tabs', plugins_url('/vod/css/jquery.ui.tabs.css'));
+		wp_register_style('ui-tabs', plugins_url('/vod-infomaniak/css/jquery.ui.tabs.css'));
 
 		//On load Css et Js
 		wp_enqueue_script("jquery-ui-tabs");
@@ -229,7 +229,7 @@ class EasyVod
 	}
 	 
 	function mce_register($plugin_array) {
-		$plugin_array["vodplugin"] = plugins_url('/vod/js/editor_plugin.js');
+		$plugin_array["vodplugin"] = plugins_url('/vod-infomaniak/js/editor_plugin.js');
 		return $plugin_array;
 	}
 
@@ -729,7 +729,7 @@ function vod_template_redirect() {
     global $wp_query;
     $vod_page = $wp_query->query_vars['vod_page'];
     if ($vod_page == 'callback') {
-        include(ABSPATH.'wp-content/plugins/vod/vod_callback.php');
+        include(ABSPATH.'wp-content/plugins/vod-infomaniak/vod_callback.php');
         exit;
     }
 }

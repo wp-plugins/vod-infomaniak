@@ -168,10 +168,6 @@ body .ui-resizable-autohide .ui-resizable-handle { display: none; } /* use 'body
 .ui-clearfix {display: block;}
 /* End hide from IE-mac */
 
-.ui-dialog-titlebar{
-
-}
-
 .ui-tabs-nav{
 	padding-left: 35px;
 	overflow: hidden;
@@ -221,27 +217,6 @@ body .ui-resizable-autohide .ui-resizable-handle { display: none; } /* use 'body
 	padding-left: 35px;
 }
 
-
-
-#vvq-dialog {
-	padding: 0;
-	padding-bottom: 25px;
-}
-.vvq-dialog-content {
-	margin: 15px;
-	text-align: justify;
-}
-.ui-dialog-title img {
-	position: absolute;
-	top: 5px;
-	left: 10px;
-}
-
-#vvq-precacher {
-	width: 0;
-	height: 0;
-}
-
 #dialog-tabs .ui-tabs-nav{
 	border-bottom: 1px solid #DDDDDD;
 }
@@ -258,8 +233,6 @@ body .ui-resizable-autohide .ui-resizable-handle { display: none; } /* use 'body
 	background-color: #FFF;
 }
 
-
 #dialog-tabs .ui-tabs-nav .ui-tabs-selected a{
 	color: #333;
 }
-
