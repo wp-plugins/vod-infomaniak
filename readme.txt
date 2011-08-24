@@ -26,11 +26,17 @@ Il offre également de nombreuses autres options :
 Il est nécéssaire pour utiliser ce plugin d'avoir un compte VOD sur notre interface d'administration http://statslive.infomaniak.ch/
 Pour installer ce plugin, il vous est nécéssaire de :
 
-1. Envoyer le repertoire `vod` dans le dossier `/wp-content/plugins/`.
+1. Envoyer le plugin `vod-infomaniak` dans le dossier `/wp-content/plugins/`.
 1. L'activer dans le menu plugins de wordpress.
-1. De se rendre dans Gestion VOD -> Configuration afin de configurer votre compte afin les identifiants fournis
+1. De se rendre dans Gestion VOD -> Configuration afin de configurer votre compte afin les identifiants fournis sur l'interface d'administration.
 
 == Changelog ==
 
 = 0.1 =
 * First release
+
+= Prochainement =
+
+* Gestion des fichiers audios
+* Traductions EN/DE
+* Gestion automatiques des repertoires avec Geoip ou token
