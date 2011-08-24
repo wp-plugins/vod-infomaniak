@@ -245,7 +245,7 @@ class vod_api {
 		if( !empty($this->oSoap) ){
 			return $this->oSoap;
 		}else{
-			$this->oSoap=new SoapClient('http://livestats.dev6.dev.infomaniak.ch/vod/api/vod_soap.wsdl', array(
+			$this->oSoap=new SoapClient('http://statslive.infomaniak.com/vod/api/vod_soap.wsdl', array(
 				'trace' 	=> 1,
 				'encoding' 	=> 'UTF-8'
 			));
