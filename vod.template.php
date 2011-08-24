@@ -108,7 +108,7 @@ class EasyVod_Display
 			<p>
 				Pour fonctionner, le plugin à besoin de s'interfacer avec votre compte VOD infomaniak.<br/>
 				Pour des raisons de sécurités, il est fortement conseillé de créer un nouvel utilisateur dédié dans votre admin infomaniak avec uniquement des droits restreints sur l'API.<br/>
-				Pour plus d'information, veuillez vous rendre dans la partie "Configuration > API et Callback" de votre administration VOD.
+				Pour plus d'information, veuillez vous rendre dans la partie "Configuration > Api et Callback" de votre administration VOD.
 			</p>
 			<p>
 				<label>Login :</label>
@@ -176,15 +176,10 @@ class EasyVod_Display
 				<h2>Configuration du callback</h2>
 				<p>
 				Cette option vous permet de mettre à jour automatiquement votre blog à chaque ajout de vidéo à votre espace VOD.<br/>
-				Veuillez aller dans "Configuration -> Api & Callback" et mettre l'adresse suivante dans le champ "Adresse de Callback"
+				Veuillez aller dans "<a href="https://statslive.infomaniak.com/vod/configuration.php?iVodCode=<?php echo $options['vod_api_icodeservice'];?>" target="_blank">Configuration > Api et Callback</a>" et mettre l'adresse suivante dans le champ "Adresse de Callback"
 				</p>
-				<!--<?php if( $this->options['vod_api_valid_callback'] == "on" ){ ?>
-					<p>
-						Une autre adresse de callback est défini, celui-ci ne fonctionnera donc pas avec ce blog.
-					</p>
-				<?php } ?>-->
 				<p>
-					<label>Adresse à saisir : </label>
+					<label style="font-weight: bold;">Adresse à saisir : </label>
 					<span><?php echo $sUrl."/?vod_page=callback&key=".$options['vod_api_callbackKey']; ?></span>
 				</p>
 				<?php

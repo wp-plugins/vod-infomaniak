@@ -381,7 +381,7 @@ class EasyVod
 
 	function vod_management_menu() {
 		if ( empty($this->options['vod_api_connected']) || $this->options['vod_api_connected'] == 'off' ) {
-			echo "<h2>Problème de configuration</h2><p>Veuillez-vous rendre dans Gestion VOD -> Configuration afin de configurer votre compte.</p>";
+			echo "<h2>Problème de configuration</h2><p>Veuillez-vous rendre dans <a href='admin.php?page=configuration'>Gestion VOD > Configuration</a> afin de configurer votre compte.</p>";
 		} else {
 			$iPage = !empty($_REQUEST['p']) ? intval( $_REQUEST['p'] ) : 1;
 			$iLimit = 20;
@@ -395,7 +395,7 @@ class EasyVod
 
 	function vod_upload_menu(){
 		if ( empty($this->options['vod_api_connected']) || $this->options['vod_api_connected'] == 'off' ) {
-			echo "<h2>Problème de configuration</h2><p>Veuillez-vous rendre dans Gestion VOD -> Configuration afin de configurer votre compte.</p>";
+			echo "<h2>Problème de configuration</h2><p>Veuillez-vous rendre dans <a href='admin.php?page=configuration'>Gestion VOD > Configuration</a> afin de configurer votre compte.</p>";
 		} else {
 			require_once("vod.template.php");
 			if ( $_REQUEST['sAction'] == "popupUpload" && !empty($_REQUEST['iFolderCode']) ) {
@@ -454,7 +454,7 @@ class EasyVod
 
 	function vod_playlist_menu(){
 		if ( empty($this->options['vod_api_connected']) || $this->options['vod_api_connected'] == 'off' ) {
-			echo "<h2>Problème de configuration</h2><p>Veuillez-vous rendre dans Gestion VOD -> Configuration afin de configurer votre compte.</p>";
+			echo "<h2>Problème de configuration</h2><p>Veuillez-vous rendre dans <a href='admin.php?page=configuration'>Gestion VOD > Configuration</a> afin de configurer votre compte.</p>";
 		} else {
 			require_once("vod.template.php");
 			$aPlaylist = $this->db->get_playlists();
@@ -464,7 +464,7 @@ class EasyVod
 
 	function vod_implementation_menu(){
 		if ( empty($this->options['vod_api_connected']) || $this->options['vod_api_connected'] == 'off' ) {
-			echo "<h2>Problème de configuration</h2><p>Veuillez-vous rendre dans Gestion VOD -> Configuration afin de configurer votre compte.</p>";
+			echo "<h2>Problème de configuration</h2><p>Veuillez-vous rendre dans <a href='admin.php?page=configuration'>Gestion VOD > Configuration</a> afin de configurer votre compte.</p>";
 		} else {
 			require_once("vod.template.php");
 			if (isset($_POST['submitted'])) {
