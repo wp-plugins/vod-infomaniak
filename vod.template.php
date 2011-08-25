@@ -183,7 +183,7 @@ class EasyVod_Display
 				Veuillez aller dans "<a href="https://statslive.infomaniak.com/vod/configuration.php?iVodCode=<?php echo $options['vod_api_icodeservice'];?>" target="_blank">Configuration -> Api & Callback</a>" et mettre l'adresse suivante dans le champ "Adresse de Callback"
 				</p>
 				<p>
-					<label style="font-weight: bold;">Adresse à saisir : </label>
+					<label style="font-weight: bold;">Adresse de callback : </label>
 					<span><?php echo $sUrl."/?vod_page=callback&key=".$options['vod_api_callbackKey']; ?></span>
 				</p>
 				<?php
@@ -667,7 +667,7 @@ class EasyVod_Display
 						<td><?php echo $oPlaylist->sMode; ?></td>
 						<td><?php echo $oPlaylist->dCreated; ?></td>
 						<td>
-							<a href="https://statslive.infomaniak.com/vod/playlists.php?iVodCode=<?php echo $aOptions['vod_api_icodeservice'];?>&sAction=showPlaylist&iPlaylistCode=<?php echo $oPlaylist->iPlaylistCode; ?>" target="_blank"><img src="<?php echo plugins_url('vod-infomaniak/img/ico-information.png'); ?>" alt="Administrer cette playlist"/></a>
+							<a href="https://statslive.infomaniak.com/vod/playlists.php?iVodCode=<?php echo $options['vod_api_icodeservice'];?>&sAction=showPlaylist&iPlaylistCode=<?php echo $oPlaylist->iPlaylistCode; ?>" target="_blank"><img src="<?php echo plugins_url('vod-infomaniak/img/ico-information.png'); ?>" alt="Administrer cette playlist"/></a>
 						</td>
 					</tr>
 					<?php } ?>

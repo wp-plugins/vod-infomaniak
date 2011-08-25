@@ -114,11 +114,13 @@ Vod_dialogValid = function () {
 			});
 
 			jQuery('#dialog-tabs').tabs({
-				select: function(event, ui) {
-					if( jQuery('#dialog-tabs').tabs('option', 'selected') == 0 ){
+				show: function(event, ui) {
+					if( jQuery('#dialog-tabs').tabs('option', 'selected') == 1 ){
 						jQuery('#dialog-config').hide();
+						jQuery("#dialog-search-input-video").focus();
 					}else{
 						jQuery('#dialog-config').show();
+						jQuery("#dialog-url-input").focus();
 					}
 				}
 			});
