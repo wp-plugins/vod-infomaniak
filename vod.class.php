@@ -25,7 +25,6 @@ class EasyVod
 	function __construct() {
 		$this->local_version = '0.1';
 		$this->key = 'vod_infomaniak';
-		$this->gds = '#vod.$-';
 		$this->options=$this->get_options();
 		$this->add_filters_and_hooks();
 		$this->db = new EasyVod_db();
@@ -73,8 +72,8 @@ class EasyVod
 		if (function_exists('add_submenu_page')) {
 			add_submenu_page(__FILE__,'Gestionnaire', 'Gestionnaire', 8, __FILE__, array(&$this,'vod_management_menu'));
 			add_submenu_page(__FILE__,'Importer une video', 'Importer une video', 8, 'import', array(&$this,'vod_upload_menu'));
-			add_submenu_page(__FILE__,'Implementation', 'Implementation', 8, 'implementation', array(&$this,'vod_implementation_menu'));
 			add_submenu_page(__FILE__,'Playlist', 'Playlist', 8, 'Playlist', array(&$this,'vod_playlist_menu'));
+			add_submenu_page(__FILE__,'Player', 'Player', 8, 'Player', array(&$this,'vod_implementation_menu'));
 			add_submenu_page(__FILE__,'Configuration', 'Configuration', 8, 'configuration', array(&$this,'vod_admin_menu'));
 		}		
 	}
@@ -100,8 +99,11 @@ class EasyVod
 			$str .= $min>0 ? $min."m. " : '';
 			$str .= $sec>0 ? $sec."s." : '';
 			
-			echo "<span style='display:none'>".$oVideo->sPath.$oVideo->sServerCode.".".strtolower($oVideo->sExtension).";;;</span><span>".ucfirst($oVideo->sName)." ";
-			echo "( Ajout: ".date("j F Y ", strtotime($oVideo->dUpload)).", Durée: $str )</span>\n";
+			echo "<span style='display:none'>".$oVideo->sPath.$oVideo->sServerCode.".".strtolower($oVideo->sExtension).";;;";
+			if( !empty($oVideo->sToken) ){
+				echo $oVideo->iFolder.";;;";
+			}
+			echo "</span><span>".ucfirst($oVideo->sName)." ( Ajout: ".date("j F Y ", strtotime($oVideo->dUpload)).", Durée: $str )</span>\n";
 		}
 		die();
 	}
@@ -127,7 +129,7 @@ class EasyVod
 			foreach( $aList as $param) {
 				if( strpos($param, "=") !== false  ) {
 					$aCut = split("=", $param);
-					if( in_array($aCut[0] ,array("width", "height", "autoplay", "loop", "player", "videoimage") )){
+					if( in_array($aCut[0] ,array("width", "height", "autoplay", "loop", "player", "videoimage", "tokenfolder") )){
 						$aTagParam[ $aCut[0] ] = $aCut[1];
 					}
 				}
@@ -137,7 +139,15 @@ class EasyVod
 		$iVod		= $this->options['vod_api_icodeservice'];
 		$sUrl		= "http://vod.infomaniak.com/iframe.php";
 		$sAccountBase	= $this->options['vod_api_id'];
-				
+		$sKey 		= "";
+		if( !empty($aTagParam['tokenfolder']) && !is_numeric( $file ) ){
+			$oFolder = $this->db->getFolder( $aTagParam['tokenfolder'] );
+			if( !empty($oFolder) ){
+				$fileInfo = pathinfo($file);
+				$sFileName = basename($file,'.'.$fileInfo['extension']);
+				$sKey = "?sKey=".$this->getTemporaryKey( $oFolder->sToken, $sFileName );
+			}
+		}
 		$videoimage	= empty( $aTagParam['videoimage'] ) ? 1 : intval($aTagParam['videoimage']);
 		$player		= empty( $aTagParam['player'] ) ? $this->options['player'] : intval($aTagParam['player']);
 		$autoplay	= empty( $aTagParam['autoplay'] ) ? $this->options['autoplay'] : intval($aTagParam['autoplay']);
@@ -154,6 +164,7 @@ class EasyVod
 			} else {
 				$sFile = $file;
 			}
+			$sFile = $sFile.$sKey;
 			$video_url = $sUrl."?url=".$sFile;
 			if( $videoimage ) $video_url .= "&preloadImage=".str_replace(array(".flv",".mp4"), ".jpg", $sFile);
 		}	
@@ -244,7 +255,7 @@ class EasyVod
 				$this->db->clean_folders();				
 				$aListFolder = $oApi->getFolders();
 				foreach( $aListFolder as $oFolder ){
-					$this->db->insert_folder( $oFolder['iFolderCode'], $oFolder['sFolderPath'], $oFolder['sFolderName'] );
+					$this->db->insert_folder( $oFolder['iFolderCode'], $oFolder['sFolderPath'], $oFolder['sFolderName'], $oFolder['sAccess'], $oFolder['sToken'] );
 				}
 			}
 
@@ -257,6 +268,11 @@ class EasyVod
 				}
 			}
 
+			//Update de la synchro
+			$serveurTime = $oApi->time();
+			$localTime = time();
+			$diff = ($serveurTime -  $localTime);
+			$this->options['vod_api_servTime'] = $diff;
 			$this->options['vod_api_lastUpdate'] = $gmtime;
 			update_option($this->key, $this->options);
 		}
@@ -271,18 +287,19 @@ class EasyVod
 				$this->options['vod_api_callbackKey'] = sha1( time() * rand() );
 			}
 			if ( empty( $this->options['vod_api_c']) ) {
-				$this->options['vod_api_c'] = md5( time() * rand() );
+				$this->options['vod_api_c'] = substr(sha1( time() * rand() ),0,20);
 			}
 
 			$this->options['vod_api_login'] = stripslashes(htmlspecialchars( $_POST['vod_api_login'] ));
 			if ( isset($_POST['vod_api_password']) && $_POST['vod_api_password'] != "XXXXXX" ) {
-				$this->options['vod_api_password'] = $this->encrypt( stripslashes(htmlspecialchars( $_POST['vod_api_password'] )), $this->gds.$this->options['vod_api_c']);
+				$this->options['vod_api_password'] = $this->encrypt( stripslashes(htmlspecialchars( $_POST['vod_api_password'] )));
 			}
 			$this->options['vod_api_id'] = 	stripslashes(htmlspecialchars( $_POST['vod_api_id'] ));
 			$this->options['vod_api_connected'] = 'off';
 			
 			try {
 				$oApi = $this->getAPI();
+				
 				$bResult = $oApi->ping();
 				if( $bResult ){
 					$this->options['vod_api_connected'] = 'on';
@@ -381,21 +398,47 @@ class EasyVod
 
 	function vod_management_menu() {
 		if ( empty($this->options['vod_api_connected']) || $this->options['vod_api_connected'] == 'off' ) {
-			echo "<h2>Problème de configuration</h2><p>Veuillez-vous rendre dans <a href='admin.php?page=configuration'>Gestion VOD > Configuration</a> afin de configurer votre compte.</p>";
+			echo "<h2>Problème de configuration</h2><p>Veuillez-vous rendre dans <a href='admin.php?page=configuration'>Gestion VOD -> Configuration</a> afin de configurer votre compte.</p>";
 		} else {
+			if ( $_REQUEST['sAction'] == "rename" ) {
+				$oVideo = $this->db->getVideo( intval($_POST['dialog-modal-id']) );
+				if( $oVideo != false ){
+					$oApi = $this->getAPI();
+					$oApi->renameVideo( $oVideo->iFolder, $oVideo->sServerCode, $_POST['dialog-modal-name']);
+					$this->db->rename_video(intval($_POST['dialog-modal-id']), $_POST['dialog-modal-name']);
+					echo "<script>";
+					echo "jQuery(document).ready(function() {";
+					echo "	openVodPopup('". $oVideo->iVideo ."', '". $_POST['dialog-modal-name'] ."','". $oVideo->sPath.$oVideo->sServerCode."', '".strtolower($oVideo->sExtension)."');";
+					echo "});";
+					echo "</script>";
+				}
+			} else if ( $_REQUEST['sAction'] == "delete" ) {
+				$oVideo = $this->db->getVideo( intval($_POST['dialog-confirm-id']) );
+				if( $oVideo != false ){
+					$oApi = $this->getAPI();
+					$oApi->deleteVideo( $oVideo->iFolder, $oVideo->sServerCode );
+					$this->db->delete_video(intval($_POST['dialog-confirm-id']));
+				}
+			}
 			$iPage = !empty($_REQUEST['p']) ? intval( $_REQUEST['p'] ) : 1;
 			$iLimit = 20;
 			$iVideoTotal = $this->db->count_video();
 			$aVideos = $this->db->get_videos_byPage($iPage-1, $iLimit);
+			for( $i=0; $i<count($aVideos); $i++ ){
+				if( !empty($aVideos[$i]->sToken) ){
+					$aVideos[$i]->sToken = $this->getTemporaryKey( $aVideos[$i]->sToken, $aVideos[$i]->sServerCode );
+				}
+			}
 			require_once("vod.template.php");
 			$sPagination = EasyVod_Display::buildPagination( $iPage, $iLimit, $iVideoTotal );
-			EasyVod_Display::managementMenu( $sPagination, $this->options, $aVideos );
+			$actionurl = $_SERVER['REQUEST_URI'];
+			EasyVod_Display::managementMenu( $actionurl, $sPagination, $this->options, $aVideos );
 		}
 	}
 
 	function vod_upload_menu(){
 		if ( empty($this->options['vod_api_connected']) || $this->options['vod_api_connected'] == 'off' ) {
-			echo "<h2>Problème de configuration</h2><p>Veuillez-vous rendre dans <a href='admin.php?page=configuration'>Gestion VOD > Configuration</a> afin de configurer votre compte.</p>";
+			echo "<h2>Problème de configuration</h2><p>Veuillez-vous rendre dans <a href='admin.php?page=configuration'>Gestion VOD -> Configuration</a> afin de configurer votre compte.</p>";
 		} else {
 			require_once("vod.template.php");
 			if ( $_REQUEST['sAction'] == "popupUpload" && !empty($_REQUEST['iFolderCode']) ) {
@@ -454,7 +497,7 @@ class EasyVod
 
 	function vod_playlist_menu(){
 		if ( empty($this->options['vod_api_connected']) || $this->options['vod_api_connected'] == 'off' ) {
-			echo "<h2>Problème de configuration</h2><p>Veuillez-vous rendre dans <a href='admin.php?page=configuration'>Gestion VOD > Configuration</a> afin de configurer votre compte.</p>";
+			echo "<h2>Problème de configuration</h2><p>Veuillez-vous rendre dans <a href='admin.php?page=configuration'>Gestion VOD -> Configuration</a> afin de configurer votre compte.</p>";
 		} else {
 			require_once("vod.template.php");
 			$aPlaylist = $this->db->get_playlists();
@@ -464,7 +507,7 @@ class EasyVod
 
 	function vod_implementation_menu(){
 		if ( empty($this->options['vod_api_connected']) || $this->options['vod_api_connected'] == 'off' ) {
-			echo "<h2>Problème de configuration</h2><p>Veuillez-vous rendre dans <a href='admin.php?page=configuration'>Gestion VOD > Configuration</a> afin de configurer votre compte.</p>";
+			echo "<h2>Problème de configuration</h2><p>Veuillez-vous rendre dans <a href='admin.php?page=configuration'>Gestion VOD -> Configuration</a> afin de configurer votre compte.</p>";
 		} else {
 			require_once("vod.template.php");
 			if (isset($_POST['submitted'])) {
@@ -483,26 +526,24 @@ class EasyVod
 		}
 	}
 
+	function getTemporaryKey( $sToken, $sVideoName ){
+		$iTime = time() + intval($this->options['vod_api_servTime']);
+		return md5( $sToken . $sVideoName . $_SERVER['REMOTE_ADDR'] . date("YmdH", $iTime) ); 	
+	}
+	
 	function getAPI() {		
 		require_once('vod.api.php');
-		$sPassword = $this->decrypt($this->options['vod_api_password'], $this->gds.$this->options['vod_api_c']);		
+		$sPassword = $this->decrypt($this->options['vod_api_password']);		
 		return new vod_api($this->options['vod_api_login'], $sPassword, $this->options['vod_api_id']);
 	}
+	
+	function encrypt($text){
+        return trim(base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, SALT, $text, MCRYPT_MODE_ECB, mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND))));
+    }
 
-	function encrypt($str, $key) {
-		$block = mcrypt_get_block_size('des', 'ecb');
-		$pad = $block - (strlen($str) % $block);
-		$str .= str_repeat(chr($pad), $pad);
-		return base64_encode(mcrypt_encrypt(MCRYPT_DES, $key, $str, MCRYPT_MODE_ECB));
-	}
-
-	function decrypt($str, $key) {  
-		$str = base64_decode( $str );
-		$str = mcrypt_decrypt(MCRYPT_DES, $key, $str, MCRYPT_MODE_ECB);
-		$block = mcrypt_get_block_size('des', 'ecb');
-		$pad = ord($str[($len = strlen($str)) - 1]);
-		return substr($str, 0, strlen($str) - $pad);
-	}
+    function decrypt($text){
+        return trim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, SALT, base64_decode($text), MCRYPT_MODE_ECB, mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND)));
+    } 
 
 }
 
@@ -539,7 +580,9 @@ class EasyVod_db
 		$sql_folder = "CREATE TABLE ".$this->db_table_folder." (
 		 `iFolder` INT UNSIGNED NOT NULL ,
 		 `sPath` VARCHAR( 255 ) NOT NULL ,
-		 `sName` VARCHAR( 255 ) NOT NULL 
+		 `sName` VARCHAR( 255 ) NOT NULL ,
+		 `sAccess` VARCHAR( 255 ) NOT NULL ,
+		 `sToken` VARCHAR( 255 ) NOT NULL
 		) CHARACTER SET utf8;";
 		dbDelta($sql_folder);
 
@@ -641,9 +684,9 @@ class EasyVod_db
 		return $wpdb->query("DELETE FROM ".$this->db_table_folder);
 	}
 
-	function insert_folder( $iFolder, $sPath, $sName ) {
+	function insert_folder( $iFolder, $sPath, $sName, $sAccess, $sToken) {
 		global $wpdb;
-		$wpdb->insert( $this->db_table_folder, array( 'iFolder' => $iFolder, 'sPath' => $sPath, 'sName' => $sName ) );
+		$wpdb->insert( $this->db_table_folder, array( 'iFolder' => $iFolder, 'sPath' => $sPath, 'sName' => $sName, 'sAccess' => $sAccess, 'sToken' => $sToken ) );
 	}
 
 	function count_folder() {
@@ -656,13 +699,17 @@ class EasyVod_db
 	*/
 	function search_videos( $sTerm, $iLimit=6) {
 		global $wpdb;
-		$sql = $wpdb->prepare("SELECT * FROM ".$this->db_table_video." WHERE sName LIKE %s OR sServerCode LIKE %s ORDER BY dUpload DESC LIMIT ".intval($iLimit), "%".$sTerm."%", "%".$sTerm."%");
+		$sql = $wpdb->prepare("SELECT video.*, folder.sAccess, folder.sToken FROM ".$this->db_table_video." as video
+		INNER JOIN ".$this->db_table_folder." as folder ON video.iFolder = folder.iFolder
+		WHERE video.sName LIKE %s OR sServerCode LIKE %s ORDER BY dUpload DESC LIMIT ".intval($iLimit), "%".$sTerm."%", "%".$sTerm."%");
 		return $wpdb->get_results($sql);
 	}
 
 	function get_videos_byPage( $iPage, $iLimit ) {
 		global $wpdb;
-		return $wpdb->get_results("SELECT * FROM ".$this->db_table_video." ORDER BY `dUpload` DESC LIMIT ".intval($iPage*$iLimit).", ".intval($iLimit));
+		return $wpdb->get_results("SELECT video.*, folder.sAccess, folder.sToken FROM ".$this->db_table_video." as video
+		INNER JOIN ".$this->db_table_folder." as folder ON video.iFolder = folder.iFolder
+		ORDER BY `dUpload` DESC LIMIT ".intval($iPage*$iLimit).", ".intval($iLimit));
 	}
 
 	function get_videos_byCodes( $sServerCode, $iFolderCode ) {
@@ -671,6 +718,11 @@ class EasyVod_db
 		return $wpdb->get_results($sql);
 	}
 
+	function getVideo( $iVideo ) {
+		global $wpdb;
+		return $wpdb->get_row("SELECT * FROM ".$this->db_table_video." WHERE iVideo=".intval($iVideo)." LIMIT 1");
+	}
+	
 	function get_videos() {
 		global $wpdb;
 		return $wpdb->get_results("SELECT * FROM ".$this->db_table_video." ORDER BY `dUpload` DESC");
@@ -681,6 +733,12 @@ class EasyVod_db
 		return $wpdb->query("DELETE FROM ".$this->db_table_video);
 	}
 
+	function rename_video( $iVideo, $sName){
+		global $wpdb;
+		$sql = $wpdb->prepare("UPDATE ".$this->db_table_video." SET sName=%s WHERE iVideo=%d LIMIT 1", $sName, $iVideo);
+		$wpdb->query( $sql );
+	}
+	
 	function insert_video( $iVideo, $iFolder, $sName, $sServerCode, $sPath, $sExtension, $iDuration, $dUpload ) {
 		global $wpdb;
 		$wpdb->insert( $this->db_table_video, array( 'iVideo' => $iVideo, 'iFolder' => $iFolder, 'sName' => $sName, 'sServerCode' => $sServerCode, 'sPath' => $sPath, 'sExtension' => $sExtension, 'iDuration' => $iDuration, 'dUpload' => $dUpload) );

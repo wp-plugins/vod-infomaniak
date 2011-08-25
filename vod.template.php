@@ -84,6 +84,10 @@ class EasyVod_Display
 						<label>Lecture en boucle</label>
 						<input type="checkbox" id="dialog-loop" value="1"/>
 					</p>
+					<p class="dialog-form-line">
+						<label>Utilisation du token du dossier (Id dossier)</label>
+						<input type="text" id="dialog-token" size="5"/>
+					</p>
 				</div>
 			</div>
 		</div>
@@ -108,7 +112,7 @@ class EasyVod_Display
 			<p>
 				Pour fonctionner, le plugin à besoin de s'interfacer avec votre compte VOD infomaniak.<br/>
 				Pour des raisons de sécurités, il est fortement conseillé de créer un nouvel utilisateur dédié dans votre admin infomaniak avec uniquement des droits restreints sur l'API.<br/>
-				Pour plus d'information, veuillez vous rendre dans la partie "Configuration > Api et Callback" de votre administration VOD.
+				Pour plus d'information, veuillez vous rendre dans la partie "Configuration -> Api & Callback" de votre administration VOD.
 			</p>
 			<p>
 				<label>Login :</label>
@@ -176,7 +180,7 @@ class EasyVod_Display
 				<h2>Configuration du callback</h2>
 				<p>
 				Cette option vous permet de mettre à jour automatiquement votre blog à chaque ajout de vidéo à votre espace VOD.<br/>
-				Veuillez aller dans "<a href="https://statslive.infomaniak.com/vod/configuration.php?iVodCode=<?php echo $options['vod_api_icodeservice'];?>" target="_blank">Configuration > Api et Callback</a>" et mettre l'adresse suivante dans le champ "Adresse de Callback"
+				Veuillez aller dans "<a href="https://statslive.infomaniak.com/vod/configuration.php?iVodCode=<?php echo $options['vod_api_icodeservice'];?>" target="_blank">Configuration -> Api & Callback</a>" et mettre l'adresse suivante dans le champ "Adresse de Callback"
 				</p>
 				<p>
 					<label style="font-weight: bold;">Adresse à saisir : </label>
@@ -191,28 +195,28 @@ class EasyVod_Display
 		if( !empty( $aLastImport ) ){
 			$sTab .= "<span id='tabImportRefresh' style='float:right; padding-right: 20px;'></span>";
 			$sTab .= "<h2>Précédents Envois</h2>";
-			$sTab .= "<table class='widefat'><thead><tr>";
+			$sTab .= "<table class='widefat' style='width: 99%'><thead><tr>";
 			$sTab .= "<th>Fichier</th><th>Date</th><th>Statut</th><th>Description</th>";
 			$sTab .= "</tr></thead><tbody>";
 			foreach( $aLastImport as $oImport ){ 
 				$sTab .= "<tr>";
-				$sTab .= " <td><img src='" . plugins_url('vod-infomaniak/img/videofile.png') . "'/>". $oImport['sFileName'] ."</td>";
+				$sTab .= " <td><img src='" . plugins_url('vod-infomaniak/img/videofile.png') . "' style='vertical-align:bottom'/>". $oImport['sFileName'] ."</td>";
 				$sTab .= " <td>". $oImport['dDateCreation'] ."</td>";
 				$sTab .= " <td>";
 				if( $oImport['sProcessState'] == "OK" ){
-					$sTab .= " <img src='" . plugins_url('vod-infomaniak/img/ico-tick.png') . "'/> Ok";
+					$sTab .= " <img src='" . plugins_url('vod-infomaniak/img/ico-tick.png') . "' style='vertical-align:bottom'/> Ok";
 
 				}else if( $oImport['sProcessState'] == "WARNING"){
-					$sTab .= "<img src='" . plugins_url('vod-infomaniak/img/videofile.png') . "'/> Ok (des alertes sont apparues)";
+					$sTab .= "<img src='" . plugins_url('vod-infomaniak/img/videofile.png') . "' style='vertical-align:bottom'/> Ok (des alertes sont apparues)";
 
 				}else if( $oImport['sProcessState'] == "DOWNLOAD"){
-					$sTab .= "<img src='" . plugins_url('vod-infomaniak/img/ico-download.png') . "'/> Téléchargement en cours";
+					$sTab .= "<img src='" . plugins_url('vod-infomaniak/img/ico-download.png') . "' style='vertical-align:bottom'/> Téléchargement en cours";
 
 				}else if( $oImport['sProcessState'] == 'WAITING' || $oImport['sProcessState'] == 'QUEUE' || $oImport['sProcessState'] == 'PROCESSING'){
-					$sTab .= "<img src='" . plugins_url('vod-infomaniak/img/ajax-loader.gif') . "'/> En cours de conversion";
+					$sTab .= "<img src='" . plugins_url('vod-infomaniak/img/ajax-loader.gif') . "' style='vertical-align:bottom'/> En cours de conversion";
 
 				}else{
-					$sTab .= "<img src='" . plugins_url('vod-infomaniak/img/ico-exclamation-yellow.png') . "'/> Erreurs";
+					$sTab .= "<img src='" . plugins_url('vod-infomaniak/img/ico-exclamation-yellow.png') . "' style='vertical-align:bottom'/> Erreurs";
 				}
 				$sTab .= " </td>";
 				$sTab .= " <td width='50%'>". $oImport['sLog'] ."</td>";
@@ -467,14 +471,30 @@ class EasyVod_Display
 		<?php
 	}
 
-	static function managementMenu( $sPagination, $aOptions, $aVideos){
+	static function managementMenu( $action_url, $sPagination, $aOptions, $aVideos){
 		?>
 		<h2>Gestionnaire de vidéos</h2>
 
-		<div class="tablenav">
+		<div class="tablenav" style="padding-right: 20px;">
 			<div class='tablenav-pages'>
 				<?php echo $sPagination; ?>
 			</div>
+		</div>
+
+		<div id="dialog-confirm-vod" title="Supprimer une vidéo" style="display:none;">
+			<form id="adminFormVodDelete"name="adminForm" action="<?php echo $action_url; ?>" method="POST">
+				<input type="hidden" name="submitted" value="1" />
+				<input type="hidden" name="sAction" value="delete" />
+				<input type="hidden" id="dialog-confirm-id" name="dialog-confirm-id" value=""/>
+				<p style="padding-left: 10px;">
+					Vous êtes sur le point de supprimer la vidéo '<span id="dialog-confirm-title" style="font-weight: bold;"></span>'.<br/><br/>
+					<span style="color: darkRed; font-style:italic;">
+						<span  style="font-weight: bold;">Attention :</span>
+						C'est une suppression definitive de la vidéo, il n'y pas de corbeille ou de moyen de la recuperer une fois effacer.
+					</span><br/><br/>
+					Etes-vous sûr de vouloir continuer ?
+				</p>
+			</form>
 		</div>
 
 		<div id="dialog-modal-vod" title="Prévisualisation" style="display:none; padding: 5px; overflow: hidden;">
@@ -484,30 +504,48 @@ class EasyVod_Display
 			</center>
 			<h3>Informations</h3>
 			<p>
-				<input id="dialog-modal-name" text="" style="float:right; margin-right:25px; width: 400px;"/>				
+				<form name="adminForm" action="<?php echo $action_url; ?>" method="POST">
+					<input type="hidden" name="submitted" value="1" />
+					<input type="hidden" name="sAction" value="rename" />
+					<input type="hidden" id="dialog-modal-id" name="dialog-modal-id" value=""/>
+					<input type="submit" value="Modifier" style="float:right; margin-right:25px;"/>
+					<input id="dialog-modal-name" name="dialog-modal-name" text="" style="float:right; width: 335px;"/>
+				</form>	
 				<label>Nom :</label>	
+			</p>
+			<p id="dialog-modal-access-block" style="padding-top: 2px;">
+				<label>Restriction d'accès :</label>
+				<span id="dialog-modal-access" style="font-weight: bold; padding-left: 35px;"></span>
+				
 			</p>			
 			<h3>Intégration</h3>
 			<p>
 				<input id="dialog-modal-url" text="" style="float:right; margin-right:25px; width: 400px; border 1px solid #CCC; border-radius: 3px; background-color: #FFF; padding: 3px;" readonly="value"/>
-				<label>Url de la vidéo :</label>				
+				<label>Url de la vidéo :</label>
 			</p>
 			<p>
 				<input id="dialog-modal-balise" text="" style="float:right; margin-right:25px; width: 400px; border 1px solid #CCC; border-radius: 3px; background-color: #FFF; padding: 3px;" readonly="value"/>
 				<label>Code d'intégration :</label>
 			</p>
-			<p>
-				<label>Edition de la vidéo :</label> <span style="padding-left: 30px;"><a id="dialog-modal-href" href="#" target="_blank">Accès à l'admin VOD</a></span>
-			</p>
+			<div style="padding-top: 15px; text-align:center;">
+				<ul style="display:inline; ">
+					<li style="display:inline">
+						<a id="dialog-modal-admin" href="#" target="_blank" style="text-decoration: none; color:#444444;"><img src="<?php echo plugins_url('vod-infomaniak/img/ico-video.png'); ?>" alt="Administrer cette video" style="vertical-align:bottom"/> Administrer cette vidéo</a>
+					</li>
+					<li style="display:inline; padding-left: 20px">
+						<a id="dialog-modal-admin2" href="#" target="_blank" style="text-decoration: none; color:#444444;"><img src="<?php echo plugins_url('vod-infomaniak/img/ico-statistics.png'); ?>" alt="Voir les statistiques de cette video" style="vertical-align:bottom"/> Voir les statistiques</a>
+					</li>
+				</ul>
+			</div>
 		</div>
 
-		<table class="widefat">
+		<table class="widefat" style="width: 99%">
 			<thead>
 				<tr>
-					<th>Video</th>
+					<th width="50%">Video</th>
 					<th>Dossier</th>
 					<th>Date d'upload</th>
-					<th>Action</th>			
+					<th width="8%">Action</th>			
 				</tr>
 			</thead>
 			<tbody>
@@ -516,28 +554,72 @@ class EasyVod_Display
 				?>
 				<tr>
 					<td>
-						<img src="<?php echo plugins_url('vod-infomaniak/img/videofile.png'); ?>"/>
-						<a href="javascript:; return false;" onclick="openVodPopup('<?php echo $oVideo->iVideo; ?>', '<?php echo $oVideo->sName; ?>','<?php echo $oVideo->sPath.$oVideo->sServerCode."', '".strtolower($oVideo->sExtension);?>'); return false;"><?php echo $oVideo->sName; ?></a>
+						<img src="<?php echo plugins_url('vod-infomaniak/img/videofile.png'); ?>" style="vertical-align:bottom"/>
+						<a href="javascript:; return false;" onclick="openVodPopup('<?php echo $oVideo->iVideo; ?>', '<?php echo $oVideo->sName; ?>','<?php echo $oVideo->sPath.$oVideo->sServerCode; ?>', '<?php echo strtolower($oVideo->sExtension);?>', '<?php echo strtolower($oVideo->sAccess);?>', '<?php echo $oVideo->sToken;?>'); return false;"><?php echo ucfirst(stripslashes($oVideo->sName)); ?></a>
 					</td>
-					<td><img src="<?php echo plugins_url('vod-infomaniak/img/ico-folder-open-16x16.png'); ?>"/> <?php echo $oVideo->sPath; ?></td>
+					<td><img src="<?php echo plugins_url('vod-infomaniak/img/ico-folder-open-16x16.png'); ?>" style="vertical-align:bottom"/> <?php echo $oVideo->sPath; ?></td>
 					<td><?php echo $oVideo->dUpload; ?></td>
-					<td> </td>
+					<td>
+						<a href="javascript:; return false;" onclick="openVodPopup('<?php echo $oVideo->iVideo; ?>', '<?php echo $oVideo->sName; ?>','<?php echo $oVideo->sPath.$oVideo->sServerCode."', '".strtolower($oVideo->sExtension);?>', '<?php echo strtolower($oVideo->sAccess);?>', '<?php echo $oVideo->sToken;?>'); return false;"><img src="<?php echo plugins_url('vod-infomaniak/img/ico-information.png'); ?>" alt="Information sur cette video"/></a>
+						<a href="https://statslive.infomaniak.com/vod/videoDetail.php?iVodCode=<?php echo $aOptions['vod_api_icodeservice'];?>&iFileCode=<?php echo $oVideo->iVideo; ?>" target="_blank"><img src="<?php echo plugins_url('vod-infomaniak/img/ico-video.png'); ?>" alt="Administrer cette video"/></a>
+						<a href="https://statslive.infomaniak.com/vod/videoDetail.php?iVodCode=<?php echo $aOptions['vod_api_icodeservice'];?>&iFileCode=<?php echo $oVideo->iVideo; ?>&tab=2" target="_blank"><img src="<?php echo plugins_url('vod-infomaniak/img/ico-statistics.png'); ?>" alt="Voir les statistiques de cette video"/></a>
+						<a href="javascript:; return false;" onclick="confirmVodDelete('<?php echo $oVideo->iVideo; ?>', '<?php echo $oVideo->sName; ?>');"><img src="<?php echo plugins_url('vod-infomaniak/img/ico-delete.png'); ?>" alt="Supprimer cette video"/></a>
+					</td>
 				</tr>
 				<?php	} ?>
 			</tbody>
 			<script>
-				openVodPopup = function( iVideo, title, url, sExtension ){
-					var urlComplete = "<?php echo $aOptions['vod_api_id'];?>"+url;
-					jQuery( "#dialog-modal-title").text( title );
-					jQuery( "#dialog-modal-name").val( title );
-					jQuery( "#dialog-modal-url").val( "http://vod.infomaniak.com/redirect/"+urlComplete+"."+sExtension );
-					jQuery( "#dialog-modal-balise").val( "[vod]"+url+"."+sExtension+"[/vod]" );
-					jQuery( "#dialog-modal-href").attr( "href", "https://statslive.infomaniak.com/vod/videoDetail.php?iVodCode=<?php echo $aOptions['vod_api_icodeservice'];?>&iFileCode="+iVideo );
-					jQuery( "#dialog-modal-video").attr( "src", "http://vod.infomaniak.com/iframe.php?url="+urlComplete+"."+sExtension+"&player=576&vod=214&preloadImage="+urlComplete+".jpg" );
-
-					jQuery( "#dialog-modal-vod").dialog({
+				confirmVodDelete = function( iVideo, sTitle ){
+					jQuery("#dialog-confirm-id").val( iVideo );
+					jQuery("#dialog-confirm-title").text( sTitle );
+					jQuery("#dialog-confirm-vod").dialog({
+						resizable: false,
 						width: 600,
-						height: 620,
+						height:210,
+						modal: true,
+						buttons: {
+							"Supprimer définitivement la vidéo": function() {
+								jQuery('#adminFormVodDelete').submit();
+							},
+							"Annuler": function() {
+								jQuery( this ).dialog( "close" );
+							}
+						}
+					});
+				}
+				openVodPopup = function( iVideo, title, url, sExtension, sAccess, sToken ){
+					var urlComplete = "<?php echo $aOptions['vod_api_id'];?>"+url;
+					var sParam = "";
+					if( sToken != "" ){
+						sParam = "?sKey="+sToken;
+					}
+					jQuery("#dialog-modal-id").val( iVideo );
+					jQuery("#dialog-modal-title").text( title );
+					jQuery("#dialog-modal-name").val( title );
+					jQuery("#dialog-modal-url").val( "http://vod.infomaniak.com/redirect/"+urlComplete+"."+sExtension );
+					jQuery("#dialog-modal-balise").val( "[vod]"+url+"."+sExtension+"[/vod]" );
+					jQuery("#dialog-modal-admin").attr( "href", "https://statslive.infomaniak.com/vod/videoDetail.php?iVodCode=<?php echo $aOptions['vod_api_icodeservice'];?>&iFileCode="+iVideo );
+					jQuery("#dialog-modal-admin2").attr( "href", "https://statslive.infomaniak.com/vod/videoDetail.php?iVodCode=<?php echo $aOptions['vod_api_icodeservice'];?>&iFileCode="+iVideo+"&tab=2" );
+					jQuery("#dialog-modal-video").attr( "src", "http://vod.infomaniak.com/iframe.php?url="+urlComplete+"."+sExtension+sParam+"&player=576&vod=214&preloadImage="+urlComplete+".jpg" );
+
+					textAccess = "";
+					if( sAccess != 'ALL' ){
+						textAccess += "Vidéo Geolocalisé";
+					}
+					if( sToken != "" ){
+						if( textAccess != "" ) textAccess += ", ";
+						textAccess += "Securisé avec un token";
+					}
+					if( textAccess != "" ){
+						jQuery("#dialog-modal-access").text( textAccess );
+						jQuery("#dialog-modal-access-block").show();
+					}else{
+						jQuery("#dialog-modal-access-block").hide();
+					}
+					
+					jQuery("#dialog-modal-vod").dialog({
+						width: 600,
+						height: 625,
 						//modal: true,
 						resizable: false,
 						beforeClose: function(event, ui) {
@@ -548,6 +630,12 @@ class EasyVod_Display
 				}
 			</script>
 		</table>
+
+		<div class="tablenav" style="padding-right: 20px;">
+			<div class='tablenav-pages'>
+				<?php echo $sPagination; ?>
+			</div>
+		</div>
 		<?php
 	}
 
@@ -559,24 +647,28 @@ class EasyVod_Display
 		</p>
 
 		<h2>Précédents Envois</h2>
-			<table class='widefat'>
+			<table class='widefat' style='width: 99%'>
 				<thead>
 					<tr>
-						<th>Nom</th>
-						<th>Description</th>
+						<th width="20%">Nom</th>
+						<th width="30%">Description</th>
 						<th>Nombre vidéos</th>
 						<th>Mode de lecture</th>
 						<th>Date</th>
+						<th width="8%">Action</th>
 					</tr>
 				</thead>
 				<tbody>
 					<?php foreach( $aPlaylist as $oPlaylist ){ ?>
 					<tr>
-						<td><?php echo $oPlaylist->sPlaylistName; ?></td>
-						<td><?php echo $oPlaylist->sPlaylistDescription; ?></td>
+						<td><img src="<?php echo plugins_url('vod-infomaniak/img/ico-display-list.png'); ?>" style="vertical-align:bottom; padding: 0px 5px;"/> <?php echo ucfirst($oPlaylist->sPlaylistName); ?></td>
+						<td><?php echo ucfirst($oPlaylist->sPlaylistDescription); ?></td>
 						<td><?php echo $oPlaylist->iTotal; ?></td>
 						<td><?php echo $oPlaylist->sMode; ?></td>
 						<td><?php echo $oPlaylist->dCreated; ?></td>
+						<td>
+							<a href="https://statslive.infomaniak.com/vod/playlists.php?iVodCode=<?php echo $aOptions['vod_api_icodeservice'];?>&sAction=showPlaylist&iPlaylistCode=<?php echo $oPlaylist->iPlaylistCode; ?>" target="_blank"><img src="<?php echo plugins_url('vod-infomaniak/img/ico-information.png'); ?>" alt="Administrer cette playlist"/></a>
+						</td>
 					</tr>
 					<?php } ?>
 				</tbody>

@@ -17,6 +17,7 @@ Vod_dialogToggleSlider = function(){
 		jQuery("#dialog-slide-header").removeClass("selected");
 		jQuery("#dialog-slide").hide();
 	}
+	jQuery("#dialog-vod-form").dialog( "option", {'position' : 'center'} );
 };
 
 //Fonction permettant de cacher l'overlay de configuration
@@ -39,7 +40,7 @@ Vod_dialogValid = function () {
 	if ( url == null || url == '' ){
 		alert('Veuillez saisir une adresse de vidéo valide.');
 	}else{
-		if ( !jQuery("#dialog-slide-header").hasClass('selected') ) {
+		if ( !jQuery("#dialog-slide-header").hasClass('selected') && jQuery('#dialog-token').val()=="" ) {
 			var text = "[vod]" + url + "[/vod]";
 		}else{
 			//Il y a des options d'integration
@@ -47,6 +48,7 @@ Vod_dialogValid = function () {
 			var height = jQuery("#dialog-height-input").val();
 			var playerDefault = jQuery("#dialog-player-default").val();
 			var player = jQuery("#dialog-player").val();
+			var tokenFolder = jQuery('#dialog-token').val();
 			var text = '[vod';
 			if( width != '' ){
 				text += " width='"+width+"'";
@@ -57,17 +59,20 @@ Vod_dialogValid = function () {
 			if( player != playerDefault ){
 				text += " player='"+player+"'";
 			}
+			if( tokenFolder != '' ){
+				text += " tokenfolder='"+tokenFolder+"'";
+			}
 
-			//Celles qu'on ajoute à chaque fois
-			var stretch = jQuery("#dialog-stretch").attr('checked') ? 1 : 0;
-			var autostart = jQuery("#dialog-autostart").attr('checked') ? 1 : 0;
-			var loop = jQuery("#dialog-loop").attr('checked') ? 1 : 0;
-			//var mute = jQuery("#dialog-mute").val();
-
-			text += " stretch='"+ parseInt(stretch)+"'";
-			text += " autoplay='"+ parseInt(autostart)+"'";
-			text += " loop='"+ parseInt(loop)+"'";
-			//text += " stretch='"+ parseInt(stretch)+"'";
+			if( jQuery("#dialog-slide-header").hasClass('selected') ){
+				//Celles qu'on ajoute à chaque fois
+				var stretch = jQuery("#dialog-stretch").attr('checked') ? 1 : 0;
+				var autostart = jQuery("#dialog-autostart").attr('checked') ? 1 : 0;
+				var loop = jQuery("#dialog-loop").attr('checked') ? 1 : 0;	
+				text += " stretch='"+ parseInt(stretch)+"'";
+				text += " autoplay='"+ parseInt(autostart)+"'";
+				text += " loop='"+ parseInt(loop)+"'";
+			}
+			
 			text += ']' + url + "[/vod]";
 		}
 
@@ -123,6 +128,11 @@ Vod_dialogValid = function () {
 					part = this.value.split(';;;');
 					jQuery('#dialog-search-input-video').val('');
 					jQuery('#dialog-url-input').val(part[0]);
+					if( part.length == 3 ){
+						jQuery('#dialog-token').val( part[1] );
+					}else{
+						jQuery('#dialog-token').val("");
+					}
 					jQuery('#dialog-tabs').tabs( "select" , 0 )
 				}
 			});

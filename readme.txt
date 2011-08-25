@@ -50,6 +50,10 @@ Cette adresse doit donc être joignable de façon publique. Pour plus d'informat
 
 == Changelog ==
 
+= 0.1.1 =
+* Ajout de nouveaux liens sur les videos (statistiques, détail d'une vidéo)
+* Possibilité de delete/rename une video
+
 = 0.1 =
 * First release
 

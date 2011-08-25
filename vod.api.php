@@ -45,6 +45,19 @@ class vod_api {
 	}
 	
 	/**
+	 * Fonction permettant de tester la connectivite avec l'API
+	 *
+	 * @return integer
+	 */
+	public function time(){
+		$oSoap = $this->getSoapAdmin();
+		if( !empty( $oSoap ) ){
+			return $oSoap->time();
+		}
+		return false;
+	}
+	
+	/**
 	 * Fonction permettant de recuperer l'id de l'espace VOD
 	 * 
 	 * @return integer
@@ -79,6 +92,37 @@ class vod_api {
 		$oSoap = $this->getSoapAdmin();
 		if( !empty( $oSoap ) ){
 			return intval($oSoap->countVideo());
+		}
+		return false;
+	}
+	
+	/**
+	 * Fonction permettant de supprimer une video
+	 * 
+	 * @param integer $iFolderCode
+	 * @param string $sFileServerCode
+	 * @return boolean
+	 */
+	public function deleteVideo( $iFolderCode, $sFileServerCode){
+		$oSoap = $this->getSoapAdmin();
+		if( !empty( $oSoap ) ){
+			return $oSoap->deleteVideo( $iFolderCode, $sFileServerCode );
+		}
+		return false;
+	}
+	
+	/**
+	 * Fonction permettant de renommer une video
+	 * 
+	 * @param integer $iFolderCode
+	 * @param string $sFileServerCode
+	 * @param string $sName
+	 * @return boolean
+	 */
+	public function renameVideo( $iFolderCode, $sFileServerCode, $sName){
+		$oSoap = $this->getSoapAdmin();
+		if( !empty( $oSoap ) ){
+			return $oSoap->renameVideo($iFolderCode, $sFileServerCode, $sName);
 		}
 		return false;
 	}
