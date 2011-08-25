@@ -4,8 +4,7 @@ Tags: video, manage
 Requires at least: 2.8.6
 Tested up to: 3.2.1
 
-Insert and Manage Infomaniak VOD's videos in posts, comments and RSS feeds with ease and full customization.
-You need an Infomaniak VOD account to use this plugin.
+Insert and Manage Infomaniak VOD's videos in posts, comments and RSS feeds with ease. You need an Infomaniak VOD account to use this plugin.
 
 == Description ==
 
