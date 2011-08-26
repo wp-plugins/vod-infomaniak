@@ -13,7 +13,6 @@
 class EasyVod_Display
 {
 
-	// Output the <div> used to display the dialog box
 	static function buildForm( $options, $aPlayers ) { 
 	?>
 	<div class="hidden">
@@ -95,15 +94,6 @@ class EasyVod_Display
 	<?php
 	}
 
-	// WordPress' js_escape() won't allow <, >, or " -- instead it converts it to an HTML entity. This is a "fixed" function that's used when needed.
-	static function js_escape($text) {
-		$safe_text = addslashes($text);
-		$safe_text = preg_replace('/&#(x)?0*(?(1)27|39);?/i', "'", stripslashes($safe_text));
-		$safe_text = preg_replace("/\r?\n/", "\\n", addslashes($safe_text));
-		$safe_text = str_replace('\\\n', '\n', $safe_text);
-		return apply_filters('js_escape', $safe_text, $text);
-	}
-
 	static function adminMenu( $action_url, $options, $sUrl){
 		?>
 		<h2><?php _e('Administration du plugin VOD','vod_infomaniak');?></h2>
@@ -164,11 +154,11 @@ class EasyVod_Display
 
 
 				<div class="submit">
-					<form id="updateSynchro" name="updateSynchro" action="<?php echo $action_url; ?>" method="post">
+					<form id="updateSynchro" name="updateSynchro" action="<?php echo $action_url; ?>" method="post" style="display:inline;">
 						<input type="hidden" name="updateSynchro" value="1" /> 
 						<input type="submit" name="Submit" value="<?php _e('Synchronisation rapide','vod_infomaniak'); ?>" />
 					</form>
-					<form id="updateSynchroVideo" name="updateSynchroVideo" action="<?php echo $action_url; ?>" method="post">
+					<form id="updateSynchroVideo" name="updateSynchroVideo" action="<?php echo $action_url; ?>" method="post" style="display:inline;">
 						<input type="hidden" name="updateSynchroVideo" value="1" /> 
 						<input type="submit" name="Submit" value="<?php _e('Synchroniser Videos','vod_infomaniak'); ?>" />
 					</form>
@@ -246,7 +236,6 @@ class EasyVod_Display
 			</div>
 		</p>
 
-		
 		<div id="tabImport"><?php echo $sTab; ?></div>
 
 		<script type="text/javascript">
@@ -499,7 +488,7 @@ class EasyVod_Display
 						<input type="hidden" name="sAction" value="rename" />
 						<input type="hidden" id="dialog-modal-id" name="dialog-modal-id" value=""/>
 						<input type="submit" value="Modifier" style="float:right; margin-right:25px;"/>
-						<input id="dialog-modal-name" name="dialog-modal-name" text="" style="float:right; width: 335px;"/>
+						<input id="dialog-modal-name" name="dialog-modal-name" text="" style="float:right; width: 350px; border: 1px solid #CCCCCC; color: #444444; border-radius: 3px; padding: 4px"/>
 					</form>	
 					<label><?php _e("Nom",'vod_infomaniak'); ?> :</label>	
 				</p>
@@ -512,18 +501,18 @@ class EasyVod_Display
 					<a id="dialog-modal-url-href" href="#" target="_blank">
 						<img src="<?php echo plugins_url('vod-infomaniak/img/ico-redo.png'); ?>" style="float:right; margin-right:25px; vertical-align:bottom;"  alt="<?php _e("Visualiser la video",'vod_infomaniak'); ?>"/>
 					</a>
-					<input id="dialog-modal-url" text="" style="float:right; width: 378px; margin-right: 5px; border 1px solid #CCC; border-radius: 3px; background-color: #FFF; padding: 3px;" readonly="value" onfocus="this.select();"/>
+					<input id="dialog-modal-url" text="" style="float:right; width: 393px; margin-right: 5px; border 1px solid #CCC; border-radius: 3px; background-color: #FFF; margin-top:0; padding: 4px; border: 1px solid #CCCCCC; color: #444444;" readonly="value" onfocus="this.select();"/>
 					<label><?php _e("Url de la video",'vod_infomaniak'); ?> :</label>
 				</p>
 				<p>
 					<a id="dialog-modal-url-img-href" href="#" target="_blank">
 						<img src="<?php echo plugins_url('vod-infomaniak/img/ico-redo.png'); ?>" style="float:right; margin-right:25px; vertical-align:bottom;" alt="Visualiser l'image"/>
 					</a>
-					<input id="dialog-modal-url-img" text="" style="float:right; width: 378px; margin-right: 5px; border 1px solid #CCC; border-radius: 3px; background-color: #FFF; padding: 3px;" readonly="value" onfocus="this.select();"/>
+					<input id="dialog-modal-url-img" text="" style="float:right; width: 393px; margin-right: 5px; border 1px solid #CCC; border-radius: 3px; background-color: #FFF; margin-top:0; padding: 4px; border: 1px solid #CCCCCC; color: #444444;" readonly="value" onfocus="this.select();"/>
 					<label><?php _e("Url de l'image",'vod_infomaniak'); ?> :</label>
 				</p>
 				<p>
-					<input id="dialog-modal-balise" text="" style="float:right; margin-right:25px; width: 400px; border 1px solid #CCC; border-radius: 3px; background-color: #FFF; padding: 3px;" readonly="value" onfocus="this.select();"/>
+					<input id="dialog-modal-balise" text="" style="float:right; margin-right:25px; width: 414px; border 1px solid #CCC; border-radius: 3px; background-color: #FFF; margin-top:0; padding: 4px; border: 1px solid #CCCCCC; color: #444444;" readonly="value" onfocus="this.select();"/>
 					<label><?php _e("Code d'integration",'vod_infomaniak'); ?> :</label>
 				</p>
 			</div>
@@ -559,7 +548,7 @@ class EasyVod_Display
 					<th width="50%"><?php _e("Video",'vod_infomaniak'); ?></th>
 					<th><?php _e("Dossier",'vod_infomaniak'); ?></th>
 					<th><?php _e("Date d'upload",'vod_infomaniak'); ?></th>
-					<th width="8%"><?php _e("Action",'vod_infomaniak'); ?></th>			
+					<th width="80"><?php _e("Action",'vod_infomaniak'); ?></th>			
 				</tr>
 			</thead>
 			<tbody>
@@ -673,7 +662,7 @@ class EasyVod_Display
 						<th><?php _e("Nombre videos",'vod_infomaniak'); ?></th>
 						<th><?php _e("Mode de lecture",'vod_infomaniak'); ?></th>
 						<th><?php _e("Date",'vod_infomaniak'); ?></th>
-						<th width="8%"><?php _e("Action",'vod_infomaniak'); ?></th>
+						<th width="80px"><?php _e("Action",'vod_infomaniak'); ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -738,9 +727,8 @@ class EasyVod_Display
 					</td>
 				</tr>
 			</table>
-			
-			
 		</form>
+		
 		<h2><?php _e("Creation ou modification de players",'vod_infomaniak'); ?></h2>
 		<p><?php printf( __("Afin de modifier ou creer de nouveaux players flash, nous vous invitons a vous rendre dans votre administration vod : <a href='https://statslive.infomaniak.com/vod/player.php?iVodCode=%d' target='_blank'>Acceder a la configuration des players</a>",'vod_infomaniak'), $options['vod_api_icodeservice']); ?></p>
 		<h2><?php _e("Plus d'options",'vod_infomaniak'); ?></h2>

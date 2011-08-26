@@ -23,11 +23,11 @@ if( $aOptions['vod_api_callbackKey'] == $_REQUEST['key'] ){
 	$sServerCode = $response['sFileServerCode'];
 
 	if( empty($iVideo) || empty($iFolder) ){
-		die("Problème avec les parametres");
+		die(__("Probleme avec les parametres"));
 	}
 	$oFolder = $db->getFolder( $iFolder );
 	if( empty( $oFolder ) || empty( $oFolder->sName) ){
-		die("dossier inconnu");
+		die(__("Dossier inconnu"));
 	}
 	
 	$encodage = array_shift($response['files']);

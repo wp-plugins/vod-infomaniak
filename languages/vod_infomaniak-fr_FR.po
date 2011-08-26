@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: vod\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-08-26 14:40+0200\n"
-"PO-Revision-Date: 2011-08-26 14:43+0100\n"
+"PO-Revision-Date: 2011-08-26 17:13+0100\n"
 "Last-Translator: \n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: fr_FR\n"
@@ -429,7 +429,7 @@ msgstr "Séléction du player par defaut"
 #: vod.template.php:662
 #, php-format
 msgid "Si vous desirez ajouter ou modifier les playlist ci-dessous, veuillez vous rendre dans <a href='https://statslive.infomaniak.com/vod/playlists.php?iVodCode=%s' target='_blank'>la console d'administration</a>"
-msgstr ""
+msgstr "Si vous souhaitez ajouter ou modifier une des playlist ci-dessous, veuillez vous rendre dans <a href='https://statslive.infomaniak.com/vod/playlists.php?iVodCode=%s' target='_blank'>la console d'administration</a>"
 
 #: vod.template.php:195
 msgid "Statut"

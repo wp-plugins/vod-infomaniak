@@ -75,8 +75,8 @@ class EasyVod
 		if (function_exists('add_submenu_page')) {
 			add_submenu_page(__FILE__,__('Gestionnaire','vod_infomaniak'), __('Gestionnaire','vod_infomaniak'), 'edit_pages', __FILE__, array(&$this,'vod_management_menu'));
 			add_submenu_page(__FILE__,__('Importer une video','vod_infomaniak'), __('Importer une video','vod_infomaniak'), 'edit_pages', 'import', array(&$this,'vod_upload_menu'));
-			add_submenu_page(__FILE__,__('Playlist','vod_infomaniak'), __('Playlist','vod_infomaniak'), 'edit_pages', 'Playlist', array(&$this,'vod_playlist_menu'));
 			add_submenu_page(__FILE__,__('Player video','vod_infomaniak'), __('Player video','vod_infomaniak'), 'edit_pages', 'Player', array(&$this,'vod_implementation_menu'));
+			add_submenu_page(__FILE__,__('Playlist','vod_infomaniak'), __('Playlist','vod_infomaniak'), 'edit_pages', 'Playlist', array(&$this,'vod_playlist_menu'));
 			add_submenu_page(__FILE__,__('Configuration','vod_infomaniak'), __('Configuration','vod_infomaniak'), 'edit_plugins', 'configuration', array(&$this,'vod_admin_menu'));
 		}		
 	}
@@ -170,9 +170,9 @@ class EasyVod
 			$video_url = $sUrl."?url=".$sFile;
 			if( $videoimage ) $video_url .= "&preloadImage=".str_replace(array(".flv",".mp4"), ".jpg", $sFile);
 		}	
-		if( !empty($player) ){
+		if( !empty($player) ) {
 			$video_url .= "&player=$player";
-		}else{
+		} else {
 			$video_url .= "&player=576";
 		}
 		if( $iVod ) $video_url .= "&vod=$iVod";
@@ -235,7 +235,7 @@ class EasyVod
 		}
 	}
 
-	function checkAutoUpdate(){
+	function checkAutoUpdate() {
 		$gmtime = time() - (int)substr(date('O'),0,3)*60*60;
 		if ( $this->options['vod_api_lastUpdate'] < $gmtime - $this->auto_sync_delay ) {			
 			$oApi = $this->getAPI();
@@ -280,7 +280,7 @@ class EasyVod
 		}
 	}
 
-	function vod_admin_menu(){
+	function vod_admin_menu() {
 		$site_url = get_option("siteurl");
 
 		if (isset($_POST['submitted'])) {
@@ -398,7 +398,7 @@ class EasyVod
 		EasyVod_Display::adminMenu( $actionurl, $this->options, $site_url);
 	}
 
-	function plugin_ready(){
+	function plugin_ready() {
 		if ( empty($this->options['vod_api_connected']) || $this->options['vod_api_connected'] == 'off' ) {
 			echo "<h2>".__('Probleme de configuration','vod_infomaniak')."</h2><p>".__("Veuillez-vous rendre dans <a href='admin.php?page=configuration'>Gestion VOD -> Configuration</a> afin de configurer votre compte.",'vod_infomaniak').'</p>';
 			return false;
@@ -455,8 +455,8 @@ class EasyVod
 			$iLimit = 20;
 			$iVideoTotal = $this->db->count_video();
 			$aVideos = $this->db->get_videos_byPage($iPage-1, $iLimit);
-			for( $i=0; $i<count($aVideos); $i++ ){
-				if( !empty($aVideos[$i]->sToken) ){
+			for ( $i=0; $i<count($aVideos); $i++ ) {
+				if ( !empty($aVideos[$i]->sToken) ) {
 					$aVideos[$i]->sToken = $this->getTemporaryKey( $aVideos[$i]->sToken, $aVideos[$i]->sServerCode );
 				}
 			}
@@ -467,7 +467,7 @@ class EasyVod
 		}
 	}
 
-	function vod_upload_menu(){
+	function vod_upload_menu() {
 		if ( $this->plugin_ready() ) {
 			require_once("vod.template.php");
 			if ( $_REQUEST['sAction'] == "popupUpload" && !empty($_REQUEST['iFolderCode']) ) {
@@ -571,6 +571,17 @@ class EasyVod
     } 
 
 }
+
+/**
+ * Classe permettant la gestion des tables sql utilisé par ce plugin
+ * En cas de problemes ou de questions, veuillez contacter streaming@infomaniak.ch
+ *
+ * @author Destrem Kevin
+ * @link http://statslive.infomaniak.ch/vod/api/
+ * @version 1.0
+ * @copyright infomaniak.ch
+ *
+ */
 
 class EasyVod_db
 {
