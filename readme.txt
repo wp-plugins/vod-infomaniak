@@ -66,6 +66,10 @@ Les nouvelles vidéos seront automatiquement ajoutés avec le paramètre "tokenF
 
 == Changelog ==
 
+= 0.1.5 =
+* Correction concernant l'ecrite d'un post lorsque la vidéo nécéssite un token
+* Correction du message indiquant des géolocalisation sur certaines vidéos n'en ayant pas
+
 = 0.1.4 =
 * Mise en place d'une premiere version du système de traduction
 * Correction dans l'appel d'une fonction de wordpress deprecated
@@ -90,4 +94,4 @@ Les nouvelles vidéos seront automatiquement ajoutés avec le paramètre "tokenF
 = Prochainement =
 * Gestion des fichiers audio
 * Traductions EN/DE
-* Gestion automatiques des répertoires avec Geoip ou token
+* Une version stable

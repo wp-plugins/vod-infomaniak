@@ -126,7 +126,6 @@ class EasyVod
 		//Recuperation des parametres optionnels des tags
 		$aTagParam = array();
 		if ( !empty( $params ) ) {
-					
 			$params = strtolower(str_replace(array("'",'"'), "", $params));
 			$aList = split(" ", $params);
 			foreach( $aList as $param) {
@@ -431,10 +430,18 @@ class EasyVod
 			} else if ( $_REQUEST['sAction'] == "post" ){
 				$oVideo = $this->db->getVideo( intval($_POST['dialog-post-id']) );
 				if( $oVideo != false ){
+					$sBalise = "vod";
+					$oFolder = $this->db->getFolder( $oVideo->iFolder );
+					if( $oFolder != false ){
+						if( !empty($oFolder->sToken) ){
+							$sBalise = "vod tokenfolder='".$oVideo->iFolder."'";
+						}
+					}
+					
 					// Create post object
 					$my_post = array(
 						'post_title' => $oVideo->sName,
-						'post_content' => '[vod]'.$oVideo->sPath.$oVideo->sServerCode.".".strtolower($oVideo->sExtension).'[/vod]'
+						'post_content' => '['.$sBalise.']'.$oVideo->sPath.$oVideo->sServerCode.".".strtolower($oVideo->sExtension).'[/vod]'
 					);
 
 					// Insert the post into the database

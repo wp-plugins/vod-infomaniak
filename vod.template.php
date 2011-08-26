@@ -486,7 +486,7 @@ class EasyVod_Display
 			</form>
 		</div>
 
-		<div id="dialog-modal-vod" title="<?php _e("Previsualisation",'vod_infomaniak'); ?>" style="display:none; padding: 5px; overflow: hidden;">
+		<div id="dialog-modal-vod" title="<?php _e("Previsualisation d'une video",'vod_infomaniak'); ?>" style="display:none; padding: 5px; overflow: hidden;">
 			<h3 id="dialog-modal-title" style="text-align:center; margin: 5px">Titre</h3>
 			<center>
 				<iframe id="dialog-modal-video" frameborder="0" width="480" height="320" src="#"></iframe>
@@ -569,12 +569,12 @@ class EasyVod_Display
 				<tr>
 					<td>
 						<img src="<?php echo plugins_url('vod-infomaniak/img/videofile.png'); ?>" style="vertical-align:bottom"/>
-						<a href="javascript:; return false;" onclick="openVodPopup('<?php echo $oVideo->iVideo; ?>', '<?php echo $oVideo->sName; ?>','<?php echo $oVideo->sPath.$oVideo->sServerCode; ?>', '<?php echo strtolower($oVideo->sExtension);?>', '<?php echo strtolower($oVideo->sAccess);?>', '<?php echo $oVideo->sToken;?>'); return false;"><?php echo ucfirst(stripslashes($oVideo->sName)); ?></a>
+						<a href="javascript:; return false;" onclick="openVodPopup('<?php echo $oVideo->iVideo; ?>', '<?php echo $oVideo->sName; ?>','<?php echo $oVideo->sPath.$oVideo->sServerCode; ?>', '<?php echo strtolower($oVideo->sExtension);?>', '<?php echo strtolower($oVideo->sAccess);?>', '<?php echo $oVideo->sToken;?>', '<?php echo $oVideo->iFolder;?>'); return false;"><?php echo ucfirst(stripslashes($oVideo->sName)); ?></a>
 					</td>
 					<td><img src="<?php echo plugins_url('vod-infomaniak/img/ico-folder-open-16x16.png'); ?>" style="vertical-align:bottom"/> <?php echo $oVideo->sPath; ?></td>
 					<td><?php echo $oVideo->dUpload; ?></td>
 					<td>
-						<a href="javascript:; return false;" onclick="openVodPopup('<?php echo $oVideo->iVideo; ?>', '<?php echo $oVideo->sName; ?>','<?php echo $oVideo->sPath.$oVideo->sServerCode."', '".strtolower($oVideo->sExtension);?>', '<?php echo strtolower($oVideo->sAccess);?>', '<?php echo $oVideo->sToken;?>'); return false;"><img src="<?php echo plugins_url('vod-infomaniak/img/ico-information.png'); ?>" alt="<?php _e("Information sur cette video",'vod_infomaniak'); ?>"/></a>
+						<a href="javascript:; return false;" onclick="openVodPopup('<?php echo $oVideo->iVideo; ?>', '<?php echo $oVideo->sName; ?>','<?php echo $oVideo->sPath.$oVideo->sServerCode."', '".strtolower($oVideo->sExtension);?>', '<?php echo strtolower($oVideo->sAccess);?>', '<?php echo $oVideo->sToken;?>', '<?php echo $oVideo->iFolder;?>'); return false;"><img src="<?php echo plugins_url('vod-infomaniak/img/ico-information.png'); ?>" alt="<?php _e("Information sur cette video",'vod_infomaniak'); ?>"/></a>
 						<a href="https://statslive.infomaniak.com/vod/videoDetail.php?iVodCode=<?php echo $aOptions['vod_api_icodeservice'];?>&iFileCode=<?php echo $oVideo->iVideo; ?>" target="_blank"><img src="<?php echo plugins_url('vod-infomaniak/img/ico-video.png'); ?>" alt="<?php _e("Administrer cette video",'vod_infomaniak'); ?>"/></a>
 						<a href="https://statslive.infomaniak.com/vod/videoDetail.php?iVodCode=<?php echo $aOptions['vod_api_icodeservice'];?>&iFileCode=<?php echo $oVideo->iVideo; ?>&tab=2" target="_blank"><img src="<?php echo plugins_url('vod-infomaniak/img/ico-statistics.png'); ?>" alt="<?php _e("Voir les statistiques de cette video",'vod_infomaniak'); ?>"/></a>
 						<a href="javascript:; return false;" onclick="confirmVodDelete('<?php echo $oVideo->iVideo; ?>', '<?php echo $oVideo->sName; ?>');"><img src="<?php echo plugins_url('vod-infomaniak/img/ico-delete.png'); ?>" alt="<?php _e("Supprimer cette video",'vod_infomaniak'); ?>"/></a>
@@ -601,27 +601,30 @@ class EasyVod_Display
 						}
 					});
 				}
-				openVodPopup = function( iVideo, title, url, sExtension, sAccess, sToken ){
+				openVodPopup = function( iVideo, title, url, sExtension, sAccess, sToken, iFolder ){
 					var urlComplete = "<?php echo $aOptions['vod_api_id'];?>"+url;
 					var sParam = "";
 					if( sToken != "" ){
 						sParam = "?sKey="+sToken;
+						sBalise = "vod tokenfolder='"+iFolder+"'";
+					}else{
+						sBalise = 'vod';
 					}
 					jQuery("#dialog-modal-id").val( iVideo );
 					jQuery("#dialog-post-id").val( iVideo );
 					jQuery("#dialog-modal-title").text( title );
 					jQuery("#dialog-modal-name").val( title );
 					jQuery("#dialog-modal-url").val( "http://vod.infomaniak.com/redirect/"+urlComplete+"."+sExtension );
-					jQuery("#dialog-modal-url-href").attr( "href", "http://vod.infomaniak.com/redirect/"+urlComplete+"."+sExtension );
+					jQuery("#dialog-modal-url-href").attr( "href", "http://vod.infomaniak.com/redirect/"+urlComplete+"."+sExtension+sParam );
 					jQuery("#dialog-modal-url-img").val( "http://vod.infomaniak.com/redirect/"+urlComplete+".jpg" );
 					jQuery("#dialog-modal-url-img-href").attr( "href", "http://vod.infomaniak.com/redirect/"+urlComplete+".jpg" );
-					jQuery("#dialog-modal-balise").val( "[vod]"+url+"."+sExtension+"[/vod]" );
+					jQuery("#dialog-modal-balise").val( "["+sBalise+"]"+url+"."+sExtension+"[/vod]" );
 					jQuery("#dialog-modal-admin").attr( "href", "https://statslive.infomaniak.com/vod/videoDetail.php?iVodCode=<?php echo $aOptions['vod_api_icodeservice'];?>&iFileCode="+iVideo );
 					jQuery("#dialog-modal-admin2").attr( "href", "https://statslive.infomaniak.com/vod/videoDetail.php?iVodCode=<?php echo $aOptions['vod_api_icodeservice'];?>&iFileCode="+iVideo+"&tab=2" );
 					jQuery("#dialog-modal-video").attr( "src", "http://vod.infomaniak.com/iframe.php?url="+urlComplete+"."+sExtension+sParam+"&player=576&vod=214&preloadImage="+urlComplete+".jpg" );
 
 					textAccess = "";
-					if( sAccess != 'ALL' ){
+					if( sAccess != '' && sAccess != 'all' ){
 						textAccess += "<?php _e("Video Geolocalise",'vod_infomaniak'); ?>";
 					}
 					if( sToken != "" ){
