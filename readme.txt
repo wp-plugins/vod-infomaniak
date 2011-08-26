@@ -31,6 +31,11 @@ Pour installer ce plugin, il faut :
 
 == Frequently Asked Questions ==
 
+= La numérotation du plugin est etrange, ca ne commence pas à la version 1.0 un logiciel? =
+
+Si justement, ce plugin est une préversion encore en cours de developpement. Il passera en version 1.0 dès qu'il sera considéré comme assez stable et abouti.
+Il n'y a pas encore de version stable, c'est donc de l'évolution continue et il risque donc de demander assez souvent d'être mis à jour. 
+
 = Il faut que je fournisse mes identifiants personnels au plugin ? =
 
 Pour des raisons de sécurités, il est fortement déconseillé de le faire.
