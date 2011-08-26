@@ -76,6 +76,11 @@ Les nouvelles vidéos seront automatiquement ajoutés avec le paramètre "tokenF
 
 == Changelog ==
 
+= 0.1.6 =
+* Reorganisation du menu un peu bordelique
+* Snapshot de prévisualisation
+* Fix d'un bug d'affichage en 1024
+
 = 0.1.5 =
 * Correction concernant l'ecrite d'un post lorsque la vidéo nécéssite un token
 * Correction du message indiquant des géolocalisation sur certaines vidéos n'en ayant pas

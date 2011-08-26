@@ -169,5 +169,4 @@ Vod_dialogValid = function () {
 		}
 	});
 	tinymce.PluginManager.add('vodplugin', tinymce.plugins.vodplugin);
-
 })();

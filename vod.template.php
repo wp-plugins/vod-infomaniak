@@ -216,7 +216,7 @@ class EasyVod_Display
 	static function uploadMenu( $actionurl, $options, $aFolders, $sTab=""){
 		?>
 		<h2><?php _e("Envoi d'une nouvelle video",'vod_infomaniak'); ?></h2>
-		<p><?php _e("Ce plug-in vous permet d'ajouter de nouvelles videos directement depuis ce blog. Pour cela, vous n'avez qu'a choisir un dossier puis suivre les",'vod_infomaniak'); ?> :</p>		
+		<p><?php _e("Ce plug-in vous permet d'ajouter de nouvelles videos directement depuis ce blog. Pour cela, vous n'avez qu'a choisir un dossier puis suivre les instructions",'vod_infomaniak'); ?> :</p>		
 		<p>
 			<label><b>1.</b> <?php _e("Choix du dossier d'envoi",'vod_infomaniak'); ?> :</label><br/>
 			<select id="uploadSelectFolder" onchange="changeFolder();" onkeyup="changeFolder();">

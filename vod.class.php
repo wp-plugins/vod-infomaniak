@@ -17,7 +17,7 @@ class EasyVod
 	private $options;
 	private $key;
 	private $db;
-	public $version = "0.1.4";
+	public $version = "0.1.6";
 
 	function EasyVod() {
 		$this->__construct();
@@ -69,12 +69,12 @@ class EasyVod
 
 	function add_menu_items() {
 		if (function_exists('add_menu_page')) {
-			add_menu_page('Gestion VOD', 'Gestion VOD', 'edit_pages', __FILE__, array(&$this,'vod_management_menu'));
+			add_menu_page(__('Videos','vod_infomaniak'), __('Videos','vod_infomaniak'), 'edit_pages', __FILE__, array(&$this,'vod_management_menu'));
 		}
 
 		if (function_exists('add_submenu_page')) {
 			add_submenu_page(__FILE__,__('Gestionnaire','vod_infomaniak'), __('Gestionnaire','vod_infomaniak'), 'edit_pages', __FILE__, array(&$this,'vod_management_menu'));
-			add_submenu_page(__FILE__,__('Importer une video','vod_infomaniak'), __('Importer une video','vod_infomaniak'), 'edit_pages', 'import', array(&$this,'vod_upload_menu'));
+			add_submenu_page(__FILE__,__('Importation','vod_infomaniak'), __('Importation','vod_infomaniak'), 'edit_pages', 'import', array(&$this,'vod_upload_menu'));
 			add_submenu_page(__FILE__,__('Player video','vod_infomaniak'), __('Player video','vod_infomaniak'), 'edit_pages', 'Player', array(&$this,'vod_implementation_menu'));
 			add_submenu_page(__FILE__,__('Playlist','vod_infomaniak'), __('Playlist','vod_infomaniak'), 'edit_pages', 'Playlist', array(&$this,'vod_playlist_menu'));
 			add_submenu_page(__FILE__,__('Configuration','vod_infomaniak'), __('Configuration','vod_infomaniak'), 'edit_plugins', 'configuration', array(&$this,'vod_admin_menu'));
@@ -400,7 +400,7 @@ class EasyVod
 
 	function plugin_ready() {
 		if ( empty($this->options['vod_api_connected']) || $this->options['vod_api_connected'] == 'off' ) {
-			echo "<h2>".__('Probleme de configuration','vod_infomaniak')."</h2><p>".__("Veuillez-vous rendre dans <a href='admin.php?page=configuration'>Gestion VOD -> Configuration</a> afin de configurer votre compte.",'vod_infomaniak').'</p>';
+			echo "<h2>".__('Probleme de configuration','vod_infomaniak')."</h2><p>".__("Veuillez-vous rendre dans <a href='admin.php?page=configuration'>Videos -> Configuration</a> afin de configurer votre compte.",'vod_infomaniak').'</p>';
 			return false;
 		}
 		return true;
@@ -638,7 +638,8 @@ class EasyVod_db
 		 `iPlaylistCode` INT UNSIGNED NOT NULL ,
 		 `sPlaylistName` VARCHAR( 255 ) NOT NULL ,
 		 `sPlaylistDescription` VARCHAR( 255 ) NOT NULL ,
-		 `iTotal`INT UNSIGNED NOT NULL,
+		 `iTotal` INT UNSIGNED NOT NULL,
+		 `iTotalDuration` INT UNSIGNED NOT NULL,
 		 `sMode` VARCHAR( 255 ) NOT NULL,
 		 `dCreated` DATETIME NOT NULL 
 		) CHARACTER SET utf8;";
