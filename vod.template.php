@@ -515,16 +515,19 @@ class EasyVod_Display
 			</p>
 			<p id="dialog-modal-access-block" style="padding-top: 2px;">
 				<label>Restriction d'accès :</label>
-				<span id="dialog-modal-access" style="font-weight: bold; padding-left: 35px;"></span>
-				
+				<span id="dialog-modal-access" style="font-weight: bold; padding-left: 50px;"></span>
 			</p>			
 			<h3>Intégration</h3>
 			<p>
-				<input id="dialog-modal-url" text="" style="float:right; margin-right:25px; width: 400px; border 1px solid #CCC; border-radius: 3px; background-color: #FFF; padding: 3px;" readonly="value"/>
+				<input id="dialog-modal-url" text="" style="float:right; margin-right:25px; width: 400px; border 1px solid #CCC; border-radius: 3px; background-color: #FFF; padding: 3px;" readonly="value" onfocus="this.select();"/>
 				<label>Url de la vidéo :</label>
 			</p>
 			<p>
-				<input id="dialog-modal-balise" text="" style="float:right; margin-right:25px; width: 400px; border 1px solid #CCC; border-radius: 3px; background-color: #FFF; padding: 3px;" readonly="value"/>
+				<input id="dialog-modal-url-img" text="" style="float:right; margin-right:25px; width: 400px; border 1px solid #CCC; border-radius: 3px; background-color: #FFF; padding: 3px;" readonly="value" onfocus="this.select();"/>
+				<label>Url de l'image :</label>
+			</p>
+			<p>
+				<input id="dialog-modal-balise" text="" style="float:right; margin-right:25px; width: 400px; border 1px solid #CCC; border-radius: 3px; background-color: #FFF; padding: 3px;" readonly="value" onfocus="this.select();"/>
 				<label>Code d'intégration :</label>
 			</p>
 			<div style="padding-top: 15px; text-align:center;">
@@ -534,6 +537,14 @@ class EasyVod_Display
 					</li>
 					<li style="display:inline; padding-left: 20px">
 						<a id="dialog-modal-admin2" href="#" target="_blank" style="text-decoration: none; color:#444444;"><img src="<?php echo plugins_url('vod-infomaniak/img/ico-statistics.png'); ?>" alt="Voir les statistiques de cette video" style="vertical-align:bottom"/> Voir les statistiques</a>
+					</li>
+					<li style="display:inline; padding-left: 20px">
+						<form id="adminFormPost" name="adminFormPost" action="<?php echo $action_url; ?>" method="POST" style="display:none">
+							<input type="hidden" name="submitted" value="1" />
+							<input type="hidden" name="sAction" value="post" />
+							<input type="hidden" id="dialog-post-id" name="dialog-post-id" value=""/>
+						</form>
+						<a id="dialog-modal-admin3" href="javascript:;" onclick="jQuery('#adminFormPost').submit();" style="text-decoration: none; color:#444444;"><img src="<?php echo plugins_url('vod-infomaniak/img/ico-edit.png'); ?>" alt="Creer un article" style="vertical-align:bottom"/> Creer un article</a>
 					</li>
 				</ul>
 			</div>
@@ -594,9 +605,11 @@ class EasyVod_Display
 						sParam = "?sKey="+sToken;
 					}
 					jQuery("#dialog-modal-id").val( iVideo );
+					jQuery("#dialog-post-id").val( iVideo );
 					jQuery("#dialog-modal-title").text( title );
 					jQuery("#dialog-modal-name").val( title );
 					jQuery("#dialog-modal-url").val( "http://vod.infomaniak.com/redirect/"+urlComplete+"."+sExtension );
+					jQuery("#dialog-modal-url-img").val( "http://vod.infomaniak.com/redirect/"+urlComplete+".jpg" );
 					jQuery("#dialog-modal-balise").val( "[vod]"+url+"."+sExtension+"[/vod]" );
 					jQuery("#dialog-modal-admin").attr( "href", "https://statslive.infomaniak.com/vod/videoDetail.php?iVodCode=<?php echo $aOptions['vod_api_icodeservice'];?>&iFileCode="+iVideo );
 					jQuery("#dialog-modal-admin2").attr( "href", "https://statslive.infomaniak.com/vod/videoDetail.php?iVodCode=<?php echo $aOptions['vod_api_icodeservice'];?>&iFileCode="+iVideo+"&tab=2" );
@@ -618,9 +631,8 @@ class EasyVod_Display
 					}
 					
 					jQuery("#dialog-modal-vod").dialog({
-						width: 600,
-						height: 625,
-						//modal: true,
+						width: 620,
+						height: 655,
 						resizable: false,
 						beforeClose: function(event, ui) {
 							jQuery( "#dialog-modal-video").attr( "src", "#");
@@ -682,43 +694,64 @@ class EasyVod_Display
 		<h2>Intégration par défaut des vidéos</h2>
 		<form name="adminForm" action="<?php echo $action_url; ?>" method="post">
 			<input type="hidden" name="submitted" value="1" /> 
-			<p>
-				<label>Selection du player par défaut :</label>
-				<select id="selectPlayer" name="selectPlayer" onchange="PlayerInfo();" onkeyup="PlayerInfo();">
-				<?php 
-					foreach( $aPlayers as $player ){
-						$selected = "";
-						if( $options['player'] == $player->iPlayer ){
-							$selected = 'selected="selected"';
-						}
-						echo "<option value='".$player->iPlayer."' $selected>".ucfirst($player->sName)."</option>";
-					}
-				?>
-				</select>
-				
-				<p>Informations sur ce Player :</p>
-				<?php foreach( $aPlayers as $player ){ ?>
-					<div id="player-info-<?php echo ucfirst($player->iPlayer); ?>" class="player-info" style="padding: 5px 15px; border: 1px solid #EEE; display:none; width: 500px;">
-						
-						<ul>
-							<li><b>Nom :</b> <?php echo ucfirst($player->sName); ?></li>
-							<li><b>Date :</b> <?php echo date("d M Y H:i", strtotime($player->dEdit)); ?></li>
-							<li><b>Résolution :</b> <?php echo $player->iWidth; ?>x<?php echo $player->iHeight; ?></li>
-							<li><b>Démarrage automatique :</b> <?php echo $player->bAutoPlay==0? 'Non': 'Oui'; ?></li>
-							<li><b>Lecture en boucle :</b> <?php echo $player->bLoop==0? 'Non': 'Oui'; ?></li>
-							<li><b>Switch de qualité :</b> <?php echo $player->bSwitchQuality==0? 'Non': 'Oui'; ?></li>
-						</ul>
-					</div>
-				<?php } ?>
-				
-			</p>
-			<div class="submit">
-				<input type="submit" name="Submit" value="Choisir ce player" />
-			</div>
+			<table>
+				<tr>
+					<td style="vertical-align: top">
+						<label>Selection du player par défaut :</label><br/>
+						<select id="selectPlayer" name="selectPlayer" onchange="PlayerInfo();" onkeyup="PlayerInfo();">
+						<?php 
+							foreach( $aPlayers as $player ){
+								$selected = "";
+								if( $options['player'] == $player->iPlayer ){
+									$selected = 'selected="selected"';
+								}
+								echo "<option value='".$player->iPlayer."' $selected>".ucfirst($player->sName)."</option>";
+							}
+						?>
+						</select> <input type="submit" name="Submit" value="Choisir ce player" />
+					
+						<p>Informations sur ce Player :</p>
+						<?php foreach( $aPlayers as $player ){ ?>
+							<div id="player-info-<?php echo $player->iPlayer; ?>" class="player-info" style="padding: 5px 15px; border: 1px solid #EEE; display:none; width: 500px;">
+								
+								<ul>
+									<li><b>Nom :</b> <?php echo ucfirst($player->sName); ?></li>
+									<li><b>Date :</b> <?php echo date("d M Y H:i", strtotime($player->dEdit)); ?></li>
+									<li><b>Résolution :</b> <?php echo $player->iWidth; ?>x<?php echo $player->iHeight; ?></li>
+									<li><b>Démarrage automatique :</b> <?php echo $player->bAutoPlay==0? 'Non': 'Oui'; ?></li>
+									<li><b>Lecture en boucle :</b> <?php echo $player->bLoop==0? 'Non': 'Oui'; ?></li>
+									<li><b>Switch de qualité :</b> <?php echo $player->bSwitchQuality==0? 'Non': 'Oui'; ?></li>
+								</ul>
+								<div style="text-align:center; width: 100%">
+									<a id="dialog-modal-admin" href="https://statslive.infomaniak.com/vod/players/playerConfig.php?iVodCode=<?php echo $options['vod_api_icodeservice'];?>&iPlayerCode=<?php echo $player->iPlayer; ?>" target="_blank" style="text-decoration: none; color:#444444; font-weight: bold;"><img src="<?php echo plugins_url('vod-infomaniak/img/ico-edit.png'); ?>" alt="Editer ce Player" style="vertical-align:bottom"/> Modifier ce player</a>
+								</div>
+							</div>
+						<?php } ?>
+					</td>
+					<td style="vertical-align: top; padding-left: 25px;">
+						<iframe id="player-demo-video" frameborder="0" width="480" height="360" src="#"></iframe>
+					</td>
+				</tr>
+			</table>
+			
+			
 		</form>
 		<h2>Création ou modification de players</h2>
 		<p>
 			Afin de modifier ou créer de nouveaux players flash, nous vous invitons à vous rendre dans votre administration vod : <a href="https://statslive.infomaniak.com/vod/player.php?iVodCode=<?php echo $options['vod_api_icodeservice'];?>" target="_blank">Accèder à la configuration des players</a>
+		</p>
+		<h2>Plus d'options</h2>
+		<p>
+			Il est possible de vraiment personnaliser votre player vidéo afin qu'ils s'intègre à votre site. Voici quelques fonctionnalités avancés :
+			<ul style="margin-left: 15px; list-style: disc inside;">
+				<li>Fonction de seek permettant de se déplacer dans une vidéo même longue quasi instantanément.</li>
+				<li>Bouton permettant de changer à la volé entre les différentes qualités d'une vidéo.</li>
+				<li>Bouton d'export sur certains réseau sociaux (facebook, twitter) afin que votre vidéo soit plus visible.</li>
+				<li>Player exportable afin de permettre aux visiteurs de récupérer le code d'integration.</li>
+				<li>Facilité de personnalisation du player via de rapides modifications (couleurs de la barre, taille de la barre, logo) ou l'utilisation d'une barre entièrement personnaliser.</li>
+				<li>Compatibilité avec adswizz afin d'ajouter facilement des publicités avant ou après les vidéos.</li>
+				<li>Et encore d'autres options à découvrir ...</li>
+			</ul>
 		</p>
 		<script>
 			PlayerInfo = function(){
@@ -726,6 +759,7 @@ class EasyVod_Display
 				value = jQuery('#selectPlayer').val();
 				console.log(value);
 				jQuery('#player-info-'+value).show();
+				jQuery("#player-demo-video").attr( "src", "http://vod.infomaniak.com/iframe.php?url=infomaniak_11_vod/demo-2362/mp4-226/big_buck_bunny_720p_h264.mp4&player="+value+"&vod=<?php echo $options['vod_api_icodeservice'];?>&preloadImage=infomaniak_11_vod/demo-2362/mp4-226/big_buck_bunny_720p_h264.jpg" );
 			}
 			PlayerInfo();
 		</script>

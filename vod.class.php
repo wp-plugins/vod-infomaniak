@@ -29,7 +29,7 @@ class EasyVod
 		$this->add_filters_and_hooks();
 		$this->db = new EasyVod_db();
 		$this->auto_sync = true;
-		$this->auto_sync_delay = 6*3600;
+		$this->auto_sync_delay = 3*3600;
 	}
 
 	function add_filters_and_hooks() {
@@ -418,6 +418,21 @@ class EasyVod
 					$oApi = $this->getAPI();
 					$oApi->deleteVideo( $oVideo->iFolder, $oVideo->sServerCode );
 					$this->db->delete_video(intval($_POST['dialog-confirm-id']));
+				}
+			} else if ( $_REQUEST['sAction'] == "post" ){
+				$oVideo = $this->db->getVideo( intval($_POST['dialog-post-id']) );
+				if( $oVideo != false ){
+					// Create post object
+					$my_post = array(
+						'post_title' => $oVideo->sName,
+						'post_content' => '[vod]'.$oVideo->sPath.$oVideo->sServerCode.".".strtolower($oVideo->sExtension).'[/vod]'
+					);
+
+					// Insert the post into the database
+					$id_draft = wp_insert_post( $my_post );
+					echo "<h3>Article correctement créé. Vous allez etre rediriger sur la page d'édition";
+					echo "<script type='text/javascript'>window.location = '".admin_url('post.php?post='.$id_draft.'&action=edit')."';</script>";
+					exit;
 				}
 			}
 			$iPage = !empty($_REQUEST['p']) ? intval( $_REQUEST['p'] ) : 1;

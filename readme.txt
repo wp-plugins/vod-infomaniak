@@ -4,7 +4,7 @@ Tags: video, manage
 Requires at least: 2.8.6
 Tested up to: 3.2.1
 
-Insert and Manage Infomaniak VOD's videos in posts, comments and RSS feeds with ease. You need an Infomaniak VOD account to use this plugin.
+Easily embed and manage videos from Infomaniak VOD in your posts, comments and RSS feeds. You need an Infomaniak VOD account to use this plugin.
 
 == Description ==
 
@@ -12,23 +12,22 @@ Attention : Ce plugin est encore en cours de développement, il est fortement d�
 
 Ce plugin vous permet de gérer facilement les interactions entre votre espace VOD et votre blog.
 Il vous permet en toute simplicité de récupérer et de gérer l'ensemble de vos vidéos. 
-Il offre également de nombreuses autres options :
+Il offre également de nombreuses autres options tels que :
 
-* Mise à jour automatique lors de l'ajout de nouvelles vidéos
-* Récupération automatique des players existants
-* Possibilité d'ajouter des fichiers audio/vidéo directement depuis l'interface d'admin
-istration
-* Gestion des playlist
+* La mise à jour automatique lors de l'ajout de nouvelles vidéos
+* La récupération automatique des players existants
+* La possibilité d'importer des fichiers audio/vidéo directement depuis votre administration wordpress
+* La gestion des playlist
 * Outil de recherche de vidéo lors de l'écriture d'un article ou d'une page
 
 == Installation ==
 
 Il est nécessaire pour utiliser ce plugin d'avoir un compte VOD sur notre interface d'administration http://statslive.infomaniak.ch/
-Pour installer ce plugin, il vous est nécessaire de :
+Pour installer ce plugin, il faut :
 
-1. Envoyer le plugin `vod-infomaniak` dans le dossier `/wp-content/plugins/`.
-1. L'activer dans le menu plugins de wordpress.
-1. De se rendre dans Gestion VOD -> Configuration afin de configurer votre compte afin les identifiants fournis sur l'interface d'administration.
+1. Envoyer le plugin `vod-infomaniak` dans le dossier `/wp-content/plugins/` de votre blog.
+1. Aller activer ce plugin dans le menu plugins de wordpress.
+1. Se rendre dans Gestion VOD -> Configuration afin de configurer votre compte avec les identifiants fournis sur l'interface d'administration.
 
 == Frequently Asked Questions ==
 
@@ -66,6 +65,11 @@ Une fois activé, il faut se rendre sur la page Gestion VOD > Configuration et a
 Les nouvelles vidéos seront automatiquement ajoutés avec le paramètre "tokenFolder" permettant d'identifier les vidéos nécessitant la génération d'une clef unique.
 
 == Changelog ==
+
+= 0.1.3 =
+* Ajout de l'url de l'image
+* Option permettant de creer automatiquement un article en draft à partir d'une vidéo
+* Amélioration de la page player avec un player de prévisualisation pour pouvoir tester celui selectionné
 
 = 0.1.2 =
 * Gestion automatique des token unique sur les vidéos le nécessitant. L'ajout d'un attribut 'tokenfolder' à la balise [vod] permet au plugin d'identifier les vidéos utilisant cette fonctionnalité et ainsi de générer à la volé la clef unique pour chaque visiteur.
