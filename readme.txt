@@ -69,6 +69,11 @@ Cette option est configurable dans la console d'administration dans "Dossiers ->
 Une fois activé, il faut se rendre sur la page Gestion VOD > Configuration et appuyer sur le bouton "Synchronisation rapide".
 Les nouvelles vidéos seront automatiquement ajoutés avec le paramètre "tokenFolder" permettant d'identifier les vidéos nécessitant la génération d'une clef unique.
 
+== Screenshots ==
+
+1. Article créer à l'aide du plugin et dans lequel on peut retrouver une vidéo.
+2. Screenshot montrant le menu d'administration permettant de gérer ses vidéos/players/playlist
+
 == Changelog ==
 
 = 0.1.5 =
