@@ -66,6 +66,10 @@ Les nouvelles vidéos seront automatiquement ajoutés avec le paramètre "tokenF
 
 == Changelog ==
 
+= 0.1.4 =
+* Mise en place d'une premiere version du système de traduction
+* Correction dans l'appel d'une fonction de wordpress deprecated
+
 = 0.1.3 =
 * Ajout de l'url de l'image
 * Option permettant de creer automatiquement un article en draft à partir d'une vidéo

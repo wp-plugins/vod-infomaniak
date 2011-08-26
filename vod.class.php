@@ -12,11 +12,12 @@
 
 class EasyVod
 {
-	var $local_version;
-	var $plugin_url;
-	var $options;
-	var $key;
-	var $db;
+	private $local_version;
+	private $plugin_url;
+	private $options;
+	private $key;
+	private $db;
+	public $version = "0.1.4";
 
 	function EasyVod() {
 		$this->__construct();
@@ -34,6 +35,8 @@ class EasyVod
 
 	function add_filters_and_hooks() {
 		register_activation_hook(__FILE__, array(&$this, 'install_db') );
+		load_plugin_textdomain( 'vod_infomaniak', FALSE, basename( dirname( __FILE__ ) ) .'/languages' );
+		
 		wp_register_style('ui-tabs', plugins_url('vod-infomaniak/css/jquery.ui.tabs.css'));
 		
 		add_action( 'admin_footer', array(&$this, 'buildForm') );
@@ -66,15 +69,15 @@ class EasyVod
 
 	function add_menu_items() {
 		if (function_exists('add_menu_page')) {
-			add_menu_page('Gestion VOD', 'Gestion VOD', 8, __FILE__, array(&$this,'vod_management_menu'));
+			add_menu_page('Gestion VOD', 'Gestion VOD', 'edit_pages', __FILE__, array(&$this,'vod_management_menu'));
 		}
 
 		if (function_exists('add_submenu_page')) {
-			add_submenu_page(__FILE__,'Gestionnaire', 'Gestionnaire', 8, __FILE__, array(&$this,'vod_management_menu'));
-			add_submenu_page(__FILE__,'Importer une video', 'Importer une video', 8, 'import', array(&$this,'vod_upload_menu'));
-			add_submenu_page(__FILE__,'Playlist', 'Playlist', 8, 'Playlist', array(&$this,'vod_playlist_menu'));
-			add_submenu_page(__FILE__,'Player', 'Player', 8, 'Player', array(&$this,'vod_implementation_menu'));
-			add_submenu_page(__FILE__,'Configuration', 'Configuration', 8, 'configuration', array(&$this,'vod_admin_menu'));
+			add_submenu_page(__FILE__,__('Gestionnaire','vod_infomaniak'), __('Gestionnaire','vod_infomaniak'), 'edit_pages', __FILE__, array(&$this,'vod_management_menu'));
+			add_submenu_page(__FILE__,__('Importer une video','vod_infomaniak'), __('Importer une video','vod_infomaniak'), 'edit_pages', 'import', array(&$this,'vod_upload_menu'));
+			add_submenu_page(__FILE__,__('Playlist','vod_infomaniak'), __('Playlist','vod_infomaniak'), 'edit_pages', 'Playlist', array(&$this,'vod_playlist_menu'));
+			add_submenu_page(__FILE__,__('Player video','vod_infomaniak'), __('Player video','vod_infomaniak'), 'edit_pages', 'Player', array(&$this,'vod_implementation_menu'));
+			add_submenu_page(__FILE__,__('Configuration','vod_infomaniak'), __('Configuration','vod_infomaniak'), 'edit_plugins', 'configuration', array(&$this,'vod_admin_menu'));
 		}		
 	}
 	
@@ -103,7 +106,7 @@ class EasyVod
 			if( !empty($oVideo->sToken) ){
 				echo $oVideo->iFolder.";;;";
 			}
-			echo "</span><span>".ucfirst($oVideo->sName)." ( Ajout: ".date("j F Y ", strtotime($oVideo->dUpload)).", Durée: $str )</span>\n";
+			echo "</span><span>".ucfirst($oVideo->sName)." ( Ajout: ".date("j F Y ", strtotime($oVideo->dUpload)).", Duree: $str )</span>\n";
 		}
 		die();
 	}
@@ -336,7 +339,7 @@ class EasyVod
 					}
 				}
 			} catch (Exception $oException) {
-				echo "<h4 style='color: red;'>Erreur : Impossible de se connecter</h4>";
+				echo "<h4 style='color: red;'>".__('Erreur : Impossible de se connecter','vod_infomaniak').'</h4>';
 			}
 			update_option($this->key, $this->options);
 		}
@@ -396,10 +399,16 @@ class EasyVod
 		EasyVod_Display::adminMenu( $actionurl, $this->options, $site_url);
 	}
 
-	function vod_management_menu() {
+	function plugin_ready(){
 		if ( empty($this->options['vod_api_connected']) || $this->options['vod_api_connected'] == 'off' ) {
-			echo "<h2>Problème de configuration</h2><p>Veuillez-vous rendre dans <a href='admin.php?page=configuration'>Gestion VOD -> Configuration</a> afin de configurer votre compte.</p>";
-		} else {
+			echo "<h2>".__('Probleme de configuration','vod_infomaniak')."</h2><p>".__("Veuillez-vous rendre dans <a href='admin.php?page=configuration'>Gestion VOD -> Configuration</a> afin de configurer votre compte.",'vod_infomaniak').'</p>';
+			return false;
+		}
+		return true;
+	}
+	
+	function vod_management_menu() {
+		if ( $this->plugin_ready() ) {
 			if ( $_REQUEST['sAction'] == "rename" ) {
 				$oVideo = $this->db->getVideo( intval($_POST['dialog-modal-id']) );
 				if( $oVideo != false ){
@@ -430,7 +439,7 @@ class EasyVod
 
 					// Insert the post into the database
 					$id_draft = wp_insert_post( $my_post );
-					echo "<h3>Article correctement créé. Vous allez etre rediriger sur la page d'édition";
+					echo "<h3>".__('Article correctement cree. Vous allez etre rediriger sur la page d\'edition','vod_infomaniak')."</h3>";
 					echo "<script type='text/javascript'>window.location = '".admin_url('post.php?post='.$id_draft.'&action=edit')."';</script>";
 					exit;
 				}
@@ -452,15 +461,13 @@ class EasyVod
 	}
 
 	function vod_upload_menu(){
-		if ( empty($this->options['vod_api_connected']) || $this->options['vod_api_connected'] == 'off' ) {
-			echo "<h2>Problème de configuration</h2><p>Veuillez-vous rendre dans <a href='admin.php?page=configuration'>Gestion VOD -> Configuration</a> afin de configurer votre compte.</p>";
-		} else {
+		if ( $this->plugin_ready() ) {
 			require_once("vod.template.php");
 			if ( $_REQUEST['sAction'] == "popupUpload" && !empty($_REQUEST['iFolderCode']) ) {
 				//Affichage du popup d'upload				
 				$oFolder = $this->db->getFolder( $_REQUEST['iFolderCode'] );
 				if( empty($oFolder) || empty( $oFolder->sName ) ){
-					die("Il n'est pas possible d'uploader dans ce dossier.");
+					die(__("Il n'est pas possible d'uploader dans ce dossier.",'vod_infomaniak'));
 				}
 				$oApi = $this->getAPI();
 				$sToken = $oApi->initUpload( $oFolder->sPath );
@@ -470,7 +477,7 @@ class EasyVod
 				$bResult = false;				
 				$oFolder = $this->db->getFolder( $_REQUEST['iFolderCode'] );
 				if( empty($oFolder) || empty( $oFolder->sName ) ){
-					die("Il n'est pas possible d'uploader dans ce dossier.");
+					die(__("Il n'est pas possible d'uploader dans ce dossier.",'vod_infomaniak'));
 				}
 				if( $_REQUEST['submit'] == 1 ){
 					$oApi = $this->getAPI();
@@ -511,9 +518,7 @@ class EasyVod
 	}
 
 	function vod_playlist_menu(){
-		if ( empty($this->options['vod_api_connected']) || $this->options['vod_api_connected'] == 'off' ) {
-			echo "<h2>Problème de configuration</h2><p>Veuillez-vous rendre dans <a href='admin.php?page=configuration'>Gestion VOD -> Configuration</a> afin de configurer votre compte.</p>";
-		} else {
+		if ( $this->plugin_ready() ) {
 			require_once("vod.template.php");
 			$aPlaylist = $this->db->get_playlists();
 			EasyVod_Display::playlistMenu( $actionurl, $this->options, $aPlaylist );
@@ -521,9 +526,7 @@ class EasyVod
 	}
 
 	function vod_implementation_menu(){
-		if ( empty($this->options['vod_api_connected']) || $this->options['vod_api_connected'] == 'off' ) {
-			echo "<h2>Problème de configuration</h2><p>Veuillez-vous rendre dans <a href='admin.php?page=configuration'>Gestion VOD -> Configuration</a> afin de configurer votre compte.</p>";
-		} else {
+		if ( $this->plugin_ready() ) {
 			require_once("vod.template.php");
 			if (isset($_POST['submitted'])) {
 				$oPlayer = $this->db->get_player( intval($_REQUEST['selectPlayer']) );
