@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: vod\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-08-26 18:01+0200\n"
-"PO-Revision-Date: 2011-08-26 18:01+0100\n"
+"PO-Revision-Date: 2011-08-29 09:57+0100\n"
 "Last-Translator: \n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: fr_FR\n"
@@ -26,13 +26,13 @@ msgid ""
 "\t\t\t\t<li>Compatibilite avec adswizz afin d'ajouter facilement des publicites avant ou apres les videos.</li>\n"
 "\t\t\t\t<li>Et encore d'autres options a decouvrir ...</li>"
 msgstr ""
-"<li>Fonction de seek permettant de se déplacer dans une vidéo même longue quasi instantanement.</li>\n"
-"\t\t\t\t<li>Bouton permettant de changer à la volé entre les differentes qualités disponibles pour une video.</li>\n"
-"\t\t\t\t<li>Bouton d'export sur certains reseau sociaux (facebook, twitter) afin que vos vidéo soit visible par plus de monde.</li>\n"
+"<li>Fonction de seek permettant de se déplacer dans une vidéo même longue quasi instantanément.</li>\n"
+"\t\t\t\t<li>Bouton permettant de changer à la volée entre les différentes qualités disponibles pour une vidéo.</li>\n"
+"\t\t\t\t<li>Bouton d'export sur certains réseaux sociaux (facebook, twitter) afin que vos vidéos soient visibles par plus de monde.</li>\n"
 "\t\t\t\t<li>Player exportable permettant aux visiteurs de récupérer le code d'intégration et de le mettre sur leur site.</li>\n"
-"\t\t\t\t<li>Facilité de personnalisation du player via de rapides modifications (couleurs de la barre, taille de la barre, logo) ou l'utilisation d'une barre entierement personnalisée.</li>\n"
-"\t\t\t\t<li>Compatibilité avec adswizz afin de pouvoir ajouter facilement des publicites avant ou apres ses videos.</li>\n"
-"\t\t\t\t<li>Et encore d'autres options à decouvrir ...</li>"
+"\t\t\t\t<li>Facilité de personnalisation du player via de rapides modifications (couleurs de la barre, taille de la barre, logo) ou l'utilisation d'une barre entièrement personnalisée.</li>\n"
+"\t\t\t\t<li>Compatibilité avec adswizz afin de pouvoir ajouter facilement des publicités avant ou après ses vidéos.</li>\n"
+"\t\t\t\t<li>Et encore d'autres options à découvrir ...</li>"
 
 #: vod.template.php:551
 #: vod.template.php:665
@@ -71,7 +71,7 @@ msgstr ""
 
 #: vod.class.php:449
 msgid "Article correctement cree. Vous allez etre rediriger sur la page d'edition"
-msgstr "Article correctement créé. Vous allez être rediriger sur la page d'édition"
+msgstr "Article correctement créé. Vous allez être redirigé sur la page d'édition"
 
 #: vod.template.php:470
 msgid "Attention"
@@ -83,7 +83,7 @@ msgstr ""
 
 #: vod.template.php:471
 msgid "C'est une suppression definitive de la video, il n'y pas de corbeille ou de moyen de la recuperer une fois effacer."
-msgstr "C'est une suppression définitive de la vidéo, il n'y pas de corbeille ou de moyen de la recuperer une fois effacer."
+msgstr "C'est une suppression définitive de la vidéo, il n'y pas de corbeille ou de moyen de la récupérer une fois effacer."
 
 #: vod.template.php:219
 msgid "Ce plug-in vous permet d'ajouter de nouvelles videos directement depuis ce blog. Pour cela, vous n'avez qu'a choisir un dossier puis suivre les instructions"
@@ -91,7 +91,7 @@ msgstr "Ce plug-in vous permet d'ajouter de nouvelles vidéos directement depuis
 
 #: vod.template.php:409
 msgid "Cette adresse necessite une authentification."
-msgstr "Cette adresse nécéssite une authentification."
+msgstr "Cette adresse nécessite une authentification."
 
 #: vod.template.php:168
 #, php-format
@@ -202,11 +202,11 @@ msgstr ""
 
 #: vod.template.php:473
 msgid "Etes-vous sur de vouloir continuer ?"
-msgstr "Êtes-vous sur de vouloir continuer ?"
+msgstr "Êtes-vous sûr de vouloir continuer ?"
 
 #: vod.template.php:75
 msgid "Etirer la video (stretch)"
-msgstr "Etirer la vidéo (stretch)"
+msgstr "Étirer la vidéo (stretch)"
 
 #: vod.template.php:28
 msgid "Exemple"
@@ -234,7 +234,7 @@ msgstr ""
 
 #: vod.template.php:736
 msgid "Il est possible de personnaliser votre player video afin qu'ils s'integre parfaitement a votre site. Voici quelques fonctionnalites avancees qu'il propose :"
-msgstr "Il est possible de personnaliser votre player vidéo afin qu'il s'integre parfaitement à votre site. Voici quelques fonctionnalités avancées qu'il propose :"
+msgstr "Il est possible de personnaliser votre player vidéo afin qu'il s'intègre parfaitement à votre site. Voici quelques fonctionnalités avancées qu'il propose :"
 
 #: vod.class.php:477
 #: vod.class.php:487
@@ -275,7 +275,7 @@ msgstr "Intégration"
 
 #: vod.template.php:688
 msgid "Integration par defaut des videos"
-msgstr "Intégration par defaut des videos"
+msgstr "Intégration par défaut des vidéos"
 
 #: vod.template.php:345
 msgid "L'envoi doit etre effectue en moins de 4 heures"
@@ -369,7 +369,7 @@ msgstr ""
 
 #: vod.template.php:151
 msgid "Playlist recuperes"
-msgstr "Playlist récupérés"
+msgstr "Playlist récupérées"
 
 #: vod.template.php:653
 msgid "Playlists"
@@ -381,7 +381,7 @@ msgstr ""
 
 #: vod.template.php:137
 msgid "Pour fonctionner correctement, cette extension a besoin de se synchroniser regulierement avec votre compte VOD.<br/>Cela vous permet de garder une liste des players, dossiers et playlist a jour sur votre blog.<br/>Cette operation s'effectue automatiquement assez regulierement mais il est egalement possible de forcer une verification ci-dessous."
-msgstr "Pour fonctionner correctement, cette extension a besoin de se synchroniser regulierement avec votre compte VOD.<br/>Cela vous permet de garder une liste des players, dossiers et playlist à jour sur votre blog.<br/>Cette opération s'effectue automatiquement assez regulierement mais il est egalement possible de forcer la vérification via le bouton ci-dessous."
+msgstr "Pour fonctionner correctement, cette extension a besoin de se synchroniser régulièrement avec votre compte VOD.<br/>Cela vous permet de garder une liste des players, dossiers et playlist à jour sur votre blog.<br/>Cette opération s'effectue automatiquement assez régulièrement, mais il est également possible de forcer la vérification via le bouton ci-dessous"
 
 #: vod.template.php:103
 msgid ""
@@ -390,7 +390,7 @@ msgid ""
 "\t\t\t\tPour plus d'information, veuillez vous rendre dans la partie \"Configuration -> Api & Callback\" de votre administration VOD."
 msgstr ""
 "Pour fonctionner, le plugin a besoin de s'interfacer avec votre compte VOD infomaniak.<br/>\n"
-"\t\t\t\tPour des raisons de securités, il est fortement conseillé de créer un nouvel utilisateur dedié dans votre admin infomaniak avec uniquement des droits restreints sur l'API.<br/>\n"
+"\t\t\t\tPour des raisons de sécurités, il est fortement conseillé de créer un nouvel utilisateur dédié dans votre admin infomaniak avec uniquement des droits restreints sur l'API.<br/>\n"
 "\t\t\t\tPour plus d'information, veuillez-vous rendre dans la partie \"Configuration -> Api & Callback\" de votre administration VOD."
 
 #: vod.template.php:183
@@ -400,7 +400,7 @@ msgstr "Précédents envois"
 
 #: vod.template.php:478
 msgid "Previsualisation d'une video"
-msgstr ""
+msgstr "Prévisualisation d'une vidéo"
 
 #: vod.class.php:403
 msgid "Probleme de configuration"
@@ -416,7 +416,7 @@ msgstr "Résolution"
 
 #: vod.template.php:496
 msgid "Restriction d'acces"
-msgstr ""
+msgstr "Restriction d'accès"
 
 #: vod.template.php:621
 msgid "Securise avec un token"
@@ -424,7 +424,7 @@ msgstr "Securisé avec un token"
 
 #: vod.template.php:694
 msgid "Selection du player par defaut"
-msgstr "Séléction du player par defaut"
+msgstr "Sélection du player par défaut"
 
 #: vod.template.php:654
 #, php-format
@@ -441,7 +441,7 @@ msgstr "Supprimer cette vidéo"
 
 #: vod.template.php:584
 msgid "Supprimer definitivement la video"
-msgstr "Supprimer definitivement cette vidéo"
+msgstr "Supprimer définitivement cette vidéo"
 
 #: vod.template.php:462
 msgid "Supprimer une video"
@@ -522,7 +522,7 @@ msgstr "Vidéos"
 
 #: vod.template.php:139
 msgid "Videos recuperes"
-msgstr "Vidéos récupérés"
+msgstr "Vidéos récupérées"
 
 #: vod.template.php:502
 msgid "Visualiser la video"
@@ -539,5 +539,5 @@ msgstr "Voir les statistiques de cette vidéo"
 
 #: vod.template.php:468
 msgid "Vous etes sur le point de supprimer la video"
-msgstr "Vous etes sur le point de supprimer la vidéo"
+msgstr "Vous êtes sur le point de supprimer la vidéo"
 

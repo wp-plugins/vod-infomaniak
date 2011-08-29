@@ -660,6 +660,7 @@ class EasyVod_Display
 						<th width="20%"><?php _e("Nom",'vod_infomaniak'); ?></th>
 						<th width="30%"><?php _e("Description",'vod_infomaniak'); ?></th>
 						<th><?php _e("Nombre videos",'vod_infomaniak'); ?></th>
+						<th><?php _e("Duree",'vod_infomaniak'); ?></th>
 						<th><?php _e("Mode de lecture",'vod_infomaniak'); ?></th>
 						<th><?php _e("Date",'vod_infomaniak'); ?></th>
 						<th width="80px"><?php _e("Action",'vod_infomaniak'); ?></th>
@@ -671,6 +672,18 @@ class EasyVod_Display
 						<td><img src="<?php echo plugins_url('vod-infomaniak/img/ico-display-list.png'); ?>" style="vertical-align:bottom; padding: 0px 5px;"/> <?php echo ucfirst($oPlaylist->sPlaylistName); ?></td>
 						<td><?php echo ucfirst($oPlaylist->sPlaylistDescription); ?></td>
 						<td><?php echo $oPlaylist->iTotal; ?></td>
+						<?php 
+							$duration = intval($oPlaylist->iTotalDuration/100);
+							$hour = intval($duration/3600);
+							$min = intval($duration/60)%60;
+							$sec = intval($duration)%60;
+							
+							$str = "";
+							$str .= $hour>0 ? $hour."h. " : '';
+							$str .= $min>0 ? $min."m. " : '';
+							$str .= $sec>0 ? $sec."s." : '';
+						?>
+						<td><?php echo $str; ?></td>
 						<td><?php echo $oPlaylist->sMode; ?></td>
 						<td><?php echo $oPlaylist->dCreated; ?></td>
 						<td>

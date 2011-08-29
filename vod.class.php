@@ -266,7 +266,7 @@ class EasyVod
 				$this->db->clean_playlists();				
 				$aListPlaylist = $oApi->getPlaylists();
 				foreach( $aListPlaylist as $oPlaylist ){
-					$this->db->insert_playlist( $oPlaylist['iPlaylistCode'], $oPlaylist['sPlaylistName'], $oPlaylist['sPlaylistDescription'], $oPlaylist['iTotal'], $oPlaylist['sMode'], $oPlaylist['dCreated'] );
+					$this->db->insert_playlist( $oPlaylist['iPlaylistCode'], $oPlaylist['sPlaylistName'], $oPlaylist['sPlaylistDescription'], $oPlaylist['iTotal'], $oPlaylist['sMode'], $oPlaylist['dCreated'], $oPlaylist['iTotalDuration'] );
 				}
 			}
 
@@ -356,14 +356,14 @@ class EasyVod
 			$this->db->clean_folders();				
 			$aListFolder = $oApi->getFolders();
 			foreach( $aListFolder as $oFolder ){
-				$this->db->insert_folder( $oFolder['iFolderCode'], $oFolder['sFolderPath'], $oFolder['sFolderName'] );
+				$this->db->insert_folder( $oFolder['iFolderCode'], $oFolder['sFolderPath'], $oFolder['sFolderName'], $oFolder['sAccess'], $oFolder['sToken'] );
 			}
 
 			//Update des playlist
 			$this->db->clean_playlists();				
 			$aListPlaylist = $oApi->getPlaylists();
 			foreach( $aListPlaylist as $oPlaylist ){
-				$this->db->insert_playlist( $oPlaylist['iPlaylistCode'], $oPlaylist['sPlaylistName'], $oPlaylist['sPlaylistDescription'], $oPlaylist['iTotal'], $oPlaylist['sMode'], $oPlaylist['dCreated'] );
+				$this->db->insert_playlist( $oPlaylist['iPlaylistCode'], $oPlaylist['sPlaylistName'], $oPlaylist['sPlaylistDescription'], $oPlaylist['iTotal'], $oPlaylist['sMode'], $oPlaylist['dCreated'], $oPlaylist['iTotalDuration'] );
 			}
 
 			$gmtime = time() - (int)substr(date('O'),0,3)*60*60;
@@ -693,9 +693,9 @@ class EasyVod_db
 		return $wpdb->query("DELETE FROM ".$this->db_table_playlist);
 	}
 
-	function insert_playlist( $iPlaylistCode, $sPlaylistName, $sPlaylistDescription, $iTotal, $sMode, $dCreated ) {
+	function insert_playlist( $iPlaylistCode, $sPlaylistName, $sPlaylistDescription, $iTotal, $sMode, $dCreated, $iTotalDuration ) {
 		global $wpdb;
-		$wpdb->insert( $this->db_table_playlist, array( 'iPlaylistCode' => $iPlaylistCode, 'sPlaylistName' => $sPlaylistName, 'sPlaylistDescription' => $sPlaylistDescription, 'iTotal' => $iTotal, 'sMode' => $sMode, 'dCreated' => $dCreated ) );
+		$wpdb->insert( $this->db_table_playlist, array( 'iPlaylistCode' => $iPlaylistCode, 'sPlaylistName' => $sPlaylistName, 'sPlaylistDescription' => $sPlaylistDescription, 'iTotal' => $iTotal, 'sMode' => $sMode, 'dCreated' => $dCreated, 'iTotalDuration' => $iTotalDuration ) );
 	}
 
 	function count_playlists() {
