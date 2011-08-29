@@ -82,21 +82,21 @@ Les nouvelles vidéos seront automatiquement ajoutés avec le paramètre "tokenF
 * Correction d'orthographe sur plusieurs phrases
 
 = 0.1.6 =
-* Reorganisation du menu un peu bordelique
+* Réorganisation du menu un peu bordelique
 * Snapshot de prévisualisation
 * Fix d'un bug d'affichage en 1024
 
 = 0.1.5 =
-* Correction concernant l'ecrite d'un post lorsque la vidéo nécéssite un token
+* Correction concernant l'écriture automatique d'un post lorsque la vidéo nécéssite un token
 * Correction du message indiquant des géolocalisation sur certaines vidéos n'en ayant pas
 
 = 0.1.4 =
-* Mise en place d'une premiere version du système de traduction
+* Mise en place d'une première version du système de traduction
 * Correction dans l'appel d'une fonction de wordpress deprecated
 
 = 0.1.3 =
 * Ajout de l'url de l'image
-* Option permettant de creer automatiquement un article en draft à partir d'une vidéo
+* Option permettant de créer automatiquement un article en draft à partir d'une vidéo
 * Amélioration de la page player avec un player de prévisualisation pour pouvoir tester celui selectionné
 
 = 0.1.2 =
