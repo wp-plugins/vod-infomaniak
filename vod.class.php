@@ -17,20 +17,21 @@ class EasyVod
 	private $options;
 	private $key;
 	private $db;
-	public $version = "0.1.6";
+	public $version = "0.2";
 
 	function EasyVod() {
 		$this->__construct();
 	}
 	
 	function __construct() {
-		$this->local_version = '0.1';
+		$this->local_version = $this->version;
 		$this->key = 'vod_infomaniak';
 		$this->options=$this->get_options();
 		$this->add_filters_and_hooks();
 		$this->db = new EasyVod_db();
 		$this->auto_sync = true;
-		$this->auto_sync_delay = 3500;
+		$this->auto_sync_delay = 3600;
+		define("SALT", "SALT");
 	}
 
 	function add_filters_and_hooks() {
@@ -47,7 +48,6 @@ class EasyVod
 		add_action( 'wp_ajax_vodsearchvideo', array(&$this, 'searchVideo') );
 		add_action( 'wp_ajax_vodsearchplaylist', array(&$this, 'searchPlaylist') );
 		add_action( 'template_redirect', array(&$this, 'vod_template_redirect'));
-		add_action( 'vod_cron_hourly', 'hourlyEvent');
 
 		add_filter('the_content', array(&$this, 'check'), 100);
 		add_filter('the_excerpt', array(&$this, 'check'), 100);
@@ -65,21 +65,16 @@ class EasyVod
 	
 	function install_db() {
 		$this->db->install_db();
-		wp_schedule_event(time(), 'hourly', 'vod_cron_hourly');
 		$this->fastSynchro();
 	}
 	
-	function uninstall_db(){
-		wp_clear_scheduled_hook('vod_cron_hourly');
-	}
-	
-	function hourlyEvent(){
-		if( $this->auto_sync ){
-			$this->checkAutoUpdate();
-		}
-	}
+	function uninstall_db(){}
 	
 	function add_menu_items() {
+		if( $this->auto_sync ) {
+			$this->checkAutoUpdate();
+		}
+		
 		if (function_exists('add_menu_page')) {
 			add_menu_page(__('Videos','vod_infomaniak'), __('Videos','vod_infomaniak'), 'edit_pages', __FILE__, array(&$this,'vod_management_menu'));
 		}
@@ -305,7 +300,7 @@ class EasyVod
 				$isSynchro = false;
 				$iPage = 0;
 				while( !$isSynchro ){
-					$aVideos = $oApi->getLastVideo(50, $iPage*50);
+					$aVideos = $oApi->getLastVideo(10, $iPage*10);
 					$iVideo = 0;
 					while( !$isSynchro && $iVideo < count($aVideos) ){
 						$oVideo = $aVideos[$iVideo];
@@ -439,49 +434,52 @@ class EasyVod
 	
 	function vod_management_menu() {
 		if ( $this->plugin_ready() ) {
-			if ( $_REQUEST['sAction'] == "rename" ) {
-				$oVideo = $this->db->getVideo( intval($_POST['dialog-modal-id']) );
-				if( $oVideo != false ){
-					$oApi = $this->getAPI();
-					$oApi->renameVideo( $oVideo->iFolder, $oVideo->sServerCode, $_POST['dialog-modal-name']);
-					$this->db->rename_video(intval($_POST['dialog-modal-id']), $_POST['dialog-modal-name']);
-					echo "<script>";
-					echo "jQuery(document).ready(function() {";
-					echo "	openVodPopup('". $oVideo->iVideo ."', '". $_POST['dialog-modal-name'] ."','". $oVideo->sPath.$oVideo->sServerCode."', '".strtolower($oVideo->sExtension)."');";
-					echo "});";
-					echo "</script>";
-				}
-			} else if ( $_REQUEST['sAction'] == "delete" ) {
-				$oVideo = $this->db->getVideo( intval($_POST['dialog-confirm-id']) );
-				if( $oVideo != false ){
-					$oApi = $this->getAPI();
-					$oApi->deleteVideo( $oVideo->iFolder, $oVideo->sServerCode );
-					$this->db->delete_video(intval($_POST['dialog-confirm-id']));
-				}
-			} else if ( $_REQUEST['sAction'] == "post" ){
-				$oVideo = $this->db->getVideo( intval($_POST['dialog-post-id']) );
-				if( $oVideo != false ){
-					$sBalise = "vod";
-					$oFolder = $this->db->getFolder( $oVideo->iFolder );
-					if( $oFolder != false ){
-						if( !empty($oFolder->sToken) ){
-							$sBalise = "vod tokenfolder='".$oVideo->iFolder."'";
-						}
+			if ( isset($_REQUEST['sAction']) ){
+				if ( $_REQUEST['sAction'] == "rename" ) {
+					$oVideo = $this->db->getVideo( intval($_POST['dialog-modal-id']) );
+					if( $oVideo != false ){
+						$oApi = $this->getAPI();
+						$oApi->renameVideo( $oVideo->iFolder, $oVideo->sServerCode, $_POST['dialog-modal-name']);
+						$this->db->rename_video(intval($_POST['dialog-modal-id']), $_POST['dialog-modal-name']);
+						echo "<script>";
+						echo "jQuery(document).ready(function() {";
+						echo "	openVodPopup('". $oVideo->iVideo ."', '". $_POST['dialog-modal-name'] ."','". $oVideo->sPath.$oVideo->sServerCode."', '".strtolower($oVideo->sExtension)."');";
+						echo "});";
+						echo "</script>";
 					}
-					
-					// Create post object
-					$my_post = array(
-						'post_title' => $oVideo->sName,
-						'post_content' => '['.$sBalise.']'.$oVideo->sPath.$oVideo->sServerCode.".".strtolower($oVideo->sExtension).'[/vod]'
-					);
-
-					// Insert the post into the database
-					$id_draft = wp_insert_post( $my_post );
-					echo "<h3>".__('Article correctement cree. Vous allez etre rediriger sur la page d\'edition','vod_infomaniak')."</h3>";
-					echo "<script type='text/javascript'>window.location = '".admin_url('post.php?post='.$id_draft.'&action=edit')."';</script>";
-					exit;
+				} else if ( $_REQUEST['sAction'] == "delete" ) {
+					$oVideo = $this->db->getVideo( intval($_POST['dialog-confirm-id']) );
+					if( $oVideo != false ){
+						$oApi = $this->getAPI();
+						$oApi->deleteVideo( $oVideo->iFolder, $oVideo->sServerCode );
+						$this->db->delete_video(intval($_POST['dialog-confirm-id']));
+					}
+				} else if ( $_REQUEST['sAction'] == "post" ){
+					$oVideo = $this->db->getVideo( intval($_POST['dialog-post-id']) );
+					if( $oVideo != false ){
+						$sBalise = "vod";
+						$oFolder = $this->db->getFolder( $oVideo->iFolder );
+						if( $oFolder != false ){
+							if( !empty($oFolder->sToken) ){
+								$sBalise = "vod tokenfolder='".$oVideo->iFolder."'";
+							}
+						}
+						
+						// Create post object
+						$my_post = array(
+							'post_title' => $oVideo->sName,
+							'post_content' => '['.$sBalise.']'.$oVideo->sPath.$oVideo->sServerCode.".".strtolower($oVideo->sExtension).'[/vod]'
+						);
+	
+						// Insert the post into the database
+						$id_draft = wp_insert_post( $my_post );
+						echo "<h3>".__('Article correctement cree. Vous allez etre rediriger sur la page d\'edition','vod_infomaniak')."</h3>";
+						echo "<script type='text/javascript'>window.location = '".admin_url('post.php?post='.$id_draft.'&action=edit')."';</script>";
+						exit;
+					}
 				}
 			}
+			
 			$iPage = !empty($_REQUEST['p']) ? intval( $_REQUEST['p'] ) : 1;
 			$iLimit = 20;
 			$iVideoTotal = $this->db->count_video();
@@ -501,7 +499,7 @@ class EasyVod
 	function vod_upload_menu() {
 		if ( $this->plugin_ready() ) {
 			require_once("vod.template.php");
-			if ( $_REQUEST['sAction'] == "popupUpload" && !empty($_REQUEST['iFolderCode']) ) {
+			if ( isset($_REQUEST['sAction']) && $_REQUEST['sAction'] == "popupUpload" && !empty($_REQUEST['iFolderCode']) ) {
 				//Affichage du popup d'upload				
 				$oFolder = $this->db->getFolder( $_REQUEST['iFolderCode'] );
 				if( empty($oFolder) || empty( $oFolder->sName ) ){
@@ -511,7 +509,7 @@ class EasyVod
 				$sToken = $oApi->initUpload( $oFolder->sPath );
 				delete_transient( 'vod_last_import' );
 				EasyVod_Display::uploadPopup( $sToken, $oFolder );
-			} else if( $_REQUEST['sAction'] == "popupImport" && !empty($_REQUEST['iFolderCode']) ) {
+			} else if( isset($_REQUEST['sAction']) && $_REQUEST['sAction'] == "popupImport" && !empty($_REQUEST['iFolderCode']) ) {
 				//Affichage du popup d'import
 				$bResult = false;				
 				$oFolder = $this->db->getFolder( $_REQUEST['iFolderCode'] );
@@ -561,6 +559,7 @@ class EasyVod
 		if ( $this->plugin_ready() ) {
 			require_once("vod.template.php");
 			$aPlaylist = $this->db->get_playlists();
+			$actionurl = $_SERVER['REQUEST_URI'];
 			EasyVod_Display::playlistMenu( $actionurl, $this->options, $aPlaylist );
 		}
 	}
@@ -580,6 +579,7 @@ class EasyVod
 				}
 			}
 			$aPlayers = $this->db->get_players();
+			$actionurl = $_SERVER['REQUEST_URI'];
 			EasyVod_Display::implementationMenu( $actionurl, $this->options, $aPlayers );
 		}
 	}
@@ -589,7 +589,7 @@ class EasyVod
 		return md5( $sToken . $sVideoName . $_SERVER['REMOTE_ADDR'] . date("YmdH", $iTime) ); 	
 	}
 	
-	function getAPI() {		
+	function getAPI() {
 		require_once('vod.api.php');
 		$sPassword = $this->decrypt($this->options['vod_api_password']);		
 		return new vod_api($this->options['vod_api_login'], $sPassword, $this->options['vod_api_id']);

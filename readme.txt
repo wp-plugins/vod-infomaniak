@@ -76,6 +76,10 @@ Les nouvelles vidéos seront automatiquement ajoutés avec le paramètre "tokenF
 
 == Changelog ==
 
+= 0.2 =
+* Modification du nouveau système de synchro pour qu'il se lance plus régulierement contrairement à wp_schedule_event()
+* Suppression des notices pouvant être indiqués par apache
+
 = 0.1.9 =
 * Fix du callback qui ne fonctionnait plus depuis la 1.0.7
 

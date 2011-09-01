@@ -822,6 +822,7 @@ class EasyVod_Display
 	static function buildPagination( $iCurrentPage, $iLimit, $iTotal ){
 		$iTotalPage = $iTotal;
 		$iPageTotal = floor(($iTotal-1) / $iLimit) + 1; 
+ 		$page_list = "";
  		
 		if (($iCurrentPage != 1) && ($iCurrentPage)) {
 			$page_list .= "  <a href=\" ".$_SERVER['PHP_SELF']."?page=vod-infomaniak/vod.class.php&p=1\" title=\"First Page\">«</a> ";
