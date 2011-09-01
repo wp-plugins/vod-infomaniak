@@ -61,12 +61,16 @@ class EasyVod_Display
 						<label><?php _e('Player choisi','vod_infomaniak');?></label>		
 						<select id="dialog-player">
 							<?php 
-								foreach( $aPlayers as $player ){
-									$selected = "";
-									if( $options['player'] == $player->iPlayer ){
-										$selected = 'selected="selected"';
+								if( empty($aPlayers) ) {
+									echo "<option value='0'>". __("Aucun player disponible",'vod_infomaniak') ."</option>";	
+								} else {
+									foreach( $aPlayers as $player ){
+										$selected = "";
+										if( $options['player'] == $player->iPlayer ){
+											$selected = 'selected="selected"';
+										}
+										echo "<option value='".$player->iPlayer."' $selected>".ucfirst($player->sName)."</option>";
 									}
-									echo "<option value='".$player->iPlayer."' $selected>".ucfirst($player->sName)."</option>";
 								}
 							?>
 						</select>
@@ -222,8 +226,12 @@ class EasyVod_Display
 			<select id="uploadSelectFolder" onchange="changeFolder();" onkeyup="changeFolder();">
 				<option value="-1" selected="selected">-- Dossier d'envoi --</option>
 			<?php 
-				foreach( $aFolders as $oFolder ){
-					echo "<option value='".$oFolder->iFolder."'>".__('Dossier','vod_infomaniak')." : /".$oFolder->sPath." , ".__('Nom','vod_infomaniak')." : ".$oFolder->sName."</option>";
+				if( empty($aFolders) ) {
+					echo "<option value='0'>". __("Aucun dossier disponible",'vod_infomaniak') ."</option>";	
+				} else {
+					foreach( $aFolders as $oFolder ){
+						echo "<option value='".$oFolder->iFolder."'>".__('Dossier','vod_infomaniak')." : /".$oFolder->sPath." , ".__('Nom','vod_infomaniak')." : ".$oFolder->sName."</option>";
+					}
 				}
 			?>
 			</select>
@@ -237,6 +245,12 @@ class EasyVod_Display
 		</p>
 
 		<div id="tabImport"><?php echo $sTab; ?></div>
+
+		<div id="dialog-message-upload" title="<?php _e('Envoi termine'); ?>" style="display:none;">
+			<p style="padding-left: 10px;">
+				<?php _e("L'ajout de cette video a correctement ete pris en compte.<br/>Vous pouvez retrouver l'avancement de cette conversion video dans le tableau ci-dessous."); ?>
+			</p>
+		</div>
 
 		<script type="text/javascript">
 			changeFolder = function(){
@@ -318,6 +332,15 @@ class EasyVod_Display
 				}
 
 				uploadFinish = function(){
+					jQuery( "#dialog-message-upload" ).dialog({
+						modal: true,
+						width: 600,
+						buttons: {
+							Ok: function() {
+								jQuery( this ).dialog( "close" );
+							}
+						}
+					});
 					iAjaxRefresh = 0;
 					update_vod_import();
 				}
@@ -328,10 +351,11 @@ class EasyVod_Display
 		<?php
 	}
 	
-	static function uploadPopup( $token, $oFolder ){
+	static function uploadPopup( $token, $oFolder, $bResult=false ){
 		?>
 		<script type="text/javascript" charset="iso-8859-1" src="http://ajax.googleapis.com/ajax/libs/swfobject/2.1/swfobject.js" ></script>
 		<script type="text/javascript" charset="iso-8859-1" src="http://vod.infomaniak.com/apiUpload/flashUpload.js" ></script>
+		
 		<h2><?php _e("Utilitaire d'envoi de video",'vod_infomaniak'); ?></h2>
 		<p>
 			<label style="font-weight: bold"><?php _e("Dossier d'envoi",'vod_infomaniak'); ?> :</label>
@@ -376,10 +400,10 @@ class EasyVod_Display
 		<?php
 	}
 
-	static function importPopup( $action_url, $oFolder, $bResult ){
+	static function importPopup( $action_url, $oFolder, $bResult=false ){
 		?>
 		<h2><?php _e("Utilitaire d'importation de video",'vod_infomaniak'); ?></h2>
-		
+
 		<form name="adminForm" action="<?php echo $action_url; ?>" method="post">
 			<input type="hidden" name="submit" value="1"/>
 			<input type="hidden" name="sAction" value="popupImport"/>
@@ -553,6 +577,9 @@ class EasyVod_Display
 			</thead>
 			<tbody>
 				<?php
+				if( empty($aVideos) ) {
+					echo "<option value='0'>". __("Aucune video disponible",'vod_infomaniak') ."</option>";	
+				} else {
 					foreach( $aVideos as $oVideo ){
 				?>
 				<tr>
@@ -569,7 +596,10 @@ class EasyVod_Display
 						<a href="javascript:; return false;" onclick="confirmVodDelete('<?php echo $oVideo->iVideo; ?>', '<?php echo $oVideo->sName; ?>');"><img src="<?php echo plugins_url('vod-infomaniak/img/ico-delete.png'); ?>" alt="<?php _e("Supprimer cette video",'vod_infomaniak'); ?>"/></a>
 					</td>
 				</tr>
-				<?php	} ?>
+				<?php
+					} 
+				}
+				?>
 			</tbody>
 			<script>
 				confirmVodDelete = function( iVideo, sTitle ){
@@ -667,10 +697,15 @@ class EasyVod_Display
 					</tr>
 				</thead>
 				<tbody>
-					<?php foreach( $aPlaylist as $oPlaylist ){ ?>
+					<?php 
+					if( empty($aPlaylist) ) {
+						echo "<h3>". __("Aucune playlist disponible",'vod_infomaniak') ."</h3>";	
+					} else {
+
+						foreach( $aPlaylist as $oPlaylist ){ ?>
 					<tr>
 						<td><img src="<?php echo plugins_url('vod-infomaniak/img/ico-display-list.png'); ?>" style="vertical-align:bottom; padding: 0px 5px;"/> <?php echo ucfirst($oPlaylist->sPlaylistName); ?></td>
-						<td><?php echo ucfirst($oPlaylist->sPlaylistDescription); ?></td>
+						<td><?php echo !empty($oPlaylist->sPlaylistDescription) ? ucfirst($oPlaylist->sPlaylistDescription) : "&nbsp;"; ?> </td>
 						<td><?php echo $oPlaylist->iTotal; ?></td>
 						<?php 
 							$duration = intval($oPlaylist->iTotalDuration/100);
@@ -683,14 +718,17 @@ class EasyVod_Display
 							$str .= $min>0 ? $min."m. " : '';
 							$str .= $sec>0 ? $sec."s." : '';
 						?>
-						<td><?php echo $str; ?></td>
+						<td><?php echo !empty($str) ? $str : "&nbsp;"; ?> </td>
 						<td><?php echo $oPlaylist->sMode; ?></td>
 						<td><?php echo $oPlaylist->dCreated; ?></td>
 						<td>
 							<a href="https://statslive.infomaniak.com/vod/playlists.php?iVodCode=<?php echo $options['vod_api_icodeservice'];?>&sAction=showPlaylist&iPlaylistCode=<?php echo $oPlaylist->iPlaylistCode; ?>" target="_blank"><img src="<?php echo plugins_url('vod-infomaniak/img/ico-information.png'); ?>" alt="<?php _e("Administrer cette playlist",'vod_infomaniak'); ?>"/></a>
 						</td>
 					</tr>
-					<?php } ?>
+					<?php
+						} 
+					} 
+					?>
 				</tbody>
 			</table>
 		<?php
@@ -706,19 +744,27 @@ class EasyVod_Display
 					<td style="vertical-align: top">
 						<label><?php _e("Selection du player par defaut",'vod_infomaniak'); ?> :</label><br/>
 						<select id="selectPlayer" name="selectPlayer" onchange="PlayerInfo();" onkeyup="PlayerInfo();">
-						<?php 
-							foreach( $aPlayers as $player ){
-								$selected = "";
-								if( $options['player'] == $player->iPlayer ){
-									$selected = 'selected="selected"';
+						<?php
+							if( empty($aPlayers) ) {
+								echo "<option value='0'>". __("Aucun player disponible",'vod_infomaniak') ."</option>";	
+							} else {
+								foreach( $aPlayers as $player ){
+									$selected = "";
+									if( $options['player'] == $player->iPlayer ){
+										$selected = 'selected="selected"';
+									}
+									echo "<option value='".$player->iPlayer."' $selected>".ucfirst($player->sName)."</option>";
 								}
-								echo "<option value='".$player->iPlayer."' $selected>".ucfirst($player->sName)."</option>";
 							}
 						?>
 						</select> <input type="submit" name="Submit" value="<?php _e("Choisir ce player",'vod_infomaniak'); ?>" />
 					
 						<p><?php _e("Informations sur ce Player",'vod_infomaniak'); ?> :</p>
-						<?php foreach( $aPlayers as $player ){ ?>
+						<?php 
+						if( empty($aPlayers) ) {
+							echo "<h3>". __("Aucun player disponible",'vod_infomaniak') ."</h3>";	
+						} else {
+							foreach( $aPlayers as $player ){ ?>
 							<div id="player-info-<?php echo $player->iPlayer; ?>" class="player-info" style="padding: 5px 15px; border: 1px solid #EEE; display:none; width: 500px;">
 								
 								<ul>
@@ -733,7 +779,10 @@ class EasyVod_Display
 									<a id="dialog-modal-admin" href="https://statslive.infomaniak.com/vod/players/playerConfig.php?iVodCode=<?php echo $options['vod_api_icodeservice'];?>&iPlayerCode=<?php echo $player->iPlayer; ?>" target="_blank" style="text-decoration: none; color:#444444; font-weight: bold;"><img src="<?php echo plugins_url('vod-infomaniak/img/ico-edit.png'); ?>" alt="<?php _e("Modifier ce Player",'vod_infomaniak'); ?>" style="vertical-align:bottom"/> <?php _e("Modifier ce Player",'vod_infomaniak'); ?></a>
 								</div>
 							</div>
-						<?php } ?>
+						<?php 
+							}
+						}
+						?>
 					</td>
 					<td style="vertical-align: top; padding-left: 25px;">
 						<iframe id="player-demo-video" frameborder="0" width="480" height="360" src="#"></iframe>

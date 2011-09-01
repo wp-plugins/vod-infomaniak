@@ -76,6 +76,10 @@ Les nouvelles vidéos seront automatiquement ajoutés avec le paramètre "tokenF
 
 == Changelog ==
 
+= 0.1.8 =
+* Correction d'un bug d'affichage dans le cas de playlist incomplète
+* Nouveau système de synchro automatique des videos plus efficace
+
 = 0.1.7 =
 * Fix d'un bug durant la synchro forcé des dossiers
 * Récuperation et affichage de la durée des playlist

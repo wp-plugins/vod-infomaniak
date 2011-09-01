@@ -30,11 +30,13 @@ class EasyVod
 		$this->add_filters_and_hooks();
 		$this->db = new EasyVod_db();
 		$this->auto_sync = true;
-		$this->auto_sync_delay = 3*3600;
+		$this->auto_sync_delay = 3500;
 	}
 
 	function add_filters_and_hooks() {
 		register_activation_hook(__FILE__, array(&$this, 'install_db') );
+		register_deactivation_hook(__FILE__, array(&$this, 'uninstall_db'));
+		
 		load_plugin_textdomain( 'vod_infomaniak', FALSE, basename( dirname( __FILE__ ) ) .'/languages' );
 		
 		wp_register_style('ui-tabs', plugins_url('vod-infomaniak/css/jquery.ui.tabs.css'));
@@ -44,7 +46,8 @@ class EasyVod
 		add_action( 'wp_ajax_importvod', array(&$this, 'printLastImport') );
 		add_action( 'wp_ajax_vodsearchvideo', array(&$this, 'searchVideo') );
 		add_action( 'wp_ajax_vodsearchplaylist', array(&$this, 'searchPlaylist') );
-		add_action( 'template_redirect', 'vod_template_redirect');
+		add_action( 'template_redirect', array(&$this, 'vod_template_redirect'));
+		add_action( 'vod_cron_hourly', 'hourlyEvent');
 
 		add_filter('the_content', array(&$this, 'check'), 100);
 		add_filter('the_excerpt', array(&$this, 'check'), 100);
@@ -62,11 +65,20 @@ class EasyVod
 	
 	function install_db() {
 		$this->db->install_db();
+		wp_schedule_event(time(), 'hourly', 'vod_cron_hourly');
+		$this->fastSynchro();
+	}
+	
+	function uninstall_db(){
+		wp_clear_scheduled_hook('vod_cron_hourly');
+	}
+	
+	function hourlyEvent(){
 		if( $this->auto_sync ){
 			$this->checkAutoUpdate();
 		}
 	}
-
+	
 	function add_menu_items() {
 		if (function_exists('add_menu_page')) {
 			add_menu_page(__('Videos','vod_infomaniak'), __('Videos','vod_infomaniak'), 'edit_pages', __FILE__, array(&$this,'vod_management_menu'));
@@ -78,35 +90,39 @@ class EasyVod
 			add_submenu_page(__FILE__,__('Player video','vod_infomaniak'), __('Player video','vod_infomaniak'), 'edit_pages', 'Player', array(&$this,'vod_implementation_menu'));
 			add_submenu_page(__FILE__,__('Playlist','vod_infomaniak'), __('Playlist','vod_infomaniak'), 'edit_pages', 'Playlist', array(&$this,'vod_playlist_menu'));
 			add_submenu_page(__FILE__,__('Configuration','vod_infomaniak'), __('Configuration','vod_infomaniak'), 'edit_plugins', 'configuration', array(&$this,'vod_admin_menu'));
-		}		
+		}
 	}
 	
 	function searchPlaylist() {
 		$aResult = $this->db->search_playlist($_REQUEST['q'], 12);
-		foreach( $aResult as $oPlaylist ){
-			echo "<span style='display:none'>".$oPlaylist->iPlaylistCode.";;;</span><span>".$oPlaylist->sPlaylistName."</span>\n";
+		if( !empty($aResult) ){
+			foreach( $aResult as $oPlaylist ){
+				echo "<span style='display:none'>".$oPlaylist->iPlaylistCode.";;;</span><span>".$oPlaylist->sPlaylistName."</span>\n";
+			}
 		}
 		die();
 	}
 
 	function searchVideo() {
 		$aResult = $this->db->search_videos($_REQUEST['q'], 12);
-		foreach( $aResult as $oVideo ){
-			$str = "";
-			$duration = intval($oVideo->iDuration/100);
-			$hour = intval($duration/3600);
-			$min = intval($duration/60)%60;
-			$sec = intval($duration)%60;
-			
-			$str .= $hour>0 ? $hour."h. " : '';
-			$str .= $min>0 ? $min."m. " : '';
-			$str .= $sec>0 ? $sec."s." : '';
-			
-			echo "<span style='display:none'>".$oVideo->sPath.$oVideo->sServerCode.".".strtolower($oVideo->sExtension).";;;";
-			if( !empty($oVideo->sToken) ){
-				echo $oVideo->iFolder.";;;";
+		if( !empty($aResult) ){
+			foreach( $aResult as $oVideo ){
+				$str = "";
+				$duration = intval($oVideo->iDuration/100);
+				$hour = intval($duration/3600);
+				$min = intval($duration/60)%60;
+				$sec = intval($duration)%60;
+				
+				$str .= $hour>0 ? $hour."h. " : '';
+				$str .= $min>0 ? $min."m. " : '';
+				$str .= $sec>0 ? $sec."s." : '';
+				
+				echo "<span style='display:none'>".$oVideo->sPath.$oVideo->sServerCode.".".strtolower($oVideo->sExtension).";;;";
+				if( !empty($oVideo->sToken) ){
+					echo $oVideo->iFolder.";;;";
+				}
+				echo "</span><span>".ucfirst($oVideo->sName)." ( Ajout: ".date("j F Y ", strtotime($oVideo->dUpload)).", Duree: $str )</span>\n";
 			}
-			echo "</span><span>".ucfirst($oVideo->sName)." ( Ajout: ".date("j F Y ", strtotime($oVideo->dUpload)).", Duree: $str )</span>\n";
 		}
 		die();
 	}
@@ -237,13 +253,19 @@ class EasyVod
 
 	function checkAutoUpdate() {
 		$gmtime = time() - (int)substr(date('O'),0,3)*60*60;
-		if ( $this->options['vod_api_lastUpdate'] < $gmtime - $this->auto_sync_delay ) {			
-			$oApi = $this->getAPI();
-			
-			//Update des players
-			if ( $oApi->playerModifiedSince( $this->options['vod_api_lastUpdate'] ) ) {
-				$this->db->clean_players();				
-				$aListPlayer = $oApi->getPlayers();
+		if ( $this->options['vod_api_lastUpdate'] < $gmtime - $this->auto_sync_delay ) {
+			$this->fastSynchro();
+		}
+	}
+
+	function fastSynchro( $updateVideo = true ){
+		$oApi = $this->getAPI();
+		
+		//Update des players
+		if ( $oApi->playerModifiedSince( $this->options['vod_api_lastUpdate'] ) ) {
+			$this->db->clean_players();				
+			$aListPlayer = $oApi->getPlayers();
+			if( !empty($aListPlayer) ){
 				foreach( $aListPlayer as $oPlayer ){
 					if( empty( $this->options['player'] ) ) {
 						$this->options['player'] = $oPlayer['iPlayerCode'];
@@ -251,35 +273,81 @@ class EasyVod
 					$this->db->insert_player( $oPlayer['iPlayerCode'], $oPlayer['sName'], $oPlayer['iWidth'], $oPlayer['iHeight'], $oPlayer['bAutoStart'], $oPlayer['bLoop'], $oPlayer['dEdit'], $oPlayer['bSwitchQuality'] );
 				}
 			}
+		}
 
-			//Update des folders
-			if ( $oApi->folderModifiedSince( $this->options['vod_api_lastUpdate'] ) ) {
-				$this->db->clean_folders();				
-				$aListFolder = $oApi->getFolders();
+		//Update des folders
+		if ( $oApi->folderModifiedSince( $this->options['vod_api_lastUpdate'] ) ) {
+			$this->db->clean_folders();				
+			$aListFolder = $oApi->getFolders();
+			if( !empty($aListFolder) ){
 				foreach( $aListFolder as $oFolder ){
 					$this->db->insert_folder( $oFolder['iFolderCode'], $oFolder['sFolderPath'], $oFolder['sFolderName'], $oFolder['sAccess'], $oFolder['sToken'] );
 				}
 			}
+		}
 
-			//Update des playlist
-			if ( $oApi->playlistModifiedSince( $this->options['vod_api_lastUpdate'] ) ) {
-				$this->db->clean_playlists();				
-				$aListPlaylist = $oApi->getPlaylists();
+		//Update des playlist
+		if ( $oApi->playlistModifiedSince( $this->options['vod_api_lastUpdate'] ) ) {
+			$this->db->clean_playlists();				
+			$aListPlaylist = $oApi->getPlaylists();
+			if( !empty($aListPlaylist) ){
 				foreach( $aListPlaylist as $oPlaylist ){
 					$this->db->insert_playlist( $oPlaylist['iPlaylistCode'], $oPlaylist['sPlaylistName'], $oPlaylist['sPlaylistDescription'], $oPlaylist['iTotal'], $oPlaylist['sMode'], $oPlaylist['dCreated'], $oPlaylist['iTotalDuration'] );
 				}
 			}
+		}
 
-			//Update de la synchro
-			$serveurTime = $oApi->time();
-			$localTime = time();
-			$diff = ($serveurTime -  $localTime);
-			$this->options['vod_api_servTime'] = $diff;
-			$this->options['vod_api_lastUpdate'] = $gmtime;
-			update_option($this->key, $this->options);
+		//Update de la synchro video
+		if( $updateVideo ){
+			$lastVideo = $this->db->getLastVideo();
+			if( !empty($lastVideo) ){
+				$lastDateImport = strtotime($lastVideo->dUpload);
+				$isSynchro = false;
+				$iPage = 0;
+				while( !$isSynchro ){
+					$aVideos = $oApi->getLastVideo(50, $iPage*50);
+					$iVideo = 0;
+					while( !$isSynchro && $iVideo < count($aVideos) ){
+						$oVideo = $aVideos[$iVideo];
+						if( $lastDateImport < strtotime( $oVideo['dFileUpload'] ) ){
+							$this->db->insert_video( $oVideo['iFileCode'], $oVideo['iFolder'], $oVideo['sFileName'], $oVideo['sFileServerCode'], $oVideo['aEncodes'][0]['sPath'], $oVideo['aEncodes'][0]['eConteneur'], $oVideo['fFileDuration'], $oVideo['dFileUpload'] );
+							$iVideo++;
+						}else{
+							$isSynchro = true;
+						}
+					}
+					$iPage++;
+				}
+			}
+		}
+	
+		//Update de la synchro
+		$serveurTime = $oApi->time();
+		$localTime = time();
+		$diff = ($serveurTime -  $localTime);
+		$this->options['vod_api_servTime'] = $diff;
+		$this->options['vod_api_lastUpdate'] = time();
+		update_option($this->key, $this->options);
+	}
+	
+	function fullSynchro(){
+		//Suppression et reimportation complete des videos
+		$oApi = $this->getAPI();
+		$this->fastSynchro( false );
+		$iNumberVideoApi = 200;
+		$this->db->clean_videos();
+		$iVideo = $oApi->countVideo();
+		$iPageTotal = floor( ($iVideo-1) / $iNumberVideoApi );
+		for( $iPage=0; $iPage <= $iPageTotal; $iPage++ ) {
+			$aVideos = $oApi->getLastVideo($iNumberVideoApi, $iPage*$iNumberVideoApi);
+			if( !empty($aVideos) ){
+				foreach( $aVideos as $oVideo ) {
+					$this->db->insert_video( $oVideo['iFileCode'], $oVideo['iFolder'], $oVideo['sFileName'], $oVideo['sFileServerCode'], $oVideo['aEncodes'][0]['sPath'], $oVideo['aEncodes'][0]['eConteneur'], $oVideo['fFileDuration'], $oVideo['dFileUpload'] );
+				}
+			}
 		}
 	}
-
+	
 	function vod_admin_menu() {
 		$site_url = get_option("siteurl");
 
@@ -343,56 +411,19 @@ class EasyVod
 			update_option($this->key, $this->options);
 		}
 		if (isset($_POST['updateSynchro']) && $_POST['updateSynchro'] == 1 ) {
-			$oApi = $this->getAPI();
-			
-			//Update des players
-			$this->db->clean_players();				
-			$aListPlayer = $oApi->getPlayers();
-			foreach( $aListPlayer as $oPlayer ){
-				$this->db->insert_player( $oPlayer['iPlayerCode'], $oPlayer['sName'], $oPlayer['iWidth'], $oPlayer['iHeight'], $oPlayer['bAutoStart'], $oPlayer['bLoop'], $oPlayer['dEdit'], $oPlayer['bSwitchQuality'] );
-			}
-
-			//Update des folders
-			$this->db->clean_folders();				
-			$aListFolder = $oApi->getFolders();
-			foreach( $aListFolder as $oFolder ){
-				$this->db->insert_folder( $oFolder['iFolderCode'], $oFolder['sFolderPath'], $oFolder['sFolderName'], $oFolder['sAccess'], $oFolder['sToken'] );
-			}
-
-			//Update des playlist
-			$this->db->clean_playlists();				
-			$aListPlaylist = $oApi->getPlaylists();
-			foreach( $aListPlaylist as $oPlaylist ){
-				$this->db->insert_playlist( $oPlaylist['iPlaylistCode'], $oPlaylist['sPlaylistName'], $oPlaylist['sPlaylistDescription'], $oPlaylist['iTotal'], $oPlaylist['sMode'], $oPlaylist['dCreated'], $oPlaylist['iTotalDuration'] );
-			}
-
-			$gmtime = time() - (int)substr(date('O'),0,3)*60*60;
-			$this->options['vod_api_lastUpdate'] = $gmtime;
-			update_option($this->key, $this->options);
+			$this->options['vod_api_lastUpdate'] = 0;
+			$this->fastSynchro();
 		}
 		if (isset($_POST['updateSynchroVideo']) && $_POST['updateSynchroVideo'] == 1 ) {
-			$oApi = $this->getAPI();
-						
-			//Update des videos
-			$iNumberVideoApi = 200;
-			$this->db->clean_videos();
-			$iVideo = $oApi->countVideo();
-			$iPageTotal = floor( ($iVideo-1) / $iNumberVideoApi );
-			for( $iPage=0; $iPage <= $iPageTotal; $iPage++ ) {
-				$aVideos = $oApi->getLastVideo($iNumberVideoApi, $iPage*$iNumberVideoApi);
-				foreach( $aVideos as $oVideo ) {
-					$this->db->insert_video( $oVideo['iFileCode'], $oVideo['iFolder'], $oVideo['sFileName'], $oVideo['sFileServerCode'], $oVideo['aEncodes'][0]['sPath'], $oVideo['aEncodes'][0]['eConteneur'], $oVideo['fFileDuration'], $oVideo['dFileUpload'] );
-				}
-			}
+			$this->options['vod_api_lastUpdate'] = 0;
+			$this->fullSynchro();
 		}
-
 		if ( $this->options['vod_api_connected'] == "on" ) {
 			$this->options['vod_count_player'] = $this->db->count_player();
 			$this->options['vod_count_folder'] = $this->db->count_folder();
 			$this->options['vod_count_video'] = $this->db->count_video();
 			$this->options['vod_count_playlist'] = $this->db->count_playlists();
 		}
-
 		$actionurl   = $_SERVER['REQUEST_URI'];
 		require_once("vod.template.php");
 		EasyVod_Display::adminMenu( $actionurl, $this->options, $site_url);
@@ -478,6 +509,7 @@ class EasyVod
 				}
 				$oApi = $this->getAPI();
 				$sToken = $oApi->initUpload( $oFolder->sPath );
+				delete_transient( 'vod_last_import' );
 				EasyVod_Display::uploadPopup( $sToken, $oFolder );
 			} else if( $_REQUEST['sAction'] == "popupImport" && !empty($_REQUEST['iFolderCode']) ) {
 				//Affichage du popup d'import
@@ -497,6 +529,7 @@ class EasyVod
 					$bResult = $oApi->importFromUrl( $oFolder->sPath, $sUrl , $aOption);
 				}
 				$actionurl = $_SERVER['REQUEST_URI'];
+				delete_transient( 'vod_last_import' );
 				EasyVod_Display::ImportPopup( $actionurl, $oFolder, $bResult);
 			} else {
 				//Affichage de la page principal
@@ -755,6 +788,11 @@ class EasyVod_db
 		return $wpdb->get_results($sql);
 	}
 
+	function getLastVideo(){
+		global $wpdb;
+		return $wpdb->get_row("SELECT * FROM ".$this->db_table_video." ORDER BY dUpload DESC LIMIT 1");
+	}
+	
 	function getVideo( $iVideo ) {
 		global $wpdb;
 		return $wpdb->get_row("SELECT * FROM ".$this->db_table_video." WHERE iVideo=".intval($iVideo)." LIMIT 1");
