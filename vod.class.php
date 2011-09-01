@@ -603,6 +603,14 @@ class EasyVod
         return trim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, SALT, base64_decode($text), MCRYPT_MODE_ECB, mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND)));
     } 
 
+	function vod_template_redirect() {
+	    global $wp_query;
+	    $vod_page = $wp_query->query_vars['vod_page'];
+	    if ($vod_page == 'callback') {
+	        include(ABSPATH.'wp-content/plugins/vod-infomaniak/vod_callback.php');
+	        exit;
+	    }
+	}
 }
 
 /**
@@ -836,12 +844,4 @@ function vod_query_vars($qvars) {
     return $qvars;
 }
 
-function vod_template_redirect() {
-    global $wp_query;
-    $vod_page = $wp_query->query_vars['vod_page'];
-    if ($vod_page == 'callback') {
-        include(ABSPATH.'wp-content/plugins/vod-infomaniak/vod_callback.php');
-        exit;
-    }
-}
 ?>

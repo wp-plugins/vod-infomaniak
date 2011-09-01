@@ -76,6 +76,9 @@ Les nouvelles vidéos seront automatiquement ajoutés avec le paramètre "tokenF
 
 == Changelog ==
 
+= 0.1.9 =
+* Fix du callback qui ne fonctionnait plus depuis la 1.0.7
+
 = 0.1.8 =
 * Correction d'un bug d'affichage dans le cas de playlist incomplète
 * Nouveau système de synchro automatique des videos plus efficace
