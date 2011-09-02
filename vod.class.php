@@ -248,12 +248,15 @@ class EasyVod
 
 	function checkAutoUpdate() {
 		$gmtime = time() - (int)substr(date('O'),0,3)*60*60;
-		if ( $this->options['vod_api_lastUpdate'] < $gmtime - $this->auto_sync_delay ) {
+		if ( !isset($this->options['vod_api_lastUpdate']) || $this->options['vod_api_lastUpdate'] < $gmtime - $this->auto_sync_delay ) {
 			$this->fastSynchro();
 		}
 	}
 
 	function fastSynchro( $updateVideo = true ){
+		if( !isset($this->options['vod_api_connected']) || $this->options['vod_api_connected'] != 'on' ){
+			return false;
+		}
 		$oApi = $this->getAPI();
 		
 		//Update des players
@@ -323,9 +326,13 @@ class EasyVod
 		$this->options['vod_api_servTime'] = $diff;
 		$this->options['vod_api_lastUpdate'] = time();
 		update_option($this->key, $this->options);
+		return true;
 	}
 	
 	function fullSynchro(){
+		if( !isset($this->options['vod_api_connected']) || $this->options['vod_api_connected'] != 'on' ){
+			return false;
+		}
 		//Suppression et reimportation complete des videos
 		$oApi = $this->getAPI();
 		$this->fastSynchro( false );
@@ -341,6 +348,7 @@ class EasyVod
 				}
 			}
 		}
+		return true;
 	}
 	
 	function vod_admin_menu() {

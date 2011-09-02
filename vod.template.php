@@ -111,15 +111,15 @@ class EasyVod_Display
 			</p>
 			<p>
 				<label><?php _e('Login','vod_infomaniak'); ?> :</label>
-				<input type="text" id="vod_api_login" name="vod_api_login" value="<?php echo $options['vod_api_login']; ?>"/>
+				<input type="text" id="vod_api_login" name="vod_api_login" value="<?php echo !empty($options['vod_api_login']) ? $options['vod_api_login'] : ""; ?>"/>
 			</p>
 			<p>
 				<label><?php _e('Password','vod_infomaniak'); ?> :</label>
-				<input type="password" id="vod_api_password" name="vod_api_password" value="XXXXXX"/>
+				<input type="password" id="vod_api_password" name="vod_api_password" value="<?php echo !empty($options['vod_api_password']) ? "XXXXXX" : ""; ?>"/>
 			</p>
 			<p>
 				<label><?php _e('Identifiant du compte','vod_infomaniak'); ?> :</label>
-				<input type="text" id="vod_api_id" name="vod_api_id" value="<?php echo $options['vod_api_id']; ?>"/>
+				<input type="text" id="vod_api_id" name="vod_api_id" value="<?php echo !empty($options['vod_api_id']) ? $options['vod_api_id'] : ""; ?>"/>
 			</p>
 			<p>
 				<label><?php _e('Connection','vod_infomaniak'); ?> :</label>
