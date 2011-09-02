@@ -42,15 +42,16 @@ class EasyVod
 		
 		wp_register_style('ui-tabs', plugins_url('vod-infomaniak/css/jquery.ui.tabs.css'));
 		
-		add_action( 'admin_footer', array(&$this, 'buildForm') );
 		add_action( 'admin_menu', array(&$this, 'add_menu_items'));
+		add_action( 'edit_form_advanced', array(&$this, 'buildForm') );
+		add_action( 'edit_page_form', array(&$this, 'buildForm') );
 		add_action( 'wp_ajax_importvod', array(&$this, 'printLastImport') );
 		add_action( 'wp_ajax_vodsearchvideo', array(&$this, 'searchVideo') );
 		add_action( 'wp_ajax_vodsearchplaylist', array(&$this, 'searchPlaylist') );
 		add_action( 'template_redirect', array(&$this, 'vod_template_redirect'));
 
-		add_filter('the_content', array(&$this, 'check'), 100);
-		add_filter('the_excerpt', array(&$this, 'check'), 100);
+		add_filter( 'the_content', array(&$this, 'check'), 100);
+		add_filter( 'the_excerpt', array(&$this, 'check'), 100);
 		add_filter( 'mce_external_plugins', array(&$this, 'mce_register') );
 		add_filter( 'mce_buttons', array(&$this, 'mce_add_button'), 0);
 		add_filter( 'query_vars', 'vod_query_vars');
@@ -242,7 +243,9 @@ class EasyVod
 		if ( !empty($this->options['vod_api_connected']) && $this->options['vod_api_connected'] == 'on' ) {
 			require_once("vod.template.php");
 			$aPlayers = $this->db->get_players();
-			EasyVod_Display::buildForm( $this->options, $aPlayers );
+			
+			$aLastVideos = $this->db->get_videos_byPage( 0, 50 );
+			EasyVod_Display::buildForm( $this->options, $aPlayers, $aLastVideos );
 		}
 	}
 
@@ -613,7 +616,7 @@ class EasyVod
 
 	function vod_template_redirect() {
 	    global $wp_query;
-	    $vod_page = $wp_query->query_vars['vod_page'];
+	    $vod_page = isset($wp_query->query_vars['vod_page']) ? $wp_query->query_vars['vod_page'] : "";
 	    if ($vod_page == 'callback') {
 	        include(ABSPATH.'wp-content/plugins/vod-infomaniak/vod_callback.php');
 	        exit;

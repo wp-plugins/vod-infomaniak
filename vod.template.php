@@ -13,14 +13,15 @@
 class EasyVod_Display
 {
 
-	static function buildForm( $options, $aPlayers ) { 
+	static function buildForm( $options, $aPlayers, $aLastVideos ) { 
 	?>
 	<div class="hidden">
 		<div id="dialog-vod-form">
 			<div id="dialog-tabs" class="ui-tabs">
 				<ul class="ui-tabs-nav">
 					<li><a href="#dialog-tab1"><?php _e("Avec l'url",'vod_infomaniak');?></a></li>
-					<li><a href="#dialog-tab2"><?php _e('Outil de recherche','vod_infomaniak');?></a></li>
+					<li><a href="#dialog-tab2"><?php _e('Dernieres videos','vod_infomaniak');?></a></li>
+					<li><a href="#dialog-tab3"><?php _e('Outil de recherche','vod_infomaniak');?></a></li>
 				</ul>
 				<div id="dialog-tab1" class="ui-tabs-panel">
 					<div style="padding-left: 20px; padding-bottom: 10px;"><?php _e("Veuillez saisir l'URL d'une video",'vod_infomaniak');?></div>
@@ -34,11 +35,46 @@ class EasyVod_Display
 					</div>
 					<p style="text-align:center"><input type="text" id="dialog-url-input"/></p>
 				</div>
-				<div id="dialog-tab2" class="ui-tabs-panel">
+				<div id="dialog-tab2" class="ui-tabs-panel" style="height: 450px; overflow-y: scroll;">					
+					<table class="widefat" style="width: 99%">
+						<thead>
+							<tr>
+								<th width="110"><?php _e("Video",'vod_infomaniak'); ?></th>
+								<th><?php _e("Nom",'vod_infomaniak'); ?></th>
+								<th><?php _e("Date d'upload",'vod_infomaniak'); ?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php
+							if( empty($aLastVideos) ) {
+								echo "<option value='0'>". __("Aucune video disponible",'vod_infomaniak') ."</option>";	
+							} else {
+								foreach( $aLastVideos as $oVideo ){
+							?>
+							<tr onclick="Vod_selectVideo('<?php echo $oVideo->sPath.$oVideo->sServerCode.".".strtolower($oVideo->sExtension); ?>','<?php echo $oVideo->sToken;?>','<?php echo $oVideo->iFolder;?>');">
+								<td>
+									<a href="javascript:;" onclick="Vod_selectVideo('<?php echo $oVideo->sPath.$oVideo->sServerCode.".".strtolower($oVideo->sExtension); ?>','<?php echo $oVideo->sToken;?>','<?php echo $oVideo->iFolder;?>');">
+										<img width="100" src="<?php echo "http://vod.infomaniak.com/redirect/".$options['vod_api_id'].$oVideo->sPath.$oVideo->sServerCode.".mini.jpg"; ?>"/>
+									</a>		
+								</td>
+								<td>
+									<a href="javascript:;" onclick="Vod_selectVideo('<?php echo $oVideo->sPath.$oVideo->sServerCode.".".strtolower($oVideo->sExtension); ?>','<?php echo $oVideo->sToken;?>','<?php echo $oVideo->iFolder;?>');"><?php echo ucfirst(stripslashes($oVideo->sName)); ?></a><br/><br/>
+									<img src="<?php echo plugins_url('vod-infomaniak/img/ico-folder-open-16x16.png'); ?>" style="vertical-align:bottom"/> <?php echo $oVideo->sPath; ?>	
+								</td>
+								<td><?php echo $oVideo->dUpload; ?></td>
+							</tr>
+							<?php
+								} 
+							}
+							?>
+						</tbody>
+					</table>
+				</div>
+				<div id="dialog-tab3" class="ui-tabs-panel">
 					<input type="hidden" id="url_ajax_search_video" value="<?php echo get_bloginfo('wpurl'); ?>/wp-admin/admin-ajax.php?action=vodsearchvideo"/>
 					<input type="hidden" id="url_ajax_search_playlist" value="<?php echo get_bloginfo('wpurl'); ?>/wp-admin/admin-ajax.php?action=vodsearchplaylist"/>
 					<div style="padding-left: 30px;">
-						<label><?php _e("Recherche d'une",'vod_infomaniak');?> :</label><br/>
+						<label style="font-weight: bold; margin-bottom: 5px;"><?php _e("Recherche d'une",'vod_infomaniak');?> :</label><br/><br/>
 						<input type="radio" name="searchtype" id="video" value="video" checked="checked" onclick="checkSearchType();"> <label for="video"><?php _e('Video','vod_infomaniak');?></label>
 						<input type="radio" name="searchtype" id="playlist" value="playlist" onclick="checkSearchType();"> <label for="playlist"><?php _e('Playlist','vod_infomaniak');?></label>
 						<br/>

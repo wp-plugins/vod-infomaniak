@@ -76,8 +76,12 @@ Les nouvelles vidéos seront automatiquement ajoutés avec le paramètre "tokenF
 
 == Changelog ==
 
+= 0.2.2 =
+* Nouvelle option lors de l'écriture/édition d'un article permettant de choisir parmis les 50 dernieres vidéos.
+* Quelques petites optimisations
+
 = 0.2.1 =
-* Fix d'un bug avec le système de synchro lorsque c'est une première installation que rien n'a encore été configuré.
+* Fix d'un bug avec le système de synchro lors d'une première installation et que rien n'a encore été configuré.
 
 = 0.2 =
 * Modification du nouveau système de synchro pour qu'il se lance plus régulierement contrairement à wp_schedule_event()

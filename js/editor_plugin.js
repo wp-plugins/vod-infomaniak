@@ -34,6 +34,16 @@ Vod_dialogClose = function () {
 	jQuery("#dialog-slide").hide();
 };
 
+Vod_selectVideo = function (sUrl,sToken,iFolder) {
+	jQuery('#dialog-url-input').val( sUrl );
+	if( sToken != "" ){
+		jQuery('#dialog-token').val( iFolder );
+	}else{
+		jQuery('#dialog-token').val( "" );
+	}
+	jQuery('#dialog-tabs').tabs( "select" , 0 )
+};
+
 //Fonction permettant la validation du formulaire suivant les options choisis
 Vod_dialogValid = function () {
 	var url = jQuery("#dialog-url-input").val();
@@ -115,15 +125,17 @@ Vod_dialogValid = function () {
 
 			jQuery('#dialog-tabs').tabs({
 				show: function(event, ui) {
-					if( jQuery('#dialog-tabs').tabs('option', 'selected') == 1 ){
+					if( jQuery('#dialog-tabs').tabs('option', 'selected') == 1 || jQuery('#dialog-tabs').tabs('option', 'selected') == 2){
 						jQuery('#dialog-config').hide();
 						jQuery("#dialog-search-input-video").focus();
 					}else{
 						jQuery('#dialog-config').show();
 						jQuery("#dialog-url-input").focus();
 					}
+					jQuery("#dialog-vod-form").dialog( "option", {'position' : 'center'} );
 				}
 			});
+			
 			jQuery('#dialog-search-input-video').suggest(jQuery('#url_ajax_search_video').val(), {
 				delay : 150,
 				onSelect : function(){
@@ -138,6 +150,7 @@ Vod_dialogValid = function () {
 					jQuery('#dialog-tabs').tabs( "select" , 0 )
 				}
 			});
+			
 			jQuery('#dialog-search-input-playlist').suggest(jQuery('#url_ajax_search_playlist').val(), {
 				delay : 150,
 				onSelect : function(){
