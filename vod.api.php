@@ -147,9 +147,11 @@ class vod_api {
 	 */
 	public function getLastImportation(){
 		$oSoap = $this->getSoapAdmin();
-		if( !empty( $oSoap ) ){
-			return $oSoap->getLastImportation( 15 );
-		}
+		try{
+			if( !empty( $oSoap ) ){
+				return $oSoap->getLastImportation( 15 );
+			}
+		}catch (Exception $oException) {}
 		return false;
 	}
 	

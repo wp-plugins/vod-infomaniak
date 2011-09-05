@@ -243,7 +243,6 @@ class EasyVod
 		if ( !empty($this->options['vod_api_connected']) && $this->options['vod_api_connected'] == 'on' ) {
 			require_once("vod.template.php");
 			$aPlayers = $this->db->get_players();
-			
 			$aLastVideos = $this->db->get_videos_byPage( 0, 50 );
 			EasyVod_Display::buildForm( $this->options, $aPlayers, $aLastVideos );
 		}

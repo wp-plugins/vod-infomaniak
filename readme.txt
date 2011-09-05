@@ -76,6 +76,9 @@ Les nouvelles vidéos seront automatiquement ajoutés avec le paramètre "tokenF
 
 == Changelog ==
 
+= 0.2.3 =
+* Ajout d'un try/catch sur la récuperation des importations, cela pouvant provoquer une erreur s'il n'y a aucune importation récente.
+
 = 0.2.2 =
 * Nouvelle option lors de l'écriture/édition d'un article permettant de choisir parmis les 50 dernieres vidéos.
 * Quelques petites optimisations
