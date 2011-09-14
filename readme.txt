@@ -76,6 +76,10 @@ Les nouvelles vidéos seront automatiquement ajoutés avec le paramètre "tokenF
 
 == Changelog ==
 
+= 0.2.4 =
+* Utilisation du mode de debug de wordpress au lieu d'erreur PHP en cas de problème avec l'API
+* Modification du fonctionnement du renommage d'une vidéo
+
 = 0.2.3 =
 * Ajout d'un try/catch sur la récuperation des importations, cela pouvant provoquer une erreur s'il n'y a aucune importation récente.
 

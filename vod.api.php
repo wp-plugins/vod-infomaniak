@@ -17,7 +17,7 @@ class vod_api {
 	protected $sPassword = "";
 	protected $sId = "";
 	private $oSoap;
-
+	
 	/**
 	 * Constructeur prennant les informations de connexions
 	 * 
@@ -25,21 +25,26 @@ class vod_api {
 	 * @param string $sPassword Mot de passe associe au login
 	 * @param string $sId Identifiant de l'espace VOD
 	 */
-	public function __construct($sLogin, $sPassword, $Id=""){
+	public function __construct($sLogin, $sPassword, $Id = "") {
 		$this->sLogin = $sLogin;
 		$this->sPassword = $sPassword;
 		$this->sId = $Id;
 	}
-
+	
+	private function debug($oException) {
+		if (WP_DEBUG) {
+			var_dump ( $oException );
+		}
+	}
 	/**
 	 * Fonction permettant de tester la connectivite avec l'API
 	 *
 	 * @return boolean
 	 */
-	public function ping(){
-		$oSoap = $this->getSoapAdmin();
-		if( !empty( $oSoap ) ){
-			return $oSoap->ping();
+	public function ping() {
+		$oSoap = $this->getSoapAdmin ();
+		if (! empty ( $oSoap )) {
+			return $oSoap->ping ();
 		}
 		return false;
 	}
@@ -49,12 +54,16 @@ class vod_api {
 	 *
 	 * @return integer
 	 */
-	public function time(){
-		$oSoap = $this->getSoapAdmin();
-		if( !empty( $oSoap ) ){
-			return $oSoap->time();
+	public function time() {
+		try {
+			$oSoap = $this->getSoapAdmin ();
+			if (! empty ( $oSoap )) {
+				return $oSoap->time ();
+			}
+		} catch ( Exception $oException ) {
+			$this->debug ( $oException );
 		}
-		return false;
+		return 0;
 	}
 	
 	/**
@@ -62,36 +71,48 @@ class vod_api {
 	 * 
 	 * @return integer
 	 */
-	public function getServiceItemID(){
-		$oSoap = $this->getSoapAdmin();
-		if( !empty( $oSoap ) ){
-			return intval( $oSoap->getServiceItemID() );
+	public function getServiceItemID() {
+		try {
+			$oSoap = $this->getSoapAdmin ();
+			if (! empty ( $oSoap )) {
+				return intval ( $oSoap->getServiceItemID () );
+			}
+		} catch ( Exception $oException ) {
+			$this->debug ( $oException );
 		}
 		return 0;
 	}
-
+	
 	/**
 	 * Fonction permettant de recuperer l'identifiant du groupe auquel est rattache le service
 	 * 
 	 * @return integer
 	 */
-	public function getGroupID(){
-		$oSoap = $this->getSoapAdmin();
-		if( !empty( $oSoap ) ){
-			return intval( $oSoap->getGroupeID() );
+	public function getGroupID() {
+		try {
+			$oSoap = $this->getSoapAdmin ();
+			if (! empty ( $oSoap )) {
+				return intval ( $oSoap->getGroupeID () );
+			}
+		} catch ( Exception $oException ) {
+			$this->debug ( $oException );
 		}
 		return 0;
 	}
-
+	
 	/**
 	 * Fonction permettant de recuperer le nombre de video
 	 * 
 	 * @return integer
 	 */
-	public function countVideo(){
-		$oSoap = $this->getSoapAdmin();
-		if( !empty( $oSoap ) ){
-			return intval($oSoap->countVideo());
+	public function countVideo() {
+		try {
+			$oSoap = $this->getSoapAdmin ();
+			if (! empty ( $oSoap )) {
+				return intval ( $oSoap->countVideo () );
+			}
+		} catch ( Exception $oException ) {
+			$this->debug ( $oException );
 		}
 		return false;
 	}
@@ -103,10 +124,14 @@ class vod_api {
 	 * @param string $sFileServerCode
 	 * @return boolean
 	 */
-	public function deleteVideo( $iFolderCode, $sFileServerCode){
-		$oSoap = $this->getSoapAdmin();
-		if( !empty( $oSoap ) ){
-			return $oSoap->deleteVideo( $iFolderCode, $sFileServerCode );
+	public function deleteVideo($iFolderCode, $sFileServerCode) {
+		try {
+			$oSoap = $this->getSoapAdmin ();
+			if (! empty ( $oSoap )) {
+				return $oSoap->deleteVideo ( $iFolderCode, $sFileServerCode );
+			}
+		} catch ( Exception $oException ) {
+			$this->debug ( $oException );
 		}
 		return false;
 	}
@@ -119,10 +144,14 @@ class vod_api {
 	 * @param string $sName
 	 * @return boolean
 	 */
-	public function renameVideo( $iFolderCode, $sFileServerCode, $sName){
-		$oSoap = $this->getSoapAdmin();
-		if( !empty( $oSoap ) ){
-			return $oSoap->renameVideo($iFolderCode, $sFileServerCode, $sName);
+	public function renameVideo($iFolderCode, $sFileServerCode, $sName) {
+		try {
+			$oSoap = $this->getSoapAdmin ();
+			if (! empty ( $oSoap )) {
+				return $oSoap->setVideoTitle ( $iFolderCode, $sFileServerCode, $sName );
+			}
+		} catch ( Exception $oException ) {
+			$this->debug ( $oException );
 		}
 		return false;
 	}
@@ -132,10 +161,14 @@ class vod_api {
 	 * 
 	 * @return array
 	 */
-	public function getLastVideo( $iLimit, $iPage ){
-		$oSoap = $this->getSoapAdmin();
-		if( !empty( $oSoap ) ){
-			return $oSoap->getLastVideo($iLimit, $iPage);
+	public function getLastVideo($iLimit, $iPage) {
+		try {
+			$oSoap = $this->getSoapAdmin ();
+			if (! empty ( $oSoap )) {
+				return $oSoap->getLastVideo ( $iLimit, $iPage );
+			}
+		} catch ( Exception $oException ) {
+			$this->debug ( $oException );
 		}
 		return false;
 	}
@@ -145,13 +178,15 @@ class vod_api {
 	 * 
 	 * @return array
 	 */
-	public function getLastImportation(){
-		$oSoap = $this->getSoapAdmin();
-		try{
-			if( !empty( $oSoap ) ){
-				return $oSoap->getLastImportation( 15 );
+	public function getLastImportation() {
+		$oSoap = $this->getSoapAdmin ();
+		try {
+			if (! empty ( $oSoap )) {
+				return $oSoap->getLastImportation ( 15 );
 			}
-		}catch (Exception $oException) {}
+		} catch ( Exception $oException ) {
+			$this->debug ( $oException );
+		}
 		return false;
 	}
 	
@@ -160,10 +195,14 @@ class vod_api {
 	 * 
 	 * @return array
 	 */
-	public function getFolders(){
-		$oSoap = $this->getSoapAdmin();
-		if( !empty( $oSoap ) ){
-			return $oSoap->getFolders();
+	public function getFolders() {
+		try {
+			$oSoap = $this->getSoapAdmin ();
+			if (! empty ( $oSoap )) {
+				return $oSoap->getFolders ();
+			}
+		} catch ( Exception $oException ) {
+			$this->debug ( $oException );
 		}
 		return false;
 	}
@@ -173,10 +212,14 @@ class vod_api {
 	 * 
 	 * @return boolean
 	 */
-	public function folderModifiedSince( $date ){
-		$oSoap = $this->getSoapAdmin();
-		if( !empty( $oSoap ) ){
-			return $oSoap->folderModifiedSince( $date );
+	public function folderModifiedSince($date) {
+		try {
+			$oSoap = $this->getSoapAdmin ();
+			if (! empty ( $oSoap )) {
+				return $oSoap->folderModifiedSince ( $date );
+			}
+		} catch ( Exception $oException ) {
+			$this->debug ( $oException );
 		}
 		return false;
 	}
@@ -186,23 +229,31 @@ class vod_api {
 	 * 
 	 * @return array
 	 */
-	public function getPlayers(){
-		$oSoap = $this->getSoapAdmin();
-		if( !empty( $oSoap ) ){
-			return $oSoap->getPlayers();
+	public function getPlayers() {
+		try {
+			$oSoap = $this->getSoapAdmin ();
+			if (! empty ( $oSoap )) {
+				return $oSoap->getPlayers ();
+			}
+		} catch ( Exception $oException ) {
+			$this->debug ( $oException );
 		}
 		return false;
 	}
-
+	
 	/**
 	 * Fonction permettant de savoir s'il y a eu des modifications recemment sur les players
 	 * 
 	 * @return boolean
 	 */
-	public function playerModifiedSince( $date ){
-		$oSoap = $this->getSoapAdmin();
-		if( !empty( $oSoap ) ){
-			return $oSoap->playerModifiedSince( $date );
+	public function playerModifiedSince($date) {
+		try {
+			$oSoap = $this->getSoapAdmin ();
+			if (! empty ( $oSoap )) {
+				return $oSoap->playerModifiedSince ( $date );
+			}
+		} catch ( Exception $oException ) {
+			$this->debug ( $oException );
 		}
 		return false;
 	}
@@ -212,112 +263,131 @@ class vod_api {
 	 * 
 	 * @return array
 	 */
-	public function getPlaylists(){
-		$oSoap = $this->getSoapAdmin();
-		if( !empty( $oSoap ) ){
-			return $oSoap->getPlaylists();
+	public function getPlaylists() {
+		try {
+			$oSoap = $this->getSoapAdmin ();
+			if (! empty ( $oSoap )) {
+				return $oSoap->getPlaylists ();
+			}
+		} catch ( Exception $oException ) {
+			$this->debug ( $oException );
 		}
 		return false;
 	}
-
+	
 	/**
 	 * Fonction permettant de savoir s'il y a eu des modifications recemment sur les playlist
 	 * 
 	 * @return boolean
 	 */
-	public function playlistModifiedSince( $date ){
-		$oSoap = $this->getSoapAdmin();
-		if( !empty( $oSoap ) ){
-			return $oSoap->playlistModifiedSince( $date );
+	public function playlistModifiedSince($date) {
+		try {
+			$oSoap = $this->getSoapAdmin ();
+			if (! empty ( $oSoap )) {
+				return $oSoap->playlistModifiedSince ( $date );
+			}
+		} catch ( Exception $oException ) {
+			$this->debug ( $oException );
 		}
 		return false;
 	}
-
+	
 	/**
 	 * Fonction permettant d'obtenir un token d'upload
 	 * 
 	 * @return string
 	 */
-	public function initUpload( $sPath ){
-		$oSoap = $this->getSoapAdmin();
-		if( !empty( $oSoap ) ){
-			return $oSoap->initUpload( $sPath );
+	public function initUpload($sPath) {
+		try {
+			$oSoap = $this->getSoapAdmin ();
+			if (! empty ( $oSoap )) {
+				return $oSoap->initUpload ( $sPath );
+			}
+		} catch ( Exception $oException ) {
+			$this->debug ( $oException );
 		}
 		return false;
 	}
-
+	
 	/**
 	 * Fonction permettant de lancer le telechargement d'une video
 	 * 
 	 * @return boolean
 	 */
-	public function importFromUrl( $sPath, $sUrl, $aOptions ){
-		$oSoap = $this->getSoapAdmin();
-		if( !empty( $oSoap ) ){
-			return $oSoap->importFromUrl( $sPath, $sUrl, $aOptions );
+	public function importFromUrl($sPath, $sUrl, $aOptions) {
+		try {
+			$oSoap = $this->getSoapAdmin ();
+			if (! empty ( $oSoap )) {
+				return $oSoap->importFromUrl ( $sPath, $sUrl, $aOptions );
+			}
+		} catch ( Exception $oException ) {
+			$this->debug ( $oException );
 		}
 		return false;
 	}
-
+	
 	/**
 	 * Fonction permettant de recuperer l'adresse de callback actuellement en place
 	 * 
 	 * @return string
 	 */
-	public function getCallback(){
-		$oSoap = $this->getSoapAdmin();
-		if( !empty( $oSoap ) ){
-			return $oSoap->getCallbackUrl();
+	public function getCallback() {
+		try {
+			$oSoap = $this->getSoapAdmin ();
+			if (! empty ( $oSoap )) {
+				return $oSoap->getCallbackUrl ();
+			}
+		} catch ( Exception $oException ) {
+			$this->debug ( $oException );
 		}
 		return false;
 	}
-
+	
 	/**
 	 * Fonction permettant de definir l'adresse de callback
 	 * 
 	 * @param string $sUrl Nouvelle adresse de callback
 	 * @return boolean
 	 */
-	public function setCallback( $sUrl ){
-		$oSoap = $this->getSoapAdmin();
-		if( !empty( $oSoap ) ){
-			return $oSoap->setCallbackUrl( $sUrl );
+	public function setCallback($sUrl) {
+		try {
+			$oSoap = $this->getSoapAdmin ();
+			if (! empty ( $oSoap )) {
+				return $oSoap->setCallbackUrl ( $sUrl );
+			}
+		} catch ( Exception $oException ) {
+			$this->debug ( $oException );
 		}
 		return false;
 	}
-
 	
-	private function getSoapAdmin(){
-		if( !empty($this->oSoap) ){
+	private function getSoapAdmin() {
+		if (! empty ( $this->oSoap )) {
 			return $this->oSoap;
-		}else{
-			$this->oSoap=new SoapClient('http://statslive.infomaniak.com/vod/api/vod_soap.wsdl', array(
-				'trace' 	=> 1,
-				'encoding' 	=> 'UTF-8'
-			));
-			
-			try{
-				$this->oSoap->__setSoapHeaders(array(new SoapHeader('urn:vod_soap', 'AuthenticationHeader', new SoapVODAuthentificationHeader($this->sLogin, $this->sPassword, $this->sId))));
+		} else {
+			$this->oSoap = new SoapClient ( 'http://statslive.infomaniak.com/vod/api/vod_soap.wsdl', array ('trace' => 1, 'encoding' => 'UTF-8' ) );
+			try {
+				$this->oSoap->__setSoapHeaders ( array (new SoapHeader ( 'urn:vod_soap', 'AuthenticationHeader', new SoapVODAuthentificationHeader ( $this->sLogin, $this->sPassword, $this->sId ) ) ) );
 				return $this->oSoap;
-			}catch (Exception $oException) {
-				var_dump($oException);
+			} catch ( Exception $oException ) {
+				$this->debug( $oException );
 			}
 			return false;
 		}
 	}
 }
 
-ini_set("soap.wsdl_cache_enabled", 0);
+ini_set ( "soap.wsdl_cache_enabled", 0 );
 
 class SoapVODAuthentificationHeader {
-    public $Password;
-    public $sLogin;
+	public $Password;
+	public $sLogin;
 	public $sVod;
 	
-    public function __construct($sLogin, $sPassword, $sVod) {
-        $this->sPassword=$sPassword;
-        $this->sLogin=$sLogin;
-        $this->sVod=$sVod;
-    }
+	public function __construct($sLogin, $sPassword, $sVod) {
+		$this->sPassword = $sPassword;
+		$this->sLogin = $sLogin;
+		$this->sVod = $sVod;
+	}
 }
 ?>

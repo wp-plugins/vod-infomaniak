@@ -352,13 +352,13 @@ class EasyVod_Display
 					}else if( iAjaxRefresh < 25 ){
 						iAjaxDecompte = 60;
 						setTimeout('update_vod_import();', 60000);
-					}else if( iAjaxRefresh < 30 ){
+					}else if( iAjaxRefresh < 35 ){
 						iAjaxDecompte = 120;
 						setTimeout('update_vod_import();', 120000);
-					}else if( iAjaxRefresh < 40 ){
+					}else if( iAjaxRefresh < 45 ){
 						iAjaxDecompte = 300;
 						setTimeout('update_vod_import();', 300000);
-					}else if( iAjaxRefresh < 50 ){
+					}else if( iAjaxRefresh < 60 ){
 						iAjaxDecompte = 600;
 						setTimeout('update_vod_import();', 600000);
 					}else{
@@ -621,15 +621,15 @@ class EasyVod_Display
 				<tr>
 					<td>
 						<img src="<?php echo plugins_url('vod-infomaniak/img/videofile.png'); ?>" style="vertical-align:bottom"/>
-						<a href="javascript:; return false;" onclick="openVodPopup('<?php echo $oVideo->iVideo; ?>', '<?php echo $oVideo->sName; ?>','<?php echo $oVideo->sPath.$oVideo->sServerCode; ?>', '<?php echo strtolower($oVideo->sExtension);?>', '<?php echo strtolower($oVideo->sAccess);?>', '<?php echo $oVideo->sToken;?>', '<?php echo $oVideo->iFolder;?>'); return false;"><?php echo ucfirst(stripslashes($oVideo->sName)); ?></a>
+						<a href="javascript:; return false;" onclick="openVodPopup('<?php echo $oVideo->iVideo; ?>', '<?php echo addslashes($oVideo->sName); ?>','<?php echo $oVideo->sPath.$oVideo->sServerCode; ?>', '<?php echo strtolower($oVideo->sExtension);?>', '<?php echo strtolower($oVideo->sAccess);?>', '<?php echo $oVideo->sToken;?>', '<?php echo $oVideo->iFolder;?>'); return false;"><?php echo ucfirst(stripslashes($oVideo->sName)); ?></a>
 					</td>
 					<td><img src="<?php echo plugins_url('vod-infomaniak/img/ico-folder-open-16x16.png'); ?>" style="vertical-align:bottom"/> <?php echo $oVideo->sPath; ?></td>
 					<td><?php echo $oVideo->dUpload; ?></td>
 					<td>
-						<a href="javascript:; return false;" onclick="openVodPopup('<?php echo $oVideo->iVideo; ?>', '<?php echo $oVideo->sName; ?>','<?php echo $oVideo->sPath.$oVideo->sServerCode."', '".strtolower($oVideo->sExtension);?>', '<?php echo strtolower($oVideo->sAccess);?>', '<?php echo $oVideo->sToken;?>', '<?php echo $oVideo->iFolder;?>'); return false;"><img src="<?php echo plugins_url('vod-infomaniak/img/ico-information.png'); ?>" alt="<?php _e("Information sur cette video",'vod_infomaniak'); ?>"/></a>
+						<a href="javascript:; return false;" onclick="openVodPopup('<?php echo $oVideo->iVideo; ?>', '<?php echo addslashes($oVideo->sName); ?>','<?php echo $oVideo->sPath.$oVideo->sServerCode."', '".strtolower($oVideo->sExtension);?>', '<?php echo strtolower($oVideo->sAccess);?>', '<?php echo $oVideo->sToken;?>', '<?php echo $oVideo->iFolder;?>'); return false;"><img src="<?php echo plugins_url('vod-infomaniak/img/ico-information.png'); ?>" alt="<?php _e("Information sur cette video",'vod_infomaniak'); ?>"/></a>
 						<a href="https://statslive.infomaniak.com/vod/videoDetail.php?iVodCode=<?php echo $aOptions['vod_api_icodeservice'];?>&iFileCode=<?php echo $oVideo->iVideo; ?>" target="_blank"><img src="<?php echo plugins_url('vod-infomaniak/img/ico-video.png'); ?>" alt="<?php _e("Administrer cette video",'vod_infomaniak'); ?>"/></a>
 						<a href="https://statslive.infomaniak.com/vod/videoDetail.php?iVodCode=<?php echo $aOptions['vod_api_icodeservice'];?>&iFileCode=<?php echo $oVideo->iVideo; ?>&tab=2" target="_blank"><img src="<?php echo plugins_url('vod-infomaniak/img/ico-statistics.png'); ?>" alt="<?php _e("Voir les statistiques de cette video",'vod_infomaniak'); ?>"/></a>
-						<a href="javascript:; return false;" onclick="confirmVodDelete('<?php echo $oVideo->iVideo; ?>', '<?php echo $oVideo->sName; ?>');"><img src="<?php echo plugins_url('vod-infomaniak/img/ico-delete.png'); ?>" alt="<?php _e("Supprimer cette video",'vod_infomaniak'); ?>"/></a>
+						<a href="javascript:; return false;" onclick="confirmVodDelete('<?php echo $oVideo->iVideo; ?>', '<?php echo addslashes($oVideo->sName); ?>');"><img src="<?php echo plugins_url('vod-infomaniak/img/ico-delete.png'); ?>" alt="<?php _e("Supprimer cette video",'vod_infomaniak'); ?>"/></a>
 					</td>
 				</tr>
 				<?php
