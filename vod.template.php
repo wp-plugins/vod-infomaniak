@@ -156,7 +156,6 @@ class EasyVod_Display
 			<p>
 				<label><?php _e("Identifiant de l'espace VOD",'vod_infomaniak'); ?> :</label>
 				<input type="text" id="vod_api_id" name="vod_api_id" value="<?php echo !empty($options['vod_api_id']) ? $options['vod_api_id'] : ""; ?>"/>
-				(
 			</p>
 			<p>
 				<label><?php _e('Connection','vod_infomaniak'); ?> :</label>
