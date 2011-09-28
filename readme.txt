@@ -76,6 +76,10 @@ Les nouvelles vidéos seront automatiquement ajoutés avec le paramètre "tokenF
 
 == Changelog ==
 
+= 0.2.6 =
+* Suppression d'un warning pouvant apparaitre sur certaines configurations
+* Ajout d'accents sur quelques phrases n'etant pas présentes dans les fichiers de traductions
+
 = 0.2.5 =
 * Remise en forme du formulaire d'ajout d'une vidéo
 * Nouveau système d'update automatique des tables mysql

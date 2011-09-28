@@ -74,9 +74,9 @@ class EasyVod_Display
 				<div id="dialog-tab3" class="ui-tabs-panel">
 					<input type="hidden" id="url_ajax_import_video" value="<?php echo get_bloginfo('wpurl'); ?>/wp-admin/admin-ajax.php?action=vodimportvideo"/>
 					
-					<h4 style="margin:0">1. Séléction du dossier :</h4>
+					<h4 style="margin:0"><?php _e('1. Selection du dossier','vod_infomaniak');?> :</h4>
 					<select id="uploadSelectFolder" style="width:550px;">
-						<option value="-1" selected="selected">-- Dossier d'envoi --</option>
+						<option value="-1" selected="selected">-- <?php _e("Dossier d'envoi",'vod_infomaniak');?> --</option>
 						<?php 
 							if( empty($aFolders) ) {
 								echo "<option value='0'>". __("Aucun dossier disponible",'vod_infomaniak') ."</option>";	
@@ -90,7 +90,7 @@ class EasyVod_Display
 					<input type="button" value="Valider" onclick="Vod_importVideo();return false;"/>
 					<div id="vodUploadVideo" style="display:none">
 						<br/>
-						<h4 style="margin:0">2. Envoi d'un fichier :</h4>
+						<h4 style="margin:0"><?php _e("2. Envoi d'un fichier",'vod_infomaniak');?> :</h4>
 						<div id="up"></div>
 					</div>
 					<script>

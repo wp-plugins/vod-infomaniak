@@ -144,7 +144,7 @@ class EasyVod
 				if( !empty($oVideo->sToken) ){
 					echo $oVideo->iFolder.";;;";
 				}
-				echo "</span><span>".ucfirst($oVideo->sName)." ( Ajout: ".date("j F Y ", strtotime($oVideo->dUpload)).", Duree: $str )</span>\n";
+				echo "</span><span>".ucfirst($oVideo->sName)." ( ".__("Ajout",'vod_infomaniak')." : ".date("j F Y ", strtotime($oVideo->dUpload)).", ".__("Duree",'vod_infomaniak').": $str )</span>\n";
 			}
 		}
 		die();
@@ -185,7 +185,8 @@ class EasyVod
 					if ( $result != $post->post_content ) {
 						$post->post_content = $result;
 						$update_post['post_content'] = $post->post_content;
-						wp_update_post( $update_post );
+						// Sans le @, warning suivant la config apache. Probleme soumis sur le forum officiel
+						@wp_update_post( $update_post );
 					}
 					return $this->tag($sVideoPath, $params, $high, $time, $side);
 				}
@@ -196,7 +197,7 @@ class EasyVod
 		$height		= empty( $aTagParam['height'] ) ? $this->options['height'] : intval($aTagParam['height']);
 		return "<div style='background: url(\"" . plugins_url('vod-infomaniak/img/topbg10.png') . "\") repeat;border-radius: 8px; text-align:center; color: #DDDDDD; font-weight: bold; background-color: #222222; width: ".$width."px; height: ".$height."px;'>
 			<div style='font-size: 150%;padding-top: 100px;line-height:".(($height-200)/2)."px;vertical-align: middle;'>
-				<span style='display:block;'>Vidéo en cours de conversion ...</span>
+				<span style='display:block;'>".__("Video en cours de conversion",'vod_infomaniak')." ...</span>
 				<img src='" . plugins_url('vod-infomaniak/img/ico-vod-64.png') . "' style='vertical-align:middle'/>	
 			</div>
 		</div>";
@@ -306,7 +307,6 @@ class EasyVod
 	 
 	function mce_register($plugin_array) {
 		$plugin_array["swfobject"] = "http://ajax.googleapis.com/ajax/libs/swfobject/2.1/swfobject.js";
-		//$plugin_array["flashupload"] = "http://vod.infomaniak.com/apiUpload/flashUpload.js";
 		$plugin_array["vodplugin"] = plugins_url('vod-infomaniak/js/editor_plugin.js');
 		return $plugin_array;
 	}
