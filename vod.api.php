@@ -31,9 +31,11 @@ class vod_api {
 		$this->sId = $Id;
 	}
 	
-	private function debug($oException) {
+	private function debug($sFunction, $oException) {
 		if (WP_DEBUG) {
+			echo "<h4 style='color:red'>Debug :: vod_api -> ".$sFunction."()</h4><code>";
 			var_dump ( $oException );
+			echo "</code>";
 		}
 	}
 	/**
@@ -61,7 +63,7 @@ class vod_api {
 				return $oSoap->time ();
 			}
 		} catch ( Exception $oException ) {
-			$this->debug ( $oException );
+			$this->debug ( "time", $oException );
 		}
 		return 0;
 	}
@@ -78,7 +80,7 @@ class vod_api {
 				return intval ( $oSoap->getServiceItemID () );
 			}
 		} catch ( Exception $oException ) {
-			$this->debug ( $oException );
+			$this->debug ( "getServiceItemID", $oException );
 		}
 		return 0;
 	}
@@ -95,7 +97,7 @@ class vod_api {
 				return intval ( $oSoap->getGroupeID () );
 			}
 		} catch ( Exception $oException ) {
-			$this->debug ( $oException );
+			$this->debug ( "getGroupID", $oException );
 		}
 		return 0;
 	}
@@ -112,7 +114,7 @@ class vod_api {
 				return intval ( $oSoap->countVideo () );
 			}
 		} catch ( Exception $oException ) {
-			$this->debug ( $oException );
+			$this->debug ( "countVideo", $oException );
 		}
 		return false;
 	}
@@ -131,7 +133,7 @@ class vod_api {
 				return $oSoap->deleteVideo ( $iFolderCode, $sFileServerCode );
 			}
 		} catch ( Exception $oException ) {
-			$this->debug ( $oException );
+			$this->debug ( "deleteVideo", $oException );
 		}
 		return false;
 	}
@@ -151,7 +153,7 @@ class vod_api {
 				return $oSoap->setVideoTitle ( $iFolderCode, $sFileServerCode, $sName );
 			}
 		} catch ( Exception $oException ) {
-			$this->debug ( $oException );
+			$this->debug ( "renameVideo", $oException );
 		}
 		return false;
 	}
@@ -168,7 +170,7 @@ class vod_api {
 				return $oSoap->getLastVideo ( $iLimit, $iPage );
 			}
 		} catch ( Exception $oException ) {
-			$this->debug ( $oException );
+			$this->debug ( "getLastVideo", $oException );
 		}
 		return false;
 	}
@@ -185,7 +187,7 @@ class vod_api {
 				return $oSoap->getLastImportation ( 15 );
 			}
 		} catch ( Exception $oException ) {
-			$this->debug ( $oException );
+			$this->debug ( "getLastImportation", $oException );
 		}
 		return false;
 	}
@@ -202,7 +204,7 @@ class vod_api {
 				return $oSoap->getFolders ();
 			}
 		} catch ( Exception $oException ) {
-			$this->debug ( $oException );
+			$this->debug ( "getFolders", $oException );
 		}
 		return false;
 	}
@@ -219,7 +221,7 @@ class vod_api {
 				return $oSoap->folderModifiedSince ( $date );
 			}
 		} catch ( Exception $oException ) {
-			$this->debug ( $oException );
+			$this->debug ( "folderModifiedSince", $oException );
 		}
 		return false;
 	}
@@ -236,7 +238,7 @@ class vod_api {
 				return $oSoap->getPlayers ();
 			}
 		} catch ( Exception $oException ) {
-			$this->debug ( $oException );
+			$this->debug ( "getPlayers", $oException );
 		}
 		return false;
 	}
@@ -253,7 +255,7 @@ class vod_api {
 				return $oSoap->playerModifiedSince ( $date );
 			}
 		} catch ( Exception $oException ) {
-			$this->debug ( $oException );
+			$this->debug ( "PlayerModifiedSince", $oException );
 		}
 		return false;
 	}
@@ -270,7 +272,7 @@ class vod_api {
 				return $oSoap->getPlaylists ();
 			}
 		} catch ( Exception $oException ) {
-			$this->debug ( $oException );
+			$this->debug ( "getPlaylists", $oException );
 		}
 		return false;
 	}
@@ -287,7 +289,7 @@ class vod_api {
 				return $oSoap->playlistModifiedSince ( $date );
 			}
 		} catch ( Exception $oException ) {
-			$this->debug ( $oException );
+			$this->debug ( "playlistModifiedSince", $oException );
 		}
 		return false;
 	}
@@ -304,7 +306,7 @@ class vod_api {
 				return $oSoap->initUpload ( $sPath );
 			}
 		} catch ( Exception $oException ) {
-			$this->debug ( $oException );
+			$this->debug ( "initUpload", $oException );
 		}
 		return false;
 	}
@@ -321,7 +323,24 @@ class vod_api {
 				return $oSoap->importFromUrl ( $sPath, $sUrl, $aOptions );
 			}
 		} catch ( Exception $oException ) {
-			$this->debug ( $oException );
+			$this->debug ( "importFromUrl", $oException );
+		}
+		return false;
+	}
+	
+	/**
+	 * Fonction permettant d'ajouter des infos a une ou plusieurs videos
+	 * 
+	 * @return boolean
+	 */
+	public function addInfo( $sToken, $sInfo ){
+		try {
+			$oSoap = $this->getSoapAdmin ();
+			if (! empty ( $oSoap )) {
+				return $oSoap->addInfo ( $sToken, $sInfo );
+			}
+		} catch ( Exception $oException ) {
+			$this->debug ( "addInfo", $oException );
 		}
 		return false;
 	}
@@ -338,7 +357,7 @@ class vod_api {
 				return $oSoap->getCallbackUrl ();
 			}
 		} catch ( Exception $oException ) {
-			$this->debug ( $oException );
+			$this->debug ( "getCallback", $oException );
 		}
 		return false;
 	}
@@ -356,7 +375,7 @@ class vod_api {
 				return $oSoap->setCallbackUrl ( $sUrl );
 			}
 		} catch ( Exception $oException ) {
-			$this->debug ( $oException );
+			$this->debug ( "setCallback", $oException );
 		}
 		return false;
 	}
@@ -370,7 +389,7 @@ class vod_api {
 				$this->oSoap->__setSoapHeaders ( array (new SoapHeader ( 'urn:vod_soap', 'AuthenticationHeader', new SoapVODAuthentificationHeader ( $this->sLogin, $this->sPassword, $this->sId ) ) ) );
 				return $this->oSoap;
 			} catch ( Exception $oException ) {
-				$this->debug( $oException );
+				$this->debug( "getSoapAdmin", $oException );
 			}
 			return false;
 		}

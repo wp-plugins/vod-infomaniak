@@ -18,7 +18,7 @@ class EasyVod
 	private $key;
 	private $db;
 	public $version = "0.2";
-
+	
 	function EasyVod() {
 		$this->__construct();
 	}
@@ -37,36 +37,46 @@ class EasyVod
 	function add_filters_and_hooks() {
 		register_activation_hook(__FILE__, array(&$this, 'install_db') );
 		register_deactivation_hook(__FILE__, array(&$this, 'uninstall_db'));
+		add_action('plugins_loaded', array(&$this, 'update_db'));
+		wp_register_style('ui-tabs', plugins_url('vod-infomaniak/css/jquery.ui.tabs.css'));
 		
 		load_plugin_textdomain( 'vod_infomaniak', FALSE, basename( dirname( __FILE__ ) ) .'/languages' );
 		
-		wp_register_style('ui-tabs', plugins_url('vod-infomaniak/css/jquery.ui.tabs.css'));
-		
-		add_action( 'admin_menu', array(&$this, 'add_menu_items'));
-		add_action( 'edit_form_advanced', array(&$this, 'buildForm') );
-		add_action( 'edit_page_form', array(&$this, 'buildForm') );
-		add_action( 'wp_ajax_importvod', array(&$this, 'printLastImport') );
-		add_action( 'wp_ajax_vodsearchvideo', array(&$this, 'searchVideo') );
-		add_action( 'wp_ajax_vodsearchplaylist', array(&$this, 'searchPlaylist') );
 		add_action( 'template_redirect', array(&$this, 'vod_template_redirect'));
-
+		add_filter( 'query_vars', 'vod_query_vars');
 		add_filter( 'the_content', array(&$this, 'check'), 100);
 		add_filter( 'the_excerpt', array(&$this, 'check'), 100);
-		add_filter( 'mce_external_plugins', array(&$this, 'mce_register') );
-		add_filter( 'mce_buttons', array(&$this, 'mce_add_button'), 0);
-		add_filter( 'query_vars', 'vod_query_vars');
-
-		//On load Css et Js
-		wp_enqueue_script( 'jquery-ui-dialog' );
-		wp_enqueue_script( 'jquery-ui-tabs' );
-		wp_enqueue_script( 'suggest' );
-		wp_enqueue_style( 'vod-jquery-ui', plugins_url('vod-infomaniak/css/jquery-ui.css'), array(), $this->version, 'screen' );
-		wp_enqueue_style( 'ui-tabs' );
+		
+		if ( is_admin() ) {
+			add_action( 'admin_menu', array(&$this, 'add_menu_items'));
+			add_action( 'edit_form_advanced', array(&$this, 'buildForm') );
+			add_action( 'edit_page_form', array(&$this, 'buildForm') );
+			add_action( 'wp_ajax_importvod', array(&$this, 'printLastImport') );
+			add_action( 'wp_ajax_vodsearchvideo', array(&$this, 'searchVideo') );
+			add_action( 'wp_ajax_vodsearchplaylist', array(&$this, 'searchPlaylist') );
+			add_action( 'wp_ajax_vodimportvideo', array(&$this, 'importPostVideo') );
+		
+			add_filter( 'mce_external_plugins', array(&$this, 'mce_register') );
+			add_filter( 'mce_buttons', array(&$this, 'mce_add_button'), 0);
+		
+			//On load Css et Js
+			wp_enqueue_script( 'jquery-ui-dialog' );
+			wp_enqueue_script( 'jquery-ui-tabs' );
+			wp_enqueue_script( 'suggest' );
+			wp_enqueue_style( 'vod-jquery-ui', plugins_url('vod-infomaniak/css/jquery-ui.css'), array(), $this->version, 'screen' );
+			wp_enqueue_style( 'ui-tabs' );
+		}
 	}
-	
+
 	function install_db() {
 		$this->db->install_db();
 		$this->fastSynchro();
+	}
+	
+	function update_db() {
+		if (get_site_option('vod_db_version') != $this->db->db_version ) {
+			$this->install_db();
+		}
 	}
 	
 	function uninstall_db(){}
@@ -87,6 +97,23 @@ class EasyVod
 			add_submenu_page(__FILE__,__('Playlist','vod_infomaniak'), __('Playlist','vod_infomaniak'), 'edit_pages', 'Playlist', array(&$this,'vod_playlist_menu'));
 			add_submenu_page(__FILE__,__('Configuration','vod_infomaniak'), __('Configuration','vod_infomaniak'), 'edit_plugins', 'configuration', array(&$this,'vod_admin_menu'));
 		}
+	}
+	
+	function importPostVideo() {
+		if (!empty($_REQUEST['upload']) && $_REQUEST['upload']=="finish" ) {
+			echo $this->db->insert_upload( $_REQUEST['sToken'], $_REQUEST['post'] );
+		} else if (!empty($_REQUEST['iFolder'])) {
+			$oFolder = $this->db->getFolder( $_REQUEST['iFolder'] );
+			if( empty($oFolder) || empty( $oFolder->sName ) ){
+				die(__("Il n'est pas possible d'uploader dans ce dossier.",'vod_infomaniak'));
+			}
+			$oApi = $this->getAPI();
+			$sToken = $oApi->initUpload( $oFolder->sPath );
+			$oApi->addInfo($sToken, "wp_upload_post_".$sToken);
+			delete_transient( 'vod_last_import' );
+			echo $sToken;
+		}
+		die();
 	}
 	
 	function searchPlaylist() {
@@ -131,10 +158,52 @@ class EasyVod
 				$the_content = preg_replace("/\[$tag([^`]*?)\]([^`]*?)\[\/$tag\]/", $this->tag($match[2], $match[1], '', '', $side), $the_content, 1);
 			}
 		}
+		if ( strpos($the_content, "[upload-vod") !== false ) {
+			$tag = "upload-vod";
+			preg_match_all("/\[$tag([^`]*?)\]([^`]*?)\[\/$tag\]/", $the_content, $matches, PREG_SET_ORDER);
+			foreach ($matches as $match) {
+				$the_content = preg_replace("/\[$tag([^`]*?)\]([^`]*?)\[\/$tag\]/", $this->tag_upload($match[2], $match[1], '', '', $side), $the_content, 1);
+			}
+		}
 		return $the_content;
 	}
 	
+	function tag_upload($file, $params, $high = 'v', $time = '', $side = 0) {
+		//On check que le tag upload ne doit pas etre remplacer par un tag vod
+		if ( !empty($file) && strpos($file, ':') !== false) {
+			$decoupage = split(":", $file);
+			$sToken = $decoupage[0];
+			$aUpload =$this->db->get_upload_video( $sToken );
+			if ( intval($aUpload->iVideo) > 0 ) {
+				$video = $this->db->getVideo( $aUpload->iVideo );
+				if ( !empty($video) ) {
+					global $post;
+					$sVideoPath = $video->sPath.$video->sServerCode.".".strtolower($video->sExtension);
+					$update_post = array();
+					$update_post['ID'] = $post->ID;
+					$result = str_replace("[upload-vod]".$file."[/upload-vod]", "[vod]".$sVideoPath."[/vod]", $post->post_content);
+					if ( $result != $post->post_content ) {
+						$post->post_content = $result;
+						$update_post['post_content'] = $post->post_content;
+						wp_update_post( $update_post );
+					}
+					return $this->tag($sVideoPath, $params, $high, $time, $side);
+				}
+			}
+		}
+		
+		$width		= empty( $aTagParam['width'] ) ? $this->options['width'] : intval($aTagParam['width']);
+		$height		= empty( $aTagParam['height'] ) ? $this->options['height'] : intval($aTagParam['height']);
+		return "<div style='background: url(\"" . plugins_url('vod-infomaniak/img/topbg10.png') . "\") repeat;border-radius: 8px; text-align:center; color: #DDDDDD; font-weight: bold; background-color: #222222; width: ".$width."px; height: ".$height."px;'>
+			<div style='font-size: 150%;padding-top: 100px;line-height:".(($height-200)/2)."px;vertical-align: middle;'>
+				<span style='display:block;'>Vidéo en cours de conversion ...</span>
+				<img src='" . plugins_url('vod-infomaniak/img/ico-vod-64.png') . "' style='vertical-align:middle'/>	
+			</div>
+		</div>";
+	}
+	
 	function tag($file, $params, $high = 'v', $time = '', $side = 0) {	
+		
 		//Recuperation des parametres optionnels des tags
 		$aTagParam = array();
 		if ( !empty( $params ) ) {
@@ -149,6 +218,7 @@ class EasyVod
 				}
 			}
 		}
+		
 		//Recuperation des differents parametres
 		$iVod		= $this->options['vod_api_icodeservice'];
 		$sUrl		= "http://vod.infomaniak.com/iframe.php";
@@ -235,6 +305,8 @@ class EasyVod
 	}
 	 
 	function mce_register($plugin_array) {
+		$plugin_array["swfobject"] = "http://ajax.googleapis.com/ajax/libs/swfobject/2.1/swfobject.js";
+		//$plugin_array["flashupload"] = "http://vod.infomaniak.com/apiUpload/flashUpload.js";
 		$plugin_array["vodplugin"] = plugins_url('vod-infomaniak/js/editor_plugin.js');
 		return $plugin_array;
 	}
@@ -244,7 +316,8 @@ class EasyVod
 			require_once("vod.template.php");
 			$aPlayers = $this->db->get_players();
 			$aLastVideos = $this->db->get_videos_byPage( 0, 50 );
-			EasyVod_Display::buildForm( $this->options, $aPlayers, $aLastVideos );
+			$aFolders = $this->db->get_folders();
+			EasyVod_Display::buildForm( $this->options, $aPlayers, $aLastVideos, $aFolders );
 		}
 	}
 
@@ -321,6 +394,23 @@ class EasyVod
 			}
 		}
 	
+		//Verification s'il y a des upload en attente
+		$aProcessing = $this->db->get_upload_process();
+		if ( !empty($aProcessing) ) {
+			$aLastImportation = $oApi->getLastImportation( 50 );
+			foreach ( $aLastImportation as $oImport ) {
+				if( $oImport['sProcessState'] == "OK" && !empty($oImport['iVideo']) && strpos($oImport['sInfo'], "wp_upload_post_") !== false ) {
+					//On le connait peut etre celui la
+					foreach($aProcessing as $oProcess) {
+						if ( "wp_upload_post_".$oProcess->sToken == $oImport['sInfo'] ) {
+							//On a trouvé un des upload
+							$this->db->update_upload( $oProcess->sToken, $oImport['iVideo'] );
+						}
+					}
+				}
+			}
+		}
+		
 		//Update de la synchro
 		$serveurTime = $oApi->time();
 		$localTime = time();
@@ -640,6 +730,8 @@ class EasyVod_db
 	var $db_table_folder;
 	var $db_table_video;
 	var $db_table_playlist;
+	var $db_table_upload;
+	var $db_version = "1.0.5";
 
 	function __construct() {
 		global $wpdb;
@@ -647,6 +739,7 @@ class EasyVod_db
 		$this->db_table_folder = $wpdb->prefix . "vod_folder";
 		$this->db_table_video = $wpdb->prefix . "vod_video";
 		$this->db_table_playlist = $wpdb->prefix . "vod_playlist";
+		$this->db_table_upload = $wpdb->prefix . "vod_upload";
 	}
 
 	function install_db() {
@@ -695,6 +788,18 @@ class EasyVod_db
 		 `dCreated` DATETIME NOT NULL 
 		) CHARACTER SET utf8;";
 		dbDelta($sql_playlist);
+		
+		$sql_upload = "CREATE TABLE ".$this->db_table_upload." (
+		 `iUpload` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+		 `sToken` VARCHAR( 255 ) NOT NULL,
+		 `iPost` INT UNSIGNED NOT NULL,
+		 `iVideo` INT UNSIGNED NOT NULL,
+		 PRIMARY KEY (iUpload),
+		 UNIQUE KEY sToken (sToken)
+		) CHARACTER SET utf8;";
+		dbDelta($sql_upload);
+		
+		update_option( "vod_db_version", $this->db_version );
 	}
 
 	/*
@@ -847,6 +952,28 @@ class EasyVod_db
 		return $wpdb->query("DELETE FROM ".$this->db_table_video." WHERE iVideo = ".intval($iVideo)." LIMIT 1");
 	}
 	
+	/*
+	 * Gestion des uploads
+	 */
+	function insert_upload( $sToken, $iPost ) {
+		global $wpdb;
+		$wpdb->insert( $this->db_table_upload, array( 'sToken' => $sToken, 'iPost' => $iPost) );
+	}
+	
+	function update_upload( $sToken, $iPost ) {
+		global $wpdb;
+		return $wpdb->query( $wpdb->prepare("UPDATE ".$this->db_table_upload." SET `iVideo`=%d WHERE `wp_vod_upload`.`sToken`=%s", $iPost, $sToken) );
+	}
+	
+	function get_upload_video( $sToken ) {
+		global $wpdb;
+		return $wpdb->get_row( $wpdb->prepare("SELECT * FROM ".$this->db_table_upload." WHERE sToken=%s LIMIT 1", $sToken) );
+	}
+	
+	function get_upload_process(){
+		global $wpdb;
+		return $wpdb->get_results("SELECT * FROM ".$this->db_table_upload." WHERE iVideo=0");
+	}
 }
 
 function vod_query_vars($qvars) {

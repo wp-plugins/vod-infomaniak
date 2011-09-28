@@ -13,15 +13,16 @@
 class EasyVod_Display
 {
 
-	static function buildForm( $options, $aPlayers, $aLastVideos ) { 
+	static function buildForm( $options, $aPlayers, $aLastVideos, $aFolders ) { 
 	?>
 	<div class="hidden">
 		<div id="dialog-vod-form">
 			<div id="dialog-tabs" class="ui-tabs">
 				<ul class="ui-tabs-nav">
-					<li><a href="#dialog-tab1"><?php _e("Avec l'url",'vod_infomaniak');?></a></li>
 					<li><a href="#dialog-tab2"><?php _e('Dernieres videos','vod_infomaniak');?></a></li>
-					<li><a href="#dialog-tab3"><?php _e('Outil de recherche','vod_infomaniak');?></a></li>
+					<li><a href="#dialog-tab1"><?php _e("Avec l'url",'vod_infomaniak');?></a></li>
+					<li><a href="#dialog-tab3"><?php _e("Envoi d'une video",'vod_infomaniak');?></a></li>
+					<li><a href="#dialog-tab4"><?php _e('Outil de recherche','vod_infomaniak');?></a></li>
 				</ul>
 				<div id="dialog-tab1" class="ui-tabs-panel">
 					<div style="padding-left: 20px; padding-bottom: 10px;"><?php _e("Veuillez saisir l'URL d'une video",'vod_infomaniak');?></div>
@@ -71,6 +72,96 @@ class EasyVod_Display
 					</table>
 				</div>
 				<div id="dialog-tab3" class="ui-tabs-panel">
+					<input type="hidden" id="url_ajax_import_video" value="<?php echo get_bloginfo('wpurl'); ?>/wp-admin/admin-ajax.php?action=vodimportvideo"/>
+					
+					<h4 style="margin:0">1. Séléction du dossier :</h4>
+					<select id="uploadSelectFolder" style="width:550px;">
+						<option value="-1" selected="selected">-- Dossier d'envoi --</option>
+						<?php 
+							if( empty($aFolders) ) {
+								echo "<option value='0'>". __("Aucun dossier disponible",'vod_infomaniak') ."</option>";	
+							} else {
+								foreach( $aFolders as $oFolder ){
+									echo "<option value='".$oFolder->iFolder."'>".__('Dossier','vod_infomaniak')." : /".$oFolder->sPath." , ".__('Nom','vod_infomaniak')." : ".$oFolder->sName."</option>";
+								}
+							}
+						?>
+					</select>
+					<input type="button" value="Valider" onclick="Vod_importVideo();return false;"/>
+					<div id="vodUploadVideo" style="display:none">
+						<br/>
+						<h4 style="margin:0">2. Envoi d'un fichier :</h4>
+						<div id="up"></div>
+					</div>
+					<script>
+						var flashUpload = function(sKey){
+							var objId = "up";
+							var paramsUpld = { 
+								menu: "false",
+								AllowScriptAccess: "always",
+								wmode : "transparent",
+								scale : "noscale",
+								salign: "lt",
+								bgcolor:"#ffffff",
+								quality:"high",
+								allowfullscreen:"false"			
+							};
+							var attributesUpld = {
+								id: "up",
+								name: "upName"
+							};
+							var flashvarsUpld = {
+								key: sKey,
+								nbMaxToUpload:1,
+								nbFichier:1
+							};
+	
+							swfobject.embedSWF("http://adminvod.infomaniak.ch/apiUpload/uploadStda.swf", objId, "700", "80", "9.0.0", "http://infomaniak.ch/shared/flashs/expressInstall.swf", flashvarsUpld, paramsUpld, attributesUpld);
+						};
+	
+						var updateUpladerSize = function (objId,iHeight){
+							document.getElementById(objId).height = iHeight+"px";
+						};
+					
+						multiUploadCallback = function(json) {
+							oJson = eval('('+json+')');
+							switch (oJson.sStatus) {
+								case "init":
+									document.getElementById('up').callbackInitialisation();
+									break;
+								case "complete":
+									document.getElementById('up').callbackProcessing(oJson.iCurrent,true);
+									jQuery.ajax({
+										url: jQuery("#url_ajax_import_video").val(),
+										cache: false,
+										processData: false,
+										data: "upload=finish&post=<?php global $post; echo $post->ID; ?>&sToken="+sVodUploadParameters,
+										success: function(html){
+											filename = oJson.sOriginalFileName;
+											filename = filename.replace(/[^a-zA-Z 0-9,.-_]+/g,'');
+											var text = "[upload-vod]" + sVodUploadParameters + ":"+filename+"[/upload-vod]";
+											if ( typeof tinyMCE != 'undefined' && ( ed = tinyMCE.activeEditor ) && !ed.isHidden() ) {
+												ed.focus();
+												if (tinymce.isIE){
+													ed.selection.moveToBookmark(tinymce.EditorManager.activeEditor.windowManager.bookmark);
+												}
+												ed.execCommand('mceInsertContent', false, text);
+											} else{
+												edInsertContent(edCanvas, text);
+											}
+											jQuery("#dialog-vod-form").dialog("close");
+											jQuery("#vodUploadVideo").hide();
+										}
+									});
+									break;
+								case "error":
+									alert('upload error : '+oJson.sOriginalFileName);
+									break;
+							}
+						}
+					</script>
+				</div>
+				<div id="dialog-tab4" class="ui-tabs-panel">
 					<input type="hidden" id="url_ajax_search_video" value="<?php echo get_bloginfo('wpurl'); ?>/wp-admin/admin-ajax.php?action=vodsearchvideo"/>
 					<input type="hidden" id="url_ajax_search_playlist" value="<?php echo get_bloginfo('wpurl'); ?>/wp-admin/admin-ajax.php?action=vodsearchplaylist"/>
 					<div style="padding-left: 30px;">

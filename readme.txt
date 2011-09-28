@@ -76,6 +76,12 @@ Les nouvelles vidéos seront automatiquement ajoutés avec le paramètre "tokenF
 
 == Changelog ==
 
+= 0.2.5 =
+* Remise en forme du formulaire d'ajout d'une vidéo
+* Ajout de la possibilité d'uploader une vidéo directement lors de l'ecriture d'un article/page via un onglet "Envoi d'une vidéo"
+* Modification du loading de certaines fonction par le plugin qui pouvait rentrer en conflit avec certains thèmes.
+* Nouveau système d'update automatique des tables mysql 
+
 = 0.2.4 =
 * Utilisation du mode de debug de wordpress au lieu d'erreur PHP en cas de problème avec l'API
 * Modification du fonctionnement du renommage d'une vidéo

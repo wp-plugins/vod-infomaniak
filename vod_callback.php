@@ -45,7 +45,14 @@ if( $aOptions['vod_api_callbackKey'] == $_REQUEST['key'] ){
 	}
 	
 	$db->insert_video($iVideo, $iFolder, $sFileName, $sServerCode, $sPath, $sExtension, $iDuration, $dUpload );
+	
+	if ( !empty($response['sInfo']) ){
+		$sParamInfo = $response['sInfo'];
+		if ( strpos($sParamInfo, "wp_upload_post_") !== false ) {
+			$sToken = str_replace("wp_upload_post_", "", $sParamInfo);
+			$db->update_upload( $sToken, $iVideo );
+		}
+	}
 }
 die();
 ?>
-
