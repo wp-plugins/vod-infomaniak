@@ -100,50 +100,26 @@ Les nouvelles vidéos seront automatiquement ajoutés avec le paramètre "tokenF
 = 0.2 =
 * Modification du nouveau système de synchro pour qu'il se lance plus régulierement contrairement à wp_schedule_event()
 * Suppression des notices pouvant être indiqués par apache
-
-= 0.1.9 =
-* Fix du callback qui ne fonctionnait plus depuis la 1.0.7
-
-= 0.1.8 =
 * Correction d'un bug d'affichage dans le cas de playlist incomplète
 * Nouveau système de synchro automatique des videos plus efficace
-
-= 0.1.7 =
 * Fix d'un bug durant la synchro forcé des dossiers
 * Récuperation et affichage de la durée des playlist
 * Correction d'orthographe sur plusieurs phrases
-
-= 0.1.6 =
-* Réorganisation du menu un peu bordelique
 * Snapshot de prévisualisation
 * Fix d'un bug d'affichage en 1024
-
-= 0.1.5 =
 * Correction concernant l'écriture automatique d'un post lorsque la vidéo nécéssite un token
 * Correction du message indiquant des géolocalisation sur certaines vidéos n'en ayant pas
-
-= 0.1.4 =
 * Mise en place d'une première version du système de traduction
 * Correction dans l'appel d'une fonction de wordpress deprecated
-
-= 0.1.3 =
-* Ajout de l'url de l'image
 * Option permettant de créer automatiquement un article en draft à partir d'une vidéo
 * Amélioration de la page player avec un player de prévisualisation pour pouvoir tester celui selectionné
-
-= 0.1.2 =
 * Gestion automatique des token unique sur les vidéos le nécessitant. L'ajout d'un attribut 'tokenfolder' à la balise [vod] permet au plugin d'identifier les vidéos utilisant cette fonctionnalité et ainsi de générer à la volé la clef unique pour chaque visiteur.
 * Focus automatique sur les champs des formulaires de recherches
-
-= 0.1.1 =
 * Ajout de nouveaux liens sur les vidéos (statistiques, détails d'une vidéo)
 * Possibilité de renommer et supprimer une vidéo
 * Nouveau système de cryptage du password de l'API
 
-= 0.1 =
-* Mise en place de la première version
-
 = Prochainement =
-* Gestion des fichiers audio
 * Traductions EN/DE
 * Une version stable
+* Gestion des fichiers audio
