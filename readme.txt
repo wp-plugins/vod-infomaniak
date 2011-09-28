@@ -76,32 +76,26 @@ Les nouvelles vidéos seront automatiquement ajoutés avec le paramètre "tokenF
 
 == Changelog ==
 
-= 0.2.6 =
+= 0.2.6 (28/09/2011) =
 * Suppression d'un warning pouvant apparaitre sur certaines configurations
 * Ajout d'accents sur quelques phrases n'etant pas présentes dans les fichiers de traductions
-
-= 0.2.5 =
 * Remise en forme du formulaire d'ajout d'une vidéo
 * Nouveau système d'update automatique des tables mysql
 * Ajout de la possibilité d'uploader une vidéo directement lors de l'ecriture d'un article/page via un onglet "Envoi d'une vidéo"
 * Modification du loading de certaines fonction par le plugin qui pouvait rentrer en conflit avec certains thèmes.
 * Correction d'un probleme sur la récuperation des playlist
 
-= 0.2.4 =
+= 0.2.4 (14/09/2011) =
 * Utilisation du mode de debug de wordpress au lieu d'erreur PHP en cas de problème avec l'API
 * Modification du fonctionnement du renommage d'une vidéo
 
-= 0.2.3 =
+= 0.2.3 (05/09/2011) =
 * Ajout d'un try/catch sur la récuperation des importations, cela pouvant provoquer une erreur s'il n'y a aucune importation récente.
-
-= 0.2.2 =
 * Nouvelle option lors de l'écriture/édition d'un article permettant de choisir parmis les 50 dernieres vidéos.
 * Quelques petites optimisations
-
-= 0.2.1 =
 * Fix d'un bug avec le système de synchro lors d'une première installation et que rien n'a encore été configuré.
 
-= 0.2 =
+= 0.2 (01/09/2011) =
 * Modification du nouveau système de synchro pour qu'il se lance plus régulierement contrairement à wp_schedule_event()
 * Suppression des notices pouvant être indiqués par apache
 * Correction d'un bug d'affichage dans le cas de playlist incomplète
@@ -122,6 +116,9 @@ Les nouvelles vidéos seront automatiquement ajoutés avec le paramètre "tokenF
 * Ajout de nouveaux liens sur les vidéos (statistiques, détails d'une vidéo)
 * Possibilité de renommer et supprimer une vidéo
 * Nouveau système de cryptage du password de l'API
+
+= 0.1 (23/08/2011) =
+* Lancement du projet et première version publié sur wordpress.org
 
 = Prochainement =
 * Traductions EN/DE
