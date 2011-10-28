@@ -11,8 +11,9 @@ Easily embed and manage videos from Infomaniak VOD in your posts, comments and R
 Attention : Ce plugin est encore en cours de développement, il est fortement déconseillé de l'utiliser dans un environnement de production.
 
 Ce plugin vous permet de gérer facilement les interactions entre votre espace VOD et votre blog.
-Il vous permet en toute simplicité de récupérer et de gérer l'ensemble de vos vidéos. 
-Il offre également de nombreuses autres options tels que :
+Il vous permet en toute simplicité de récupérer et de gérer l'ensemble de vos vidéos.
+
+Ce plugin offre de nombreuses options supplémentaires, tels que :
 
 * La mise à jour automatique lors de l'ajout de nouvelles vidéos
 * La récupération automatique des players existants
@@ -20,6 +21,8 @@ Il offre également de nombreuses autres options tels que :
 * La gestion des playlist
 * Outil de recherche de vidéo lors de l'écriture d'un article ou d'une page
 
+Si vous souhaitez obtenir plus d'informations sur notre solution d'hebergement vidéo, veuillez-vous rendre à l'adresse http://streaming.infomaniak.com/stockage-video-en-ligne
+ 
 == Installation ==
 
 Il est nécessaire pour utiliser ce plugin d'avoir un compte VOD sur notre interface d'administration http://statslive.infomaniak.ch/
@@ -29,12 +32,9 @@ Pour installer ce plugin, il faut :
 1. Aller activer ce plugin dans le menu plugins de wordpress.
 1. Se rendre dans Gestion VOD -> Configuration afin de configurer votre compte avec les identifiants fournis sur l'interface d'administration.
 
+Pour les mises à jours, celles-ci sont automatiques et se font sur le gestionnaire d'extension de wordpress.
+
 == Frequently Asked Questions ==
-
-= La numérotation du plugin est étrange, elle ne devrait pas débuter à 1.0 ? =
-
-Justement, ce plugin est une préversion encore en cours de developpement. Il passera en version 1.0 dès qu'il sera considéré comme assez stable et abouti.
-Il n'y a pas encore de version stable, c'est pour le moment de l'évolution continue et le plugin risque donc de demander assez souvent d'être mis à jour. 
 
 = Il faut que je fournisse mes identifiants personnels au plugin ? =
 
@@ -52,22 +52,10 @@ Dans ce cas là, il faut se rendre sur la page Gestion VOD > Configuration et ap
 Cela peut provenir d'un problème avec l'adresse de callback. C'est une adresse qu'utilise notre système d'encodage pour prévenir votre blog/site qu'une nouvelle vidéo est disponible.
 Cette adresse doit donc être joignable de façon publique. Pour plus d'informations, se reporter à la page Gestion VOD > Configuration
 
-= Je souhaite Géolocaliser une vidéo ou l'interdire à certaines adresses IP =
+= Je n'ai pas trouvé de réponse à ma question =
 
-C'est possible mais pas directement depuis le plugin. Il est pour cela nécessaire de se rendre sur la console d'administration VOD dans "Dossiers -> Diffusion -> Restrictions par zone(s) géographique(s) »
-
-= Je souhaite empêcher d'autres sites d'utiliser mes vidéos sans mon autorisation =
-
-Par défaut les vidéos sont accessibles publiquement et donc utilisable par tout le monde sur n'importe quel site.
-Il est toutefois possible de restreindre l'accès aux vidéos d'un dossier seulement à certains utilisateurs.
-
-Pour cela nous fournissons un système de token ou vous êtes seul en mesure de générer une clef unique permettant à un utilisateur de visionner ou non une vidéo.
-Ces clefs ne sont valable que pour une adresse IP et une durée limité ce qui empêche le partage de celle-ci.
-Cela permet de gérer assez finement l'accès aux vidéos et peut-être très utile dans le cas de pay per view ou d'un site privé.
-
-Cette option est configurable dans la console d'administration dans "Dossiers -> Diffusion -> Restriction par clef unique".
-Une fois activé, il faut se rendre sur la page Gestion VOD > Configuration et appuyer sur le bouton "Synchronisation rapide".
-Les nouvelles vidéos seront automatiquement ajoutés avec le paramètre "tokenFolder" permettant d'identifier les vidéos nécessitant la génération d'une clef unique.
+Sur notre site internet, nous possédons une Foire au Question (http://faq.infomaniak.ch/vod) qui répond à un grand nombre de question et propose des guides/tutoriaux vidéos.
+Si vous ne trouvez toujours pas de solution à votre question, vous pouvez aussi nous contacter par email.
 
 == Screenshots ==
 
