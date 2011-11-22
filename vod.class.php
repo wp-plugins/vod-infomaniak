@@ -5,7 +5,7 @@
  *
  * @author Destrem Kevin
  * @link http://statslive.infomaniak.ch/vod/api/
- * @version 1.0
+ * @version 0.9.0
  * @copyright infomaniak.ch
  *
  */
@@ -17,7 +17,7 @@ class EasyVod
 	private $options;
 	private $key;
 	private $db;
-	public $version = "0.2";
+	public $version = "0.9";
 	
 	function EasyVod() {
 		$this->__construct();
