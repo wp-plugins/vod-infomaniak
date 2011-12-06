@@ -67,6 +67,9 @@ Si vous ne trouvez pas de solution à votre question, vous pouvez aussi nous con
 
 == Changelog ==
 
+= 0.9.1 (1.0 RC2) (6/12/2011) =
+* Modification du comportement des parametres autoplay et loop lors de l'integration.
+
 = 0.9 (1.0 RC1) (31/10/2011) =
 * Ajout des traductions EN,DE
 * Version de controle avant la version finale

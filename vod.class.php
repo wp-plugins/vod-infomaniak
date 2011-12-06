@@ -5,7 +5,7 @@
  *
  * @author Destrem Kevin
  * @link http://statslive.infomaniak.ch/vod/api/
- * @version 0.9.0
+ * @version 0.9.1
  * @copyright infomaniak.ch
  *
  */
@@ -259,8 +259,8 @@ class EasyVod
 			$video_url .= "&player=576";
 		}
 		if( $iVod ) $video_url .= "&vod=$iVod";
-		$video_url .= "&autostart=$autoplay";
-		$video_url .= "&loop=$loop";
+		if( isset($aTagParam['autoplay']) ) $video_url .= "&autostart=$autoplay";
+		if( isset($aTagParam['loop']) ) $video_url .= "&loop=$loop";
 
 		//Build de la balise
 		$html_tag = '<span class="youtube">
@@ -673,8 +673,6 @@ class EasyVod
 					$this->options['player'] = $oPlayer->iPlayer;
 					$this->options['width'] = $oPlayer->iWidth;
 					$this->options['height'] = $oPlayer->iHeight;
-					$this->options['autoplay'] = $oPlayer->bAutoPlay;
-					$this->options['loop'] = $oPlayer->bLoop;
 					update_option($this->key, $this->options);
 				}
 			}
