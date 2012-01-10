@@ -5,7 +5,7 @@
  *
  * @author Destrem Kevin
  * @link http://statslive.infomaniak.ch/vod/api/
- * @version 0.9.1
+ * @version 1.0.0
  * @copyright infomaniak.ch
  *
  */
@@ -342,6 +342,11 @@ class EasyVod
 				foreach( $aListPlayer as $oPlayer ){
 					if( empty( $this->options['player'] ) ) {
 						$this->options['player'] = $oPlayer['iPlayerCode'];
+					} else if( $this->options['player'] == $oPlayer['iPlayerCode'] ){
+						$this->options['player'] = $oPlayer['iPlayerCode'];
+						$this->options['width'] = $oPlayer['iWidth'];
+						$this->options['height'] = $oPlayer['iHeight'];
+						update_option($this->key, $this->options);
 					}
 					$this->db->insert_player( $oPlayer['iPlayerCode'], $oPlayer['sName'], $oPlayer['iWidth'], $oPlayer['iHeight'], $oPlayer['bAutoStart'], $oPlayer['bLoop'], $oPlayer['dEdit'], $oPlayer['bSwitchQuality'] );
 				}
