@@ -864,7 +864,7 @@ class EasyVod_Display
 	static function implementationMenu( $actionurl, $options, $aPlayers ){
 		?>
 		<h2><?php _e("Integration par defaut des videos",'vod_infomaniak'); ?></h2>
-		<form name="adminForm" action="<?php echo $action_url; ?>" method="post">
+		<form name="adminForm" action="<?php echo $actionurl; ?>" method="post">
 			<input type="hidden" name="submitted" value="1" /> 
 			<table>
 				<tr>

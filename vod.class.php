@@ -5,7 +5,7 @@
  *
  * @author Destrem Kevin
  * @link http://statslive.infomaniak.ch/vod/api/
- * @version 1.0.0
+ * @version 1.0.1
  * @copyright infomaniak.ch
  *
  */

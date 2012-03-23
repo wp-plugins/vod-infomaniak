@@ -3,7 +3,7 @@ Contributors: vod-infomaniak
 Tags: video, manage
 Requires at least: 2.8.6
 Tested up to: 3.3.1
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 
 Easily embed and manage videos from Infomaniak VOD in your posts, comments and RSS feeds. You need an Infomaniak VOD account to use this plugin.
 
@@ -58,7 +58,7 @@ Cette adresse doit donc être joignable de façon publique. Pour plus d'informat
 
 = Je n'ai pas trouvé de réponse à ma question =
 
-Sur notre site internet, nous possédons une Foire au Question (http://hosting.infomaniak.ch/support/faq/categories/module_vod_wordpress-130-1.html) qui répond à un grand nombre de questions et propose des guides/tutoriaux vidéos.
+Sur notre site internet, nous possédons une Foire au Question (http://hosting.infomaniak.ch/support/faq/categories/toutes-157-1.html) qui répond à un grand nombre de questions et propose des guides/tutoriaux vidéos.
 Si vous ne trouvez pas de solution à votre question, vous pouvez aussi nous contacter par email.
 
 == Screenshots ==
@@ -68,13 +68,13 @@ Si vous ne trouvez pas de solution à votre question, vous pouvez aussi nous con
 
 == Changelog ==
 
-= 1.0.0 (10/01/2012) =
-* Après 1 mois en RC2, passage en version final
+= 1.0.1 (23/03/2012) =
+* Correction d'un bug sur la page de selection du player
+* Changement de l'adresse de la FAQ
 
-= 0.9.1 (1.0 RC2) (6/12/2011) =
+= 1.0.0 (10/01/2012) - Release Final=
+* Après 2 Release Candidate (0.9.0, 0.9.1) et 1 mois en RC2 considéré comme stable, passage en version final
 * Modification du comportement des parametres autoplay et loop lors de l'integration.
-
-= 0.9 (1.0 RC1) (31/10/2011) =
 * Ajout des traductions EN,DE
 * Version de controle avant la version finale
 
