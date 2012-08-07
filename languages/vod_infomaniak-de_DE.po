@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: vod\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-31 10:54+0100\n"
+"POT-Creation-Date: 2012-07-31 17:19+0200\n"
 "PO-Revision-Date: 2011-11-21 18:52+0100\n"
 "Last-Translator: \n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,173 +16,222 @@ msgstr ""
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: vod.template.php:77
+#: vod.template.php:78
 msgid "1. Selection du dossier"
 msgstr "1. Ordnerauswahl"
 
-#: vod.template.php:93
+#: vod.template.php:94
 msgid "2. Envoi d'un fichier"
 msgstr "2. Dateiversand"
 
-#: vod.template.php:927
+#: vod.template.php:999
 msgid ""
-"<li>Fonction de seek permettant de se deplacer dans une video meme longue quasi instantanement.</li>\n"
-"\t\t\t\t<li>Bouton permettant de changer a la vole entre les differentes qualites d'une video.</li>\n"
-"\t\t\t\t<li>Bouton d'export sur certains reseau sociaux (facebook, twitter) afin que votre video soit plus visible.</li>\n"
-"\t\t\t\t<li>Player exportable afin de permettre aux visiteurs de recuperer le code d'integration.</li>\n"
-"\t\t\t\t<li>Facilite de personnalisation du player via de rapides modifications (couleurs de la barre, taille de la barre, logo) ou l'utilisation d'une barre entierement personnaliser.</li>\n"
-"\t\t\t\t<li>Compatibilite avec adswizz afin d'ajouter facilement des publicites avant ou apres les videos.</li>\n"
+"<li>Fonction de seek permettant de se deplacer dans une video meme longue "
+"quasi instantanement.</li>\n"
+"\t\t\t\t<li>Bouton permettant de changer a la vole entre les differentes "
+"qualites d'une video.</li>\n"
+"\t\t\t\t<li>Bouton d'export sur certains reseau sociaux (facebook, twitter) "
+"afin que votre video soit plus visible.</li>\n"
+"\t\t\t\t<li>Player exportable afin de permettre aux visiteurs de recuperer "
+"le code d'integration.</li>\n"
+"\t\t\t\t<li>Facilite de personnalisation du player via de rapides "
+"modifications (couleurs de la barre, taille de la barre, logo) ou "
+"l'utilisation d'une barre entierement personnaliser.</li>\n"
+"\t\t\t\t<li>Compatibilite avec adswizz afin d'ajouter facilement des "
+"publicites avant ou apres les videos.</li>\n"
 "\t\t\t\t<li>Et encore d'autres options a decouvrir ...</li>"
 msgstr ""
-"<li>Seek-Funktion, um die Abspielposition im Video praktisch unmittelbar zu verschieben.</li>\n"
-"\t\t\t\t<li>Schaltfläche, um unmittelbar eine andere Videoqualität zu wählen.</li>\n"
-"\t\t\t\t<li>Schaltfläche für den Export in soziale Netzwerke (Facebook, Twitter), um Ihr Video bekannter zu machen.</li>\n"
-"\t\t\t\t<li>Exportierbarer Player, damit Besucher den Integrationscode übernehmen können.</li>\n"
-"\t\t\t\t<li>Persönliche Gestaltung des Players über Schnelleinstellungen (Farbe der Leiste, Grösse der Leiste, Logo) oder Verwendung einer persönlichen Leiste.</li>\n"
-"\t\t\t\t<li>Adswizz-Kompatibilität, um vor oder nach den Videos bequem Werbung einzublenden.</li>\n"
+"<li>Seek-Funktion, um die Abspielposition im Video praktisch unmittelbar zu "
+"verschieben.</li>\n"
+"\t\t\t\t<li>Schaltfläche, um unmittelbar eine andere Videoqualität zu wählen."
+"</li>\n"
+"\t\t\t\t<li>Schaltfläche für den Export in soziale Netzwerke (Facebook, "
+"Twitter), um Ihr Video bekannter zu machen.</li>\n"
+"\t\t\t\t<li>Exportierbarer Player, damit Besucher den Integrationscode "
+"übernehmen können.</li>\n"
+"\t\t\t\t<li>Persönliche Gestaltung des Players über Schnelleinstellungen "
+"(Farbe der Leiste, Grösse der Leiste, Logo) oder Verwendung einer "
+"persönlichen Leiste.</li>\n"
+"\t\t\t\t<li>Adswizz-Kompatibilität, um vor oder nach den Videos bequem "
+"Werbung einzublenden.</li>\n"
 "\t\t\t\t<li>Und viele weitere Optionen ...</li>"
 
-#: vod.template.php:702
-#: vod.template.php:823
+#: vod.template.php:774 vod.template.php:895
 msgid "Action"
 msgstr "Aktion"
 
-#: vod.template.php:230
+#: vod.template.php:340 vod.template.php:347 vod.template.php:354
+#: vod.template.php:361
+msgid "Administrateur"
+msgstr ""
+
+#: vod.template.php:232
 msgid "Administration du plugin VOD"
 msgstr "Verwaltung des VOD-Plugins"
 
-#: vod.template.php:852
+#: vod.template.php:924
 msgid "Administrer cette playlist"
 msgstr "Diese Playlist verwalten"
 
-#: vod.template.php:674
-#: vod.template.php:721
+#: vod.template.php:746 vod.template.php:793
 msgid "Administrer cette video"
 msgstr "Dieses Video verwalten"
 
-#: vod.template.php:550
+#: vod.template.php:622
 msgid "Adresse"
 msgstr "Adresse"
 
-#: vod.template.php:303
+#: vod.template.php:375
 msgid "Adresse de callback"
 msgstr "Callback-Adresse"
 
-#: vod.template.php:922
+#: vod.template.php:994
 #, php-format
-msgid "Afin de modifier ou creer de nouveaux players flash, nous vous invitons a vous rendre dans votre administration vod : <a href='https://statslive.infomaniak.com/vod/player.php?iVodCode=%d' target='_blank'>Acceder a la configuration des players</a>"
-msgstr "Bitte begeben Sie sich in Ihre VOD-Verwaltung, um neue Flash-Player zu bearbeiten oder anzulegen: <a href='https://statslive.infomaniak.com/vod/player.php?iVodCode=%d' target='_blank'>Player-Einrichtung anzeigen</a>"
+msgid ""
+"Afin de modifier ou creer de nouveaux players flash, nous vous invitons a "
+"vous rendre dans votre administration vod : <a href='https://statslive."
+"infomaniak.com/vod/player.php?iVodCode=%d' target='_blank'>Acceder a la "
+"configuration des players</a>"
+msgstr ""
+"Bitte begeben Sie sich in Ihre VOD-Verwaltung, um neue Flash-Player zu "
+"bearbeiten oder anzulegen: <a href='https://statslive.infomaniak.com/vod/"
+"player.php?iVodCode=%d' target='_blank'>Player-Einrichtung anzeigen</a>"
 
-#: vod.class.php:147
+#: vod.class.php:170
 msgid "Ajout"
 msgstr "Hinzufügen"
 
-#: vod.template.php:744
+#: vod.template.php:816
 msgid "Annuler"
 msgstr "Rückgängig"
 
-#: vod.class.php:576
-msgid "Article correctement cree. Vous allez etre rediriger sur la page d'edition"
-msgstr "Artikel erfolgreich angelegt. Sie werden auf die Bearbeitungsseite weitergeleitet."
+#: vod.class.php:675
+msgid ""
+"Article correctement cree. Vous allez etre rediriger sur la page d'edition"
+msgstr ""
+"Artikel erfolgreich angelegt. Sie werden auf die Bearbeitungsseite "
+"weitergeleitet."
 
-#: vod.template.php:621
+#: vod.template.php:693
 msgid "Attention"
 msgstr "Vorsicht"
 
-#: vod.template.php:82
-#: vod.template.php:357
+#: vod.template.php:83 vod.template.php:310 vod.template.php:429
 msgid "Aucun dossier disponible"
 msgstr "Kein Ordner verfügbar"
 
-#: vod.template.php:192
-#: vod.template.php:876
-#: vod.template.php:892
+#: vod.template.php:194 vod.template.php:948 vod.template.php:964
 msgid "Aucun player disponible"
 msgstr "Kein Player verfügbar"
 
-#: vod.template.php:829
+#: vod.template.php:901
 msgid "Aucune playlist disponible"
 msgstr "Keine Playlist verfügbar"
 
-#: vod.template.php:51
-#: vod.template.php:708
+#: vod.template.php:51 vod.template.php:780
 msgid "Aucune video disponible"
 msgstr "Kein Video verfügbar"
+
+#: vod.template.php:338 vod.template.php:345 vod.template.php:352
+#: vod.template.php:359
+msgid "Auteur"
+msgstr ""
 
 #: vod.template.php:23
 msgid "Avec l'url"
 msgstr "Mit der URL"
 
-#: vod.template.php:622
-msgid "C'est une suppression definitive de la video, il n'y pas de corbeille ou de moyen de la recuperer une fois effacer."
-msgstr "Das Video wird endgültig gelöscht. Es gibt weder einen Papierkorb noch die Möglichkeit, ein gelöschtes Video wiederherzustellen."
+#: vod.template.php:694
+msgid ""
+"C'est une suppression definitive de la video, il n'y pas de corbeille ou de "
+"moyen de la recuperer une fois effacer."
+msgstr ""
+"Das Video wird endgültig gelöscht. Es gibt weder einen Papierkorb noch die "
+"Möglichkeit, ein gelöschtes Video wiederherzustellen."
 
-#: vod.template.php:350
-msgid "Ce plug-in vous permet d'ajouter de nouvelles videos directement depuis ce blog. Pour cela, vous n'avez qu'a choisir un dossier puis suivre les instructions"
-msgstr "Mit diesem Plugin können Sie neue Videos unmittelbar aus diesem Blog hinzufügen. Dafür müssen Sie nur einen Ordner auswählen und den Anweisungen folgen"
+#: vod.template.php:422
+msgid ""
+"Ce plug-in vous permet d'ajouter de nouvelles videos directement depuis ce "
+"blog. Pour cela, vous n'avez qu'a choisir un dossier puis suivre les "
+"instructions"
+msgstr ""
+"Mit diesem Plugin können Sie neue Videos unmittelbar aus diesem Blog "
+"hinzufügen. Dafür müssen Sie nur einen Ordner auswählen und den Anweisungen "
+"folgen"
 
-#: vod.template.php:560
+#: vod.template.php:632
 msgid "Cette adresse necessite une authentification."
 msgstr "Diese Adresse erfordert eine Authentifizierung."
 
-#: vod.template.php:299
+#: vod.template.php:371
 #, php-format
-msgid "Cette option vous permet de mettre a jour automatiquement votre blog a chaque ajout de video a votre espace VOD.<br/>Veuillez aller dans \"<a href='https://statslive.infomaniak.com/vod/configuration.php?iVodCode=%d' target='_blank'>Configuration -> Api & Callback</a>\" et mettre l'adresse suivante dans le champ \"Adresse de Callback\""
-msgstr "Diese Option ermöglicht die automatische Aktualisierung Ihres Blogs, sobald ein Video in Ihrem VOD-Bereich hinzugefügt wird.<br/>Bitte begeben Sie sich in \"<a href='https://statslive.infomaniak.com/vod/configuration.php?iVodCode=%d' target='_blank'>Einstellungen -> Api & Callback</a>\" und geben Sie folgende Adresse im Feld \"Callback-Adresse \" ein"
+msgid ""
+"Cette option vous permet de mettre a jour automatiquement votre blog a "
+"chaque ajout de video a votre espace VOD.<br/>Veuillez aller dans \"<a "
+"href='https://statslive.infomaniak.com/vod/configuration.php?iVodCode=%d' "
+"target='_blank'>Configuration -> Api & Callback</a>\" et mettre l'adresse "
+"suivante dans le champ \"Adresse de Callback\""
+msgstr ""
+"Diese Option ermöglicht die automatische Aktualisierung Ihres Blogs, sobald "
+"ein Video in Ihrem VOD-Bereich hinzugefügt wird.<br/>Bitte begeben Sie sich "
+"in \"<a href='https://statslive.infomaniak.com/vod/configuration.php?"
+"iVodCode=%d' target='_blank'>Einstellungen -> Api & Callback</a>\" und geben "
+"Sie folgende Adresse im Feld \"Callback-Adresse \" ein"
 
-#: vod.template.php:887
+#: vod.template.php:959
 msgid "Choisir ce player"
 msgstr "Diesen Player auswählen"
 
-#: vod.template.php:352
+#: vod.template.php:424
 msgid "Choix du dossier d'envoi"
 msgstr "Auswahl des Sendeordners"
 
-#: vod.template.php:368
+#: vod.template.php:440
 msgid "Choix du type d'envoi"
 msgstr "Auswahl des Versandtyps"
 
-#: vod.template.php:667
+#: vod.template.php:739
 msgid "Code d'integration"
 msgstr "Integrationscode"
 
-#: vod.class.php:98
+#: vod.class.php:119
 msgid "Configuration"
 msgstr "Einstellungen"
 
-#: vod.template.php:298
+#: vod.template.php:370
 msgid "Configuration du callback"
 msgstr "Callback-Konfiguration "
 
-#: vod.template.php:255
+#: vod.template.php:257
 msgid "Connecter"
 msgstr "Verbinden"
 
-#: vod.template.php:252
+#: vod.template.php:254
 msgid "Connection"
 msgstr "Verbindung"
 
-#: vod.template.php:921
+#: vod.template.php:337 vod.template.php:344 vod.template.php:351
+#: vod.template.php:358
+msgid "Contributeur"
+msgstr ""
+
+#: vod.template.php:993
 msgid "Creation ou modification de players"
 msgstr "Player erstellen oder bearbeiten"
 
-#: vod.template.php:689
+#: vod.template.php:761
 msgid "Creer un article"
 msgstr "Artikel anlegen"
 
-#: vod.template.php:316
-#: vod.template.php:822
-#: vod.template.php:899
+#: vod.template.php:388 vod.template.php:894 vod.template.php:971
 msgid "Date"
 msgstr "Datum"
 
-#: vod.template.php:45
-#: vod.template.php:701
+#: vod.template.php:45 vod.template.php:773
 msgid "Date d'upload"
 msgstr "Uploaddatum"
 
-#: vod.template.php:210
-#: vod.template.php:901
+#: vod.template.php:212 vod.template.php:973
 msgid "Demarrage automatique"
 msgstr "Automatischer Start"
 
@@ -190,45 +239,49 @@ msgstr "Automatischer Start"
 msgid "Dernieres videos"
 msgstr "Letzte Videos"
 
-#: vod.template.php:316
-#: vod.template.php:818
+#: vod.template.php:388 vod.template.php:890
 msgid "Description"
 msgstr "Beschreibung"
 
-#: vod.template.php:183
+#: vod.template.php:185
 msgid "Dimensions"
 msgstr "Auflösung"
 
-#: vod.template.php:85
-#: vod.template.php:360
-#: vod.template.php:700
+#: vod.template.php:86 vod.template.php:314 vod.template.php:316
+#: vod.template.php:432 vod.template.php:772
 msgid "Dossier"
 msgstr "Ordner"
 
-#: vod.template.php:79
-#: vod.template.php:488
-#: vod.template.php:539
+#: vod.template.php:307
+msgid "Dossier Racine"
+msgstr ""
+
+#: vod.template.php:80 vod.template.php:560 vod.template.php:611
 msgid "Dossier d'envoi"
 msgstr "Sendeordner"
 
-#: vod.template.php:274
+#: vod.template.php:276
 msgid "Dossiers recuperes"
 msgstr "Wiederhergestellte Ordner"
 
-#: vod.class.php:147
-#: vod.template.php:820
+#: vod.class.php:170 vod.template.php:892
 msgid "Duree"
 msgstr "Dauer"
 
-#: vod.template.php:333
+#: vod.template.php:339 vod.template.php:346 vod.template.php:353
+#: vod.template.php:360
+msgid "Editeur"
+msgstr ""
+
+#: vod.template.php:405
 msgid "En cours de conversion"
 msgstr "Umwandlung in Bearbeitung"
 
-#: vod.template.php:499
+#: vod.template.php:571
 msgid "Envoi"
 msgstr "Senden"
 
-#: vod.template.php:349
+#: vod.template.php:421
 msgid "Envoi d'une nouvelle video"
 msgstr "Neues Video versenden"
 
@@ -236,27 +289,27 @@ msgstr "Neues Video versenden"
 msgid "Envoi d'une video"
 msgstr "Video versenden"
 
-#: vod.template.php:376
+#: vod.template.php:448
 msgid "Envoi termine"
 msgstr "Versand abgeschlossen"
 
-#: vod.template.php:369
+#: vod.template.php:441
 msgid "Envoyer depuis cet ordinateur"
 msgstr "Von diesem Computer senden"
 
-#: vod.class.php:504
+#: vod.class.php:542
 msgid "Erreur : Impossible de se connecter"
 msgstr "Fehler: Verbindung nicht möglich"
 
-#: vod.template.php:336
+#: vod.template.php:408
 msgid "Erreurs"
 msgstr "Fehler"
 
-#: vod.template.php:624
+#: vod.template.php:696
 msgid "Etes-vous sur de vouloir continuer ?"
 msgstr "Möchten Sie wirklich fortsetzen?"
 
-#: vod.template.php:206
+#: vod.template.php:208
 msgid "Etirer la video (stretch)"
 msgstr "Video strecken (stretch)"
 
@@ -264,19 +317,27 @@ msgstr "Video strecken (stretch)"
 msgid "Exemple"
 msgstr "Beispiel"
 
-#: vod.template.php:316
+#: vod.template.php:388
 msgid "Fichier"
 msgstr "Datei"
 
-#: vod.class.php:94
+#: vod.template.php:300
+msgid "Filtrer l'acces a l'espace VOD"
+msgstr ""
+
+#: vod.template.php:326
+msgid "Gestion des droits par groupe d'utilisateur"
+msgstr ""
+
+#: vod.class.php:107
 msgid "Gestionnaire"
 msgstr "Verwaltung"
 
-#: vod.template.php:605
+#: vod.template.php:677
 msgid "Gestionnaire de videos"
 msgstr "Videoverwaltung"
 
-#: vod.template.php:248
+#: vod.template.php:250
 msgid "Identifiant de l'espace VOD"
 msgstr "ID des VOD-Bereichs"
 
@@ -284,119 +345,126 @@ msgstr "ID des VOD-Bereichs"
 msgid "Identifiant de playlist"
 msgstr "Playlist-ID"
 
-#: vod.template.php:925
-msgid "Il est possible de personnaliser votre player video afin qu'ils s'integre parfaitement a votre site. Voici quelques fonctionnalites avancees qu'il propose :"
-msgstr "Sie können Ihren Videoplayer persönlich gestalten, damit er perfekt in Ihre Website integriert ist. Er bietet u.a. folgende fortgeschrittenen Funktionen:"
+#: vod.template.php:997
+msgid ""
+"Il est possible de personnaliser votre player video afin qu'ils s'integre "
+"parfaitement a votre site. Voici quelques fonctionnalites avancees qu'il "
+"propose :"
+msgstr ""
+"Sie können Ihren Videoplayer persönlich gestalten, damit er perfekt in Ihre "
+"Website integriert ist. Er bietet u.a. folgende fortgeschrittenen Funktionen:"
 
-#: vod.class.php:108
-#: vod.class.php:606
-#: vod.class.php:617
+#: vod.class.php:131 vod.class.php:705 vod.class.php:716
 msgid "Il n'est pas possible d'uploader dans ce dossier."
 msgstr "Uploads in diesen Ordner sind nicht möglich."
 
-#: vod.class.php:95
+#: vod.class.php:110
 msgid "Importation"
 msgstr "Import"
 
-#: vod.template.php:566
+#: vod.template.php:342
+msgid "Importation de video"
+msgstr ""
+
+#: vod.template.php:638
 msgid "Importer"
 msgstr "Importieren"
 
-#: vod.template.php:370
+#: vod.template.php:442
 msgid "Importer depuis un autre site"
 msgstr "Von einer anderen Website importieren"
 
-#: vod.template.php:257
+#: vod.template.php:259
 msgid "Impossible de se connecter"
 msgstr "Verbindung nicht möglich"
 
-#: vod.template.php:720
+#: vod.template.php:792
 msgid "Information sur cette video"
 msgstr "Informationen zu diesem Video"
 
-#: vod.template.php:635
+#: vod.template.php:707
 msgid "Informations"
 msgstr "Informationen"
 
-#: vod.template.php:889
+#: vod.template.php:961
 msgid "Informations sur ce Player"
 msgstr "Informationen zu diesem Player"
 
-#: vod.template.php:650
+#: vod.template.php:335 vod.template.php:722
 msgid "Integration"
 msgstr "Integration"
 
-#: vod.template.php:866
+#: vod.template.php:938
 msgid "Integration par defaut des videos"
 msgstr "Standard-Integration der Videos"
 
-#: vod.template.php:378
-msgid "L'ajout de cette video a correctement ete pris en compte.<br/>Vous pouvez retrouver l'avancement de cette conversion video dans le tableau ci-dessous."
-msgstr "Dieses Video wurde erfolgreich hinzugefügt.<br/>Sie sehen der Fortschritt der Videoumwandlung in der Tabelle unten."
+#: vod.template.php:450
+msgid ""
+"L'ajout de cette video a correctement ete pris en compte.<br/>Vous pouvez "
+"retrouver l'avancement de cette conversion video dans le tableau ci-dessous."
+msgstr ""
+"Dieses Video wurde erfolgreich hinzugefügt.<br/>Sie sehen der Fortschritt "
+"der Videoumwandlung in der Tabelle unten."
 
-#: vod.template.php:496
+#: vod.template.php:568
 msgid "L'envoi doit etre effectue en moins de 4 heures"
 msgstr "Der Versand darf nicht länger als 4 Stunden dauern"
 
-#: vod.template.php:494
-#: vod.template.php:545
+#: vod.template.php:566 vod.template.php:617
 msgid "Le poids des fichiers envoyes via ce module est limite a 1Go"
 msgstr "Die Dateigrösse ist beim Hochladen über dieses Modul auf 1 GB begrenzt"
 
-#: vod.template.php:214
-#: vod.template.php:902
+#: vod.template.php:216 vod.template.php:974
 msgid "Lecture en boucle"
 msgstr "Wiedergabeschleife"
 
-#: vod.template.php:495
-#: vod.template.php:546
-msgid "Les formats videos supportes sont avi, flv, mov, mpeg, mp4, mkv, rm, wmv, m4v, vob, 3gp, webm, f4v, ts"
-msgstr "Folgende Videoformate werden unterstützt: avi, flv, mov, mpeg, mp4, mkv, rm, wmv, m4v, vob, 3gp, webm, f4v, ts"
+#: vod.template.php:567 vod.template.php:618
+msgid ""
+"Les formats videos supportes sont avi, flv, mov, mpeg, mp4, mkv, rm, wmv, "
+"m4v, vob, 3gp, webm, f4v, ts"
+msgstr ""
+"Folgende Videoformate werden unterstützt: avi, flv, mov, mpeg, mp4, mkv, rm, "
+"wmv, m4v, vob, 3gp, webm, f4v, ts"
 
-#: vod.template.php:492
-#: vod.template.php:543
+#: vod.template.php:564 vod.template.php:615
 msgid "Limites"
 msgstr "Obergrenzen"
 
-#: vod.template.php:240
-#: vod.template.php:563
+#: vod.template.php:242 vod.template.php:635
 msgid "Login"
 msgstr "Benutzername"
 
-#: vod.template.php:427
+#: vod.template.php:499
 msgid "Mise a jour dans"
 msgstr "Aktualisierung in"
 
-#: vod.template.php:821
+#: vod.template.php:893
 msgid "Mode de lecture"
 msgstr "Wiedergabemodus"
 
-#: vod.template.php:906
+#: vod.template.php:978
 msgid "Modifier ce Player"
 msgstr "Diesen Player bearbeiten"
 
-#: vod.template.php:44
-#: vod.template.php:85
-#: vod.template.php:360
-#: vod.template.php:644
-#: vod.template.php:817
-#: vod.template.php:898
+#: vod.template.php:44 vod.template.php:86 vod.template.php:314
+#: vod.template.php:316 vod.template.php:432 vod.template.php:716
+#: vod.template.php:889 vod.template.php:970
 msgid "Nom"
 msgstr "Name"
 
-#: vod.template.php:819
+#: vod.template.php:891
 msgid "Nombre videos"
 msgstr "Anzahl Videos"
 
-#: vod.template.php:324
+#: vod.template.php:396
 msgid "OK"
 msgstr "OK"
 
-#: vod.template.php:327
+#: vod.template.php:399
 msgid "Ok (des alertes sont apparues)"
 msgstr "Ok (Warnmeldungen wurden angezeigt)"
 
-#: vod.template.php:180
+#: vod.template.php:182
 msgid "Options d'integration"
 msgstr "Integrationsoptionen"
 
@@ -404,125 +472,164 @@ msgstr "Integrationsoptionen"
 msgid "Outil de recherche"
 msgstr "Such-Tool"
 
-#: vod.template.php:244
-#: vod.template.php:564
+#: vod.template.php:301
+msgid ""
+"Par defaut, ce plugin permet d'acceder a l'integralite des videos/dossiers "
+"presents sur votre espace VOD.<br/>\n"
+"\t\t\t\tIl peut etre utile dans certains cas de limiter l'acces aux "
+"utilisateurs de ce site qu'a une partie des dossiers.<br/>\n"
+"\t\t\t\tL'option ci-dessous permet de restreindre l'acces de ce site a un "
+"dossier ainsi que tous ses dossiers fils."
+msgstr ""
+
+#: vod.template.php:328
+msgid ""
+"Par defaut, toutes les options du plugin sont disponibles pour les "
+"utilisateurs a partir du rang de contributeur.<br/>\n"
+"\t\t\t\tCi-dessous, il est cependant possible de parametrer les options que "
+"vous souhaitez proposer a vos utilisateurs."
+msgstr ""
+
+#: vod.template.php:246 vod.template.php:636
 msgid "Password"
 msgstr "Kennwort"
 
-#: vod.template.php:188
+#: vod.template.php:190
 msgid "Player choisi"
 msgstr "Ausgewählter Player"
 
-#: vod.class.php:96
+#: vod.class.php:113 vod.template.php:349
 msgid "Player video"
 msgstr "Videoplayer"
 
-#: vod.template.php:278
+#: vod.template.php:280
 msgid "Players recuperes"
 msgstr "Heruntergeladene Player"
 
-#: vod.class.php:97
-#: vod.template.php:170
+#: vod.class.php:116 vod.template.php:172 vod.template.php:356
 msgid "Playlist"
 msgstr "Playlist"
 
-#: vod.template.php:282
+#: vod.template.php:284
 msgid "Playlist recuperes"
 msgstr "Heruntergeladene Playlists"
 
-#: vod.template.php:810
+#: vod.template.php:882
 msgid "Playlists"
 msgstr "Playlists"
 
-#: vod.template.php:923
+#: vod.template.php:995
 msgid "Plus d'options"
 msgstr "Weitere Optionen"
 
-#: vod.template.php:268
-msgid "Pour fonctionner correctement, cette extension a besoin de se synchroniser regulierement avec votre compte VOD.<br/>Cela vous permet de garder une liste des players, dossiers et playlist a jour sur votre blog.<br/>Cette operation s'effectue automatiquement assez regulierement mais il est egalement possible de forcer une verification ci-dessous."
-msgstr "Um richtig zu funktionieren, muss diese Erweiterung sich regelmässig mit Ihrem VOD-Konto synchronisieren.<br/>Auf diese Weise bleiben Ihre Playerliste, Ordner und Playlists in Ihrem Blog auf dem neuesten Stand.<br/>Dieser Vorgang läuft regelmässig automatisch ab, Sie können aber auch unten eine Prüfung durchführen."
-
-#: vod.template.php:234
+#: vod.template.php:270
 msgid ""
-"Pour fonctionner, le plugin a besoin de s'interfacer avec votre compte VOD infomaniak.<br/>\n"
-"\t\t\t\tPour des raisons de securites, il est fortement conseille de creer un nouvel utilisateur dedie dans votre admin infomaniak avec uniquement des droits restreints sur l'API.<br/>\n"
-"\t\t\t\tPour plus d'information, veuillez vous rendre dans la partie \"Configuration -> Api & Callback\" de votre administration VOD."
+"Pour fonctionner correctement, cette extension a besoin de se synchroniser "
+"regulierement avec votre compte VOD.<br/>Cela vous permet de garder une "
+"liste des players, dossiers et playlist a jour sur votre blog.<br/>Cette "
+"operation s'effectue automatiquement assez regulierement mais il est "
+"egalement possible de forcer une verification ci-dessous."
 msgstr ""
-"Das Plugin muss sich mit Ihrem VOD-Konto bei Infomaniak verbinden, damit es funktioniert.<br/>\n"
-"\t\t\t\tWir raten aus Sicherheitsgründen dringend dazu, in Ihrer Infomaniak-Verwaltungskonsole einen neuen Benutzer anzulegen, der nur begrenzte Rechte für die API besitzt.<br/>\n"
-"\t\t\t\tWeitere Informationen finden Sie im Menü \"Einstellungen -> Api & Callback\" Ihrer VOD-Verwaltung."
+"Um richtig zu funktionieren, muss diese Erweiterung sich regelmässig mit "
+"Ihrem VOD-Konto synchronisieren.<br/>Auf diese Weise bleiben Ihre "
+"Playerliste, Ordner und Playlists in Ihrem Blog auf dem neuesten Stand.<br/"
+">Dieser Vorgang läuft regelmässig automatisch ab, Sie können aber auch unten "
+"eine Prüfung durchführen."
 
-#: vod.template.php:314
-#: vod.template.php:813
+#: vod.template.php:236
+msgid ""
+"Pour fonctionner, le plugin a besoin de s'interfacer avec votre compte VOD "
+"infomaniak.<br/>\n"
+"\t\t\t\tPour des raisons de securites, il est fortement conseille de creer "
+"un nouvel utilisateur dedie dans votre admin infomaniak avec uniquement des "
+"droits restreints sur l'API.<br/>\n"
+"\t\t\t\tPour plus d'information, veuillez vous rendre dans la partie "
+"\"Configuration -> Api & Callback\" de votre administration VOD."
+msgstr ""
+"Das Plugin muss sich mit Ihrem VOD-Konto bei Infomaniak verbinden, damit es "
+"funktioniert.<br/>\n"
+"\t\t\t\tWir raten aus Sicherheitsgründen dringend dazu, in Ihrer Infomaniak-"
+"Verwaltungskonsole einen neuen Benutzer anzulegen, der nur begrenzte Rechte "
+"für die API besitzt.<br/>\n"
+"\t\t\t\tWeitere Informationen finden Sie im Menü \"Einstellungen -> Api & "
+"Callback\" Ihrer VOD-Verwaltung."
+
+#: vod.template.php:386 vod.template.php:885
 msgid "Precedents Envois"
 msgstr "Vorherige Sendungen"
 
-#: vod.template.php:629
+#: vod.template.php:701
 msgid "Previsualisation d'une video"
 msgstr "Video-Vorschau"
 
-#: vod.class.php:529
+#: vod.class.php:627
 msgid "Probleme de configuration"
 msgstr "Konfigurationsproblem"
 
-#: vod.template.php:168
+#: vod.template.php:170
 msgid "Recherche d'une"
 msgstr "Suche nach"
 
-#: vod.template.php:900
+#: vod.template.php:972
 msgid "Resolution"
 msgstr "Auflösung"
 
-#: vod.template.php:647
+#: vod.template.php:719
 msgid "Restriction d'acces"
 msgstr "Zugangsbeschränkung"
 
-#: vod.template.php:778
+#: vod.template.php:850
 msgid "Securise avec un token"
 msgstr "Mit Token gesichert"
 
-#: vod.template.php:872
+#: vod.template.php:944
 msgid "Selection du player par defaut"
 msgstr "Auswahl des Standardplayers"
 
-#: vod.template.php:811
+#: vod.template.php:883
 #, php-format
-msgid "Si vous desirez ajouter ou modifier les playlist ci-dessous, veuillez vous rendre dans <a href='https://statslive.infomaniak.com/vod/playlists.php?iVodCode=%s' target='_blank'>la console d'administration</a>"
-msgstr "Wenn Sie die Playlists erweitern oder bearbeiten möchten, begeben Sie sich in die <a href='https://statslive.infomaniak.com/vod/playlists.php?iVodCode=%s' target='_blank'>Verwaltungskonsole</a>"
+msgid ""
+"Si vous desirez ajouter ou modifier les playlist ci-dessous, veuillez vous "
+"rendre dans <a href='https://statslive.infomaniak.com/vod/playlists.php?"
+"iVodCode=%s' target='_blank'>la console d'administration</a>"
+msgstr ""
+"Wenn Sie die Playlists erweitern oder bearbeiten möchten, begeben Sie sich "
+"in die <a href='https://statslive.infomaniak.com/vod/playlists.php?iVodCode="
+"%s' target='_blank'>Verwaltungskonsole</a>"
 
-#: vod.template.php:316
+#: vod.template.php:388
 msgid "Statut"
 msgstr "Status"
 
-#: vod.template.php:723
+#: vod.template.php:795
 msgid "Supprimer cette video"
 msgstr "Dieses Video löschen"
 
-#: vod.template.php:741
+#: vod.template.php:813
 msgid "Supprimer definitivement la video"
 msgstr "Video endgültig löschen"
 
-#: vod.template.php:613
+#: vod.template.php:685
 msgid "Supprimer une video"
 msgstr "Video löschen"
 
-#: vod.template.php:903
+#: vod.template.php:975
 msgid "Switch de qualite"
 msgstr "Qualitäts-Switch"
 
-#: vod.template.php:267
+#: vod.template.php:269
 msgid "Synchronisation des donnees"
 msgstr "Datensynchronisation"
 
-#: vod.template.php:290
+#: vod.template.php:292
 msgid "Synchronisation rapide"
 msgstr "Schnellsynchronisation"
 
-#: vod.template.php:294
+#: vod.template.php:296
 msgid "Synchroniser Videos"
 msgstr "Videos synchronisieren "
 
-#: vod.template.php:330
+#: vod.template.php:402
 msgid "Telechargement en cours"
 msgstr "Download läuft"
 
@@ -530,11 +637,11 @@ msgstr "Download läuft"
 msgid "Url complete"
 msgstr "Vollständige URL"
 
-#: vod.template.php:663
+#: vod.template.php:735
 msgid "Url de l'image"
 msgstr "Bild-URL"
 
-#: vod.template.php:656
+#: vod.template.php:728
 msgid "Url de la video"
 msgstr "Video-URL"
 
@@ -542,19 +649,19 @@ msgstr "Video-URL"
 msgid "Url partiel"
 msgstr "Teilweise URL"
 
-#: vod.template.php:218
+#: vod.template.php:220
 msgid "Utilisation du token du dossier (Id dossier)"
 msgstr "Verwendung des Ordner-Tokens (Ordner-ID)"
 
-#: vod.template.php:486
+#: vod.template.php:558
 msgid "Utilitaire d'envoi de video"
 msgstr "Dienstprogramm für den Videoversand"
 
-#: vod.template.php:532
+#: vod.template.php:604
 msgid "Utilitaire d'importation de video"
 msgstr "Dienstprogramm für den Videoimport"
 
-#: vod.template.php:261
+#: vod.template.php:263 vod.template.php:322 vod.template.php:365
 msgid "Valider"
 msgstr "Bestätigen"
 
@@ -562,46 +669,47 @@ msgstr "Bestätigen"
 msgid "Veuillez saisir l'URL d'une video"
 msgstr "Bitte geben Sie die URL eines Videos ein"
 
-#: vod.class.php:529
-msgid "Veuillez-vous rendre dans <a href='admin.php?page=configuration'>Videos -> Configuration</a> afin de configurer votre compte."
-msgstr "Bitte begeben Sie sich ins Menü <a href='admin.php?page=configuration'>Videos -> Einstellungen</a>, um Ihr Konto einzurichten."
+#: vod.class.php:627
+msgid ""
+"Veuillez-vous rendre dans <a href='admin.php?page=configuration'>Videos -> "
+"Configuration</a> afin de configurer votre compte."
+msgstr ""
+"Bitte begeben Sie sich ins Menü <a href='admin.php?"
+"page=configuration'>Videos -> Einstellungen</a>, um Ihr Konto einzurichten."
 
-#: vod.template.php:43
-#: vod.template.php:169
-#: vod.template.php:699
+#: vod.template.php:43 vod.template.php:171 vod.template.php:771
 msgid "Video"
 msgstr "Video"
 
-#: vod.template.php:774
+#: vod.template.php:846
 msgid "Video Geolocalise"
 msgstr "Geolokalisiertes Video"
 
-#: vod.class.php:200
+#: vod.class.php:223
 msgid "Video en cours de conversion"
 msgstr "Videoumwandlung in Bearbeitung"
 
-#: vod.class.php:90
+#: vod.class.php:102
 msgid "Videos"
 msgstr "Videos"
 
-#: vod.template.php:270
+#: vod.template.php:272
 msgid "Videos recuperes"
 msgstr "Heruntergeladene Videos"
 
-#: vod.template.php:653
+#: vod.template.php:725
 msgid "Visualiser la video"
 msgstr "Video anzeigen"
 
-#: vod.template.php:679
+#: vod.template.php:751
 msgid "Voir les statistiques"
 msgstr "Statistiken anzeigen"
 
-#: vod.template.php:679
-#: vod.template.php:722
+#: vod.template.php:751 vod.template.php:794
 msgid "Voir les statistiques de cette video"
 msgstr "Statistiken dieses Videos anzeigen"
 
-#: vod.template.php:619
+#: vod.template.php:691
 msgid "Vous etes sur le point de supprimer la video"
 msgstr "Sie sind dabei, das Video zu löschen"
 

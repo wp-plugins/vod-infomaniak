@@ -2,8 +2,8 @@
 Contributors: vod-infomaniak
 Tags: video, manage
 Requires at least: 2.8.6
-Tested up to: 3.3.1
-Stable tag: 1.0.1
+Tested up to: 3.4.1
+Stable tag: 1.1.0
 
 Easily embed and manage videos from Infomaniak VOD in your posts, comments and RSS feeds. You need an Infomaniak VOD account to use this plugin.
 
@@ -68,11 +68,17 @@ Si vous ne trouvez pas de solution à votre question, vous pouvez aussi nous con
 
 == Changelog ==
 
+= 1.1.0 (06/08/2012) =
+* Ajout d'une fonctionnalité permettant de n'afficher qu'une partie des dossiers/videos disponible sur l'espace VOD
+* Ajout d'une fonctionnalité permettant de gerer les droits d'accès aux différentes partie du plugin
+* Correction des URL pointant vers l'interface d'administration
+* Modification de l'outil d'autoconfiguration du callback afin d'utiliser la nouvelle version automatiquement
+
 = 1.0.1 (23/03/2012) =
 * Correction d'un bug sur la page de selection du player
 * Changement de l'adresse de la FAQ
 
-= 1.0.0 (10/01/2012) - Release Final=
+= 1.0.0 (10/01/2012) - Release Final =
 * Après 2 Release Candidate (0.9.0, 0.9.1) et 1 mois en RC2 considéré comme stable, passage en version final
 * Modification du comportement des parametres autoplay et loop lors de l'integration.
 * Ajout des traductions EN,DE

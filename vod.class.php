@@ -5,10 +5,14 @@
  *
  * @author Destrem Kevin
  * @link http://statslive.infomaniak.ch/vod/api/
- * @version 1.0.1
+ * @version 1.1.0
  * @copyright infomaniak.ch
  *
  */
+define('VOD_RIGHT_CONTRIBUTOR', 1);
+define('VOD_RIGHT_AUTHOR', 2);
+define('VOD_RIGHT_EDITOR', 3);
+define('VOD_RIGHT_ADMIN', 4);
 
 class EasyVod
 {
@@ -51,14 +55,14 @@ class EasyVod
 			add_action( 'admin_menu', array(&$this, 'add_menu_items'));
 			add_action( 'edit_form_advanced', array(&$this, 'buildForm') );
 			add_action( 'edit_page_form', array(&$this, 'buildForm') );
+			
 			add_action( 'wp_ajax_importvod', array(&$this, 'printLastImport') );
 			add_action( 'wp_ajax_vodsearchvideo', array(&$this, 'searchVideo') );
 			add_action( 'wp_ajax_vodsearchplaylist', array(&$this, 'searchPlaylist') );
 			add_action( 'wp_ajax_vodimportvideo', array(&$this, 'importPostVideo') );
-		
-			add_filter( 'mce_external_plugins', array(&$this, 'mce_register') );
-			add_filter( 'mce_buttons', array(&$this, 'mce_add_button'), 0);
-		
+				
+			add_action( 'plugins_loaded', array(&$this, 'init_mce_video') );
+			
 			//On load Css et Js
 			wp_enqueue_script( 'jquery-ui-dialog' );
 			wp_enqueue_script( 'jquery-ui-tabs' );
@@ -67,7 +71,14 @@ class EasyVod
 			wp_enqueue_style( 'ui-tabs' );
 		}
 	}
-
+	
+	function init_mce_video(){
+		if( $this->isCurrentUserCan( 'gestion' ) ){
+			add_filter( 'mce_external_plugins', array(&$this, 'mce_register') );
+			add_filter( 'mce_buttons', array(&$this, 'mce_add_button'), 0);
+		}
+	}
+	
 	function install_db() {
 		$this->db->install_db();
 		$this->fastSynchro();
@@ -86,16 +97,28 @@ class EasyVod
 			$this->checkAutoUpdate();
 		}
 		
-		if (function_exists('add_menu_page')) {
-			add_menu_page(__('Videos','vod_infomaniak'), __('Videos','vod_infomaniak'), 'edit_pages', __FILE__, array(&$this,'vod_management_menu'));
-		}
-
-		if (function_exists('add_submenu_page')) {
-			add_submenu_page(__FILE__,__('Gestionnaire','vod_infomaniak'), __('Gestionnaire','vod_infomaniak'), 'edit_pages', __FILE__, array(&$this,'vod_management_menu'));
-			add_submenu_page(__FILE__,__('Importation','vod_infomaniak'), __('Importation','vod_infomaniak'), 'edit_pages', 'import', array(&$this,'vod_upload_menu'));
-			add_submenu_page(__FILE__,__('Player video','vod_infomaniak'), __('Player video','vod_infomaniak'), 'edit_pages', 'Player', array(&$this,'vod_implementation_menu'));
-			add_submenu_page(__FILE__,__('Playlist','vod_infomaniak'), __('Playlist','vod_infomaniak'), 'edit_pages', 'Playlist', array(&$this,'vod_playlist_menu'));
-			add_submenu_page(__FILE__,__('Configuration','vod_infomaniak'), __('Configuration','vod_infomaniak'), 'edit_plugins', 'configuration', array(&$this,'vod_admin_menu'));
+		if( $this->isCurrentUserCan( 'plugin' ) ){
+			if (function_exists('add_menu_page')) {
+				add_menu_page(__('Videos','vod_infomaniak'), __('Videos','vod_infomaniak'), 'edit_posts', __FILE__, array(&$this,'vod_management_menu'));
+			}
+	
+			if (function_exists('add_submenu_page')) {
+				if( $this->isCurrentUserCan( 'gestion' ) ){
+					add_submenu_page(__FILE__,__('Gestionnaire','vod_infomaniak'), __('Gestionnaire','vod_infomaniak'), 'edit_posts', __FILE__, array(&$this,'vod_management_menu'));
+				}
+				if( $this->isCurrentUserCan( 'importation' ) ){
+					add_submenu_page(__FILE__,__('Importation','vod_infomaniak'), __('Importation','vod_infomaniak'), 'edit_posts', 'import', array(&$this,'vod_upload_menu'));
+				}
+				if( $this->isCurrentUserCan( 'player' ) ){
+					add_submenu_page(__FILE__,__('Player video','vod_infomaniak'), __('Player video','vod_infomaniak'), 'edit_posts', 'Player', array(&$this,'vod_implementation_menu'));
+				}
+				if( $this->isCurrentUserCan( 'playlist' ) ){
+					add_submenu_page(__FILE__,__('Playlist','vod_infomaniak'), __('Playlist','vod_infomaniak'), 'edit_posts', 'Playlist', array(&$this,'vod_playlist_menu'));
+				}
+				if( $this->isCurrentUserCan( 'configuration' ) ){
+					add_submenu_page(__FILE__,__('Configuration','vod_infomaniak'), __('Configuration','vod_infomaniak'), 'edit_plugins', 'configuration', array(&$this,'vod_admin_menu'));
+				}
+			}
 		}
 	}
 	
@@ -127,7 +150,7 @@ class EasyVod
 	}
 
 	function searchVideo() {
-		$aResult = $this->db->search_videos($_REQUEST['q'], 12);
+		$aResult = $this->db->search_videos($_REQUEST['q'], 12, $this->options['vod_filter_folder']);
 		if( !empty($aResult) ){
 			foreach( $aResult as $oVideo ){
 				$str = "";
@@ -282,9 +305,14 @@ class EasyVod
 			'wtitle'	=> '',
 			'tag'		=> 'vod',
 			'iframe'	=> 'on',
-			'vod_api_connected' => 'off'
+			'updateFilterFolder' => '',
+			'vod_api_connected' => 'off',
+			'vod_right_integration' => VOD_RIGHT_CONTRIBUTOR,
+			'vod_right_upload' => VOD_RIGHT_CONTRIBUTOR,
+			'vod_right_player' => VOD_RIGHT_CONTRIBUTOR,
+			'vod_right_playlist' => VOD_RIGHT_CONTRIBUTOR,
+			'vod_api_valid_callback' => 'off'
 		);
-              
 		$saved = get_option($this->key);
               
 		if (!empty($saved)) {
@@ -315,9 +343,13 @@ class EasyVod
 		if ( !empty($this->options['vod_api_connected']) && $this->options['vod_api_connected'] == 'on' ) {
 			require_once("vod.template.php");
 			$aPlayers = $this->db->get_players();
-			$aLastVideos = $this->db->get_videos_byPage( 0, 50 );
-			$aFolders = $this->db->get_folders();
-			EasyVod_Display::buildForm( $this->options, $aPlayers, $aLastVideos, $aFolders );
+			$aLastVideos = $this->db->get_videos_byPage( 0, 50, $this->options['vod_filter_folder'] );
+			$aFolders = $this->db->get_folders( $this->options['vod_filter_folder'] );
+			$bCanUpload = false;
+			if( $this->isCurrentUserCan( 'importation' ) ){
+				$bCanUpload = true;
+			}
+			EasyVod_Display::buildForm( $this->options, $aPlayers, $aLastVideos, $aFolders, $bCanUpload );
 		}
 	}
 
@@ -453,6 +485,7 @@ class EasyVod
 
 		if (isset($_POST['submitted'])) {
 			$bResult = false;
+			$aFolders = array();
 			if ( empty( $this->options['vod_api_callbackKey']) ) {
 				$this->options['vod_api_callbackKey'] = sha1( time() * rand() );
 			}
@@ -472,22 +505,36 @@ class EasyVod
 				
 				$bResult = $oApi->ping();
 				if( $bResult ){
+					
 					$this->options['vod_api_connected'] = 'on';
 					$this->options['vod_api_icodeservice'] = $oApi->getServiceItemID();
 					$this->options['vod_api_group'] = $oApi->getGroupID();
 					$this->options['vod_api_lastUpdate'] = 0;
-					
+					$this->options['vod_filter_folder'] = "";
 					//Verification DB et synchro
 					$this->install_db(); 
 					if ( empty($this->options['vod_api_valid_callback']) || $this->options['vod_api_valid_callback'] == 'off' ) {
+
+						//Clean de callback V1 s'il y en a encore
 						$sUrl = $oApi->getCallback();
-						if ( empty( $sUrl ) || strpos( $sUrl, $site_url )!==false ) {
-							$site_url = str_replace("http://","", $site_url);
-							$oApi->setCallback( $site_url."/?vod_page=callback&key=".$this->options['vod_api_callbackKey'] );
-							$this->options['vod_api_valid_callback'] == 'on';
-						} else {
-							$this->options['vod_api_valid_callback'] == 'off';
+						if( !empty( $sUrl ) && strpos( $sUrl, str_replace('http://','',$site_url) )!==false ){
+							$oApi->setCallback( "" );
 						}
+						
+						//On va essayer d'ajouter un callback V2
+						$sUrl2 = $oApi->getCallbackV2();
+						$bCallbackV2 = true;
+						if( $sUrl2 != false ){
+							foreach( $sUrl2 as $oCallback ){
+								if( strpos( $oCallback['sUrl'], $site_url )!==false ){
+									$bCallbackV2 = false;
+								}
+							}
+						}
+						if( $bCallbackV2 ){
+							$oApi->setCallbackV2( $site_url."/?vod_page=callback&key=".$this->options['vod_api_callbackKey'] );
+						}
+						$this->options['vod_api_valid_callback'] == 'on';
 					}
 					if( $this->db->count_video() == 0 ){
 						$oApi = $this->getAPI();
@@ -518,17 +565,77 @@ class EasyVod
 			$this->options['vod_api_lastUpdate'] = 0;
 			$this->fullSynchro();
 		}
+		if (isset($_POST['updateFilterFolder']) && $_POST['updateFilterFolder'] == 1 ) {
+			if( $_POST['sFolderPath'] == -1 ){
+				$this->options['vod_filter_folder'] = "";
+			} else {
+				$this->options['vod_filter_folder'] = $_POST['sFolderPath'];
+			}
+			update_option($this->key, $this->options);
+		}
+		if (isset($_POST['updateRightPlugins']) && $_POST['updateRightPlugins'] == 1 ) {
+			$this->options['vod_right_integration'] = $this->getRightValue( $_POST['integration_role'] );
+			$this->options['vod_right_upload'] = $this->getRightValue( $_POST['upload_role'] );
+			$this->options['vod_right_player'] = $this->getRightValue( $_POST['player_role'] );
+			$this->options['vod_right_playlist'] = $this->getRightValue( $_POST['playlist_role'] );
+			update_option($this->key, $this->options);
+		}
 		if ( $this->options['vod_api_connected'] == "on" ) {
 			$this->options['vod_count_player'] = $this->db->count_player();
 			$this->options['vod_count_folder'] = $this->db->count_folder();
 			$this->options['vod_count_video'] = $this->db->count_video();
 			$this->options['vod_count_playlist'] = $this->db->count_playlists();
+			$aFolders = $this->db->get_folders();
 		}
 		$actionurl   = $_SERVER['REQUEST_URI'];
 		require_once("vod.template.php");
-		EasyVod_Display::adminMenu( $actionurl, $this->options, $site_url);
+		EasyVod_Display::adminMenu( $actionurl, $this->options, $site_url, $aFolders);
 	}
 
+	function isCurrentUserCan( $page ){
+		$user = wp_get_current_user(); // pour l'utilisateur courant
+		$iUserValue = $this->getRightValue($user->roles);
+			
+		switch( $page ){
+			case 'plugin':
+				$value = $this->options['vod_right_integration'] <= $iUserValue ||
+				$this->options['vod_right_upload'] <= $iUserValue ||
+				$this->options['vod_right_player'] <= $iUserValue ||
+				$this->options['vod_right_playlist'] <= $iUserValue;
+				return $value;
+			case 'importation':
+				return $this->options['vod_right_upload'] <= $iUserValue;
+			case 'player':
+				return $this->options['vod_right_player'] <= $iUserValue;
+			case 'playlist':
+				return $this->options['vod_right_playlist'] <= $iUserValue;
+			case 'gestion':
+				return $this->options['vod_right_integration'] <= $iUserValue;
+			case 'configuration':
+				return $iUserValue == VOD_RIGHT_ADMIN;
+			default : 
+				return true;
+		}
+	}
+	
+	function getRightValue( $sValue ) {
+		if( is_array($sValue) ){
+			$sValue = $sValue[0];
+		}
+		switch( $sValue ){
+			case 'contributor':
+				return VOD_RIGHT_CONTRIBUTOR;
+			case 'author':
+				return VOD_RIGHT_AUTHOR;
+			case 'editor':
+				return VOD_RIGHT_EDITOR;
+			case 'administrator':
+				return VOD_RIGHT_ADMIN;
+			default:
+				return VOD_RIGHT_CONTRIBUTOR;
+		}
+	}
+	
 	function plugin_ready() {
 		if ( empty($this->options['vod_api_connected']) || $this->options['vod_api_connected'] == 'off' ) {
 			echo "<h2>".__('Probleme de configuration','vod_infomaniak')."</h2><p>".__("Veuillez-vous rendre dans <a href='admin.php?page=configuration'>Videos -> Configuration</a> afin de configurer votre compte.",'vod_infomaniak').'</p>';
@@ -539,6 +646,7 @@ class EasyVod
 	
 	function vod_management_menu() {
 		if ( $this->plugin_ready() ) {
+			
 			if ( isset($_REQUEST['sAction']) ){
 				if ( $_REQUEST['sAction'] == "rename" ) {
 					$oVideo = $this->db->getVideo( intval($_POST['dialog-modal-id']) );
@@ -587,8 +695,8 @@ class EasyVod
 			
 			$iPage = !empty($_REQUEST['p']) ? intval( $_REQUEST['p'] ) : 1;
 			$iLimit = 20;
-			$iVideoTotal = $this->db->count_video();
-			$aVideos = $this->db->get_videos_byPage($iPage-1, $iLimit);
+			$iVideoTotal = $this->db->count_video( $this->options['vod_filter_folder'] );
+			$aVideos = $this->db->get_videos_byPage($iPage-1, $iLimit, $this->options['vod_filter_folder']);
 			for ( $i=0; $i<count($aVideos); $i++ ) {
 				if ( !empty($aVideos[$i]->sToken) ) {
 					$aVideos[$i]->sToken = $this->getTemporaryKey( $aVideos[$i]->sToken, $aVideos[$i]->sServerCode );
@@ -636,7 +744,7 @@ class EasyVod
 				EasyVod_Display::ImportPopup( $actionurl, $oFolder, $bResult);
 			} else {
 				//Affichage de la page principal
-				$aFolders = $this->db->get_folders();
+				$aFolders = $this->db->get_folders( $this->options['vod_filter_folder'] );
 				
 				$actionurl = $_SERVER['REQUEST_URI'];
 				EasyVod_Display::uploadMenu( $actionurl, $this->options, $aFolders, $this->getLastImport() );
@@ -870,9 +978,14 @@ class EasyVod_db
 		return $wpdb->get_row("SELECT * FROM ".$this->db_table_folder." WHERE iFolder=".intval($iFolder)." LIMIT 1");
 	}
 
-	function get_folders() {
+	function get_folders( $sFilter = "" ) {
 		global $wpdb;
-		return $wpdb->get_results("SELECT * FROM ".$this->db_table_folder." ORDER BY `sPath` ASC");
+		if( !empty($sFilter) ){
+			$sql = $wpdb->prepare("SELECT * FROM ".$this->db_table_folder." WHERE sPath LIKE %s ORDER BY `sPath` ASC", $sFilter."%");
+			return $wpdb->get_results( $sql );
+		} else {
+			return $wpdb->get_results("SELECT * FROM ".$this->db_table_folder." ORDER BY `sPath` ASC");
+		}
 	}
 
 	function clean_folders() {
@@ -893,19 +1006,45 @@ class EasyVod_db
 	/*
 	* Gestion des videos
 	*/
-	function search_videos( $sTerm, $iLimit=6) {
+	function search_videos( $sTerm, $iLimit=6, $sFilter = "") {
 		global $wpdb;
-		$sql = $wpdb->prepare("SELECT video.*, folder.sAccess, folder.sToken FROM ".$this->db_table_video." as video
-		INNER JOIN ".$this->db_table_folder." as folder ON video.iFolder = folder.iFolder
-		WHERE video.sName LIKE %s OR sServerCode LIKE %s ORDER BY dUpload DESC LIMIT ".intval($iLimit), "%".$sTerm."%", "%".$sTerm."%");
-		return $wpdb->get_results($sql);
+		if( !empty( $sFilter ) ){
+			$sql = $wpdb->prepare("SELECT iFolder FROM `wp_vod_folder` WHERE sPath LIKE %s ORDER BY sPath", $sFilter.'%');
+			$aFolders = $wpdb->get_results($sql);
+			$aFoldersList = array();
+			foreach($aFolders as $oFolder){
+				$aFoldersList[] = $oFolder->iFolder;
+			}
+			$sql = $wpdb->prepare("SELECT video.*, folder.sAccess, folder.sToken FROM ".$this->db_table_video." as video
+			INNER JOIN ".$this->db_table_folder." as folder ON video.iFolder = folder.iFolder
+			WHERE (video.sName LIKE %s OR sServerCode LIKE %s) AND video.iFolder IN ( ".implode (",", $aFoldersList).") ORDER BY dUpload DESC LIMIT ".intval($iLimit), "%".$sTerm."%", "%".$sTerm."%");
+			return $wpdb->get_results($sql);
+		} else {
+			$sql = $wpdb->prepare("SELECT video.*, folder.sAccess, folder.sToken FROM ".$this->db_table_video." as video
+			INNER JOIN ".$this->db_table_folder." as folder ON video.iFolder = folder.iFolder
+			WHERE video.sName LIKE %s OR sServerCode LIKE %s ORDER BY dUpload DESC LIMIT ".intval($iLimit), "%".$sTerm."%", "%".$sTerm."%");
+			return $wpdb->get_results($sql);
+		}
 	}
 
-	function get_videos_byPage( $iPage, $iLimit ) {
+	function get_videos_byPage( $iPage, $iLimit, $sFilter = "" ) {
 		global $wpdb;
-		return $wpdb->get_results("SELECT video.*, folder.sAccess, folder.sToken FROM ".$this->db_table_video." as video
-		INNER JOIN ".$this->db_table_folder." as folder ON video.iFolder = folder.iFolder
-		ORDER BY `dUpload` DESC LIMIT ".intval($iPage*$iLimit).", ".intval($iLimit));
+		if( !empty( $sFilter ) ){
+			$sql = $wpdb->prepare("SELECT iFolder FROM `wp_vod_folder` WHERE sPath LIKE %s ORDER BY sPath", $sFilter.'%');
+			$aFolders = $wpdb->get_results($sql);
+			$aFoldersList = array();
+			foreach($aFolders as $oFolder){
+				$aFoldersList[] = $oFolder->iFolder;
+			}
+			return $wpdb->get_results("SELECT video.*, folder.sAccess, folder.sToken FROM ".$this->db_table_video." as video
+			INNER JOIN ".$this->db_table_folder." as folder ON video.iFolder = folder.iFolder
+			WHERE video.iFolder IN ( ".implode (",", $aFoldersList).")
+			ORDER BY `dUpload` DESC LIMIT ".intval($iPage*$iLimit).", ".intval($iLimit));
+		} else {
+			return $wpdb->get_results("SELECT video.*, folder.sAccess, folder.sToken FROM ".$this->db_table_video." as video
+			INNER JOIN ".$this->db_table_folder." as folder ON video.iFolder = folder.iFolder
+			ORDER BY `dUpload` DESC LIMIT ".intval($iPage*$iLimit).", ".intval($iLimit));
+		}
 	}
 
 	function get_videos_byCodes( $sServerCode, $iFolderCode ) {
@@ -945,9 +1084,20 @@ class EasyVod_db
 		$wpdb->insert( $this->db_table_video, array( 'iVideo' => $iVideo, 'iFolder' => $iFolder, 'sName' => $sName, 'sServerCode' => $sServerCode, 'sPath' => $sPath, 'sExtension' => $sExtension, 'iDuration' => $iDuration, 'dUpload' => $dUpload) );
 	}
 
-	function count_video() {
+	function count_video( $sFilter = "" ) {
 		global $wpdb;
-		return $wpdb->get_var("SELECT COUNT(*) FROM ".$this->db_table_video);
+		if( !empty( $sFilter ) ){
+			$sql = $wpdb->prepare("SELECT iFolder FROM `wp_vod_folder` WHERE sPath LIKE %s ORDER BY sPath", $sFilter.'%');
+			$aFolders = $wpdb->get_results($sql);
+			$aFoldersList = array();
+			foreach($aFolders as $oFolder){
+				$aFoldersList[] = $oFolder->iFolder;
+			}
+			return $wpdb->get_var("SELECT COUNT(*) FROM ".$this->db_table_video."
+			WHERE iFolder IN ( ".implode (",", $aFoldersList).")");
+		} else {
+			return $wpdb->get_var("SELECT COUNT(*) FROM ".$this->db_table_video);
+		}
 	}
 
 	function delete_video( $iVideo = -1) {

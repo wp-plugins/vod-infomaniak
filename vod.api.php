@@ -363,6 +363,23 @@ class vod_api {
 	}
 	
 	/**
+	 * Fonction permettant de recuperer l'adresse des callback actuellement en place
+	 * 
+	 * @return array
+	 */
+	public function getCallbackV2() {
+		try {
+			$oSoap = $this->getSoapAdmin ();
+			if (! empty ( $oSoap )) {
+				return $oSoap->getCallbackUrlV2 ();
+			}
+		} catch ( Exception $oException ) {
+			$this->debug ( "getCallback", $oException );
+		}
+		return false;
+	}
+	
+	/**
 	 * Fonction permettant de definir l'adresse de callback
 	 * 
 	 * @param string $sUrl Nouvelle adresse de callback
@@ -380,11 +397,33 @@ class vod_api {
 		return false;
 	}
 	
+	/**
+	 * Fonction permettant de definir l'adresse de callback
+	 * 
+	 * @param string $sUrl Nouvelle adresse de callback
+	 * @return boolean
+	 */
+	public function setCallbackV2($sUrl) {
+		try {
+			$oSoap = $this->getSoapAdmin ();
+			if (! empty ( $oSoap )) {
+				return $oSoap->setCallbackUrlV2 ( $sUrl );
+			}
+		} catch ( Exception $oException ) {
+			$this->debug ( "setCallback", $oException );
+		}
+		return false;
+	}
+	
 	private function getSoapAdmin() {
 		if (! empty ( $this->oSoap )) {
 			return $this->oSoap;
 		} else {
-			$this->oSoap = new SoapClient ( 'http://statslive.infomaniak.com/vod/api/vod_soap.wsdl', array ('trace' => 1, 'encoding' => 'UTF-8' ) );
+			$aOptions = array (
+				'trace' => 1, 
+				'encoding' => 'UTF-8'
+			);
+			$this->oSoap = new SoapClient ( 'https://statslive-api.infomaniak.com/vod/vod_soap.wsdl', $aOptions );
 			try {
 				$this->oSoap->__setSoapHeaders ( array (new SoapHeader ( 'urn:vod_soap', 'AuthenticationHeader', new SoapVODAuthentificationHeader ( $this->sLogin, $this->sPassword, $this->sId ) ) ) );
 				return $this->oSoap;
