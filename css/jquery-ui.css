@@ -22,6 +22,9 @@ div.ui-dialog {
 	position: relative;
 	z-index: 300002;
 }
+ul.ac_results{
+	z-index: 300003;
+}
 .ui-resizable-handle {
 	position: absolute;
 	font-size: 0.1px;
