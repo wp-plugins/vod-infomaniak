@@ -5,7 +5,7 @@
 	 *
 	 * @author Destrem Kevin
 	 * @link http://statslive.infomaniak.ch/vod/api/
-	 * @version 1.1.3
+	 * @version 1.1.4
 	 * @copyright infomaniak.ch
 	 *
 	 */
@@ -37,7 +37,6 @@
 			register_activation_hook(__FILE__, array(&$this, 'install_db'));
 			register_deactivation_hook(__FILE__, array(&$this, 'uninstall_db'));
 			add_action('plugins_loaded', array(&$this, 'update_db'));
-			wp_register_style('ui-tabs', plugins_url('vod-infomaniak/css/jquery.ui.tabs.css'));
 
 			load_plugin_textdomain('vod_infomaniak', FALSE, basename(dirname(__FILE__)) . '/languages');
 
@@ -58,13 +57,22 @@
 
 				add_action('plugins_loaded', array(&$this, 'init_mce_video'));
 
-				//On load Css et Js
-				wp_enqueue_script('jquery-ui-dialog');
-				wp_enqueue_script('jquery-ui-tabs');
-				wp_enqueue_script('suggest');
-				wp_enqueue_style('vod-jquery-ui', plugins_url('vod-infomaniak/css/jquery-ui.css'), array(), $this->version, 'screen');
-				wp_enqueue_style('ui-tabs');
+				//On load css et js pour l'admin
+				add_action('wp_enqueue_scripts', array(&$this, 'register_styles'));
+				add_action('wp_enqueue_scripts', array(&$this, 'register_scripts'));
 			}
+		}
+
+		function register_styles(){
+			wp_register_style('ui-tabs', plugins_url('vod-infomaniak/css/jquery.ui.tabs.css'));
+			wp_enqueue_style('vod-jquery-ui', plugins_url('vod-infomaniak/css/jquery-ui.css'), array(), $this->version, 'screen');
+			wp_enqueue_style('ui-tabs');
+		}
+
+		function register_scripts(){
+			wp_enqueue_script('jquery-ui-dialog');
+			wp_enqueue_script('jquery-ui-tabs');
+			wp_enqueue_script('suggest');
 		}
 
 		function init_mce_video() {

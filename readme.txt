@@ -3,7 +3,7 @@ Contributors: vod-infomaniak
 Tags: video, manage
 Requires at least: 2.8.6
 Tested up to: 3.8
-Stable tag: 1.1.3
+Stable tag: 1.1.4
 
 Easily embed and manage videos from Infomaniak VOD in your posts, comments and RSS feeds. You need an Infomaniak VOD account to use this plugin.
 
@@ -68,7 +68,7 @@ Si vous ne trouvez pas de solution à votre question, vous pouvez aussi nous con
 
 == Changelog ==
 
-= 1.1.3 (14/01/2014) =
+= 1.1.4 (14/01/2014) =
 * Correction de plusieurs notices suites aux updates de wordpress (3.7 et 3.8)
 * Correction du styles de plusieurs boutons
 * Reformatage du code
