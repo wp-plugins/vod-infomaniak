@@ -68,7 +68,7 @@ Si vous ne trouvez pas de solution à votre question, vous pouvez aussi nous con
 
 == Changelog ==
 
-= 1.1.4 (14/01/2014) =
+= 1.1.5 (14/01/2014) =
 * Correction de plusieurs notices suites aux updates de wordpress (3.7 et 3.8)
 * Correction du styles de plusieurs boutons
 * Reformatage du code

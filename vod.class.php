@@ -5,7 +5,7 @@
 	 *
 	 * @author Destrem Kevin
 	 * @link http://statslive.infomaniak.ch/vod/api/
-	 * @version 1.1.4
+	 * @version 1.1.5
 	 * @copyright infomaniak.ch
 	 *
 	 */
@@ -58,18 +58,16 @@
 				add_action('plugins_loaded', array(&$this, 'init_mce_video'));
 
 				//On load css et js pour l'admin
-				add_action('wp_enqueue_scripts', array(&$this, 'register_styles'));
-				add_action('wp_enqueue_scripts', array(&$this, 'register_scripts'));
+				add_action('admin_enqueue_scripts', array(&$this, 'register_scripts'));
 			}
 		}
 
-		function register_styles(){
+		function register_scripts(){
+			//styles
 			wp_register_style('ui-tabs', plugins_url('vod-infomaniak/css/jquery.ui.tabs.css'));
 			wp_enqueue_style('vod-jquery-ui', plugins_url('vod-infomaniak/css/jquery-ui.css'), array(), $this->version, 'screen');
 			wp_enqueue_style('ui-tabs');
-		}
-
-		function register_scripts(){
+			//scripts
 			wp_enqueue_script('jquery-ui-dialog');
 			wp_enqueue_script('jquery-ui-tabs');
 			wp_enqueue_script('suggest');
