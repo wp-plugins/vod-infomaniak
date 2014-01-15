@@ -68,6 +68,9 @@ Si vous ne trouvez pas de solution à votre question, vous pouvez aussi nous con
 
 == Changelog ==
 
+= 1.1.6 (15/01/2014) =
+* Renommage d'un des fichiers qui pouvait poser quelques problèmes à certains gestionnaires FTP
+
 = 1.1.5 (14/01/2014) =
 * Correction de plusieurs notices suites aux updates de wordpress (3.7 et 3.8)
 * Correction du styles de plusieurs boutons
