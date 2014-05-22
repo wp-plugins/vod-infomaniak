@@ -1,12 +1,15 @@
 === Plugin Name ===
 
-Contributors: Infomaniak Entertainment
+Contributors: Infomaniak Network
 Plugin Name: Vod Infomaniak
 Tags: video, manage, infomaniak, vod
 Requires at least: 2.8.6
 Tested up to: 3.9
 Stable tag: 1.1.7
-Version: 1.1.7
+
+
+
+Easily embed and manage videos from Infomaniak VOD in your posts, comments and RSS feeds. You need an Infomaniak VOD account to use this plugin.
 
 == Description ==
 
