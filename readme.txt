@@ -7,7 +7,10 @@ Tested up to: 3.9
 Stable tag: 1.1.7
 Version: 1.1.7
 
+Easily embed and manage videos from Infomaniak VOD in your posts, comments and RSS feeds. You need an Infomaniak VOD account to use this plugin.
+
 == Description ==
+
 Ce plugin vous permet de gérer facilement les interactions entre votre blog wordpress et votre espace VOD.
 Il vous permet en toute simplicité de récupérer et de gérer l'ensemble de vos vidéos.
 
@@ -23,6 +26,7 @@ Cet outil va vous permettre d'utiliser simplement depuis votre blog, de nombreus
 * Un outil de recherche de vidéo, lors de l'écriture d'un article ou d'une page pour retrouver facilement une archive
 
 == Installation ==
+
 Il est nécessaire pour utiliser ce plugin d'avoir un compte VOD sur notre interface d'administration http://statslive.infomaniak.ch/
 
 Si vous souhaitez obtenir plus d'informations sur notre solution d'hébergement vidéo, veuillez vous rendre à l'adresse http://streaming.infomaniak.com/stockage-video-en-ligne
@@ -36,6 +40,7 @@ Pour installer ce plugin, il vous faut :
 Pour les mises à jour, celles-ci sont automatiquement proposées et se font sur le gestionnaire d'extension de wordpress.
 
 == Frequently Asked Questions ==
+
 = Il faut que je fournisse mes identifiants personnels au plugin ? =
 
 Cela fonctionne, mais pour des raisons de sécurités, il est fortement déconseillé de le faire.
@@ -59,10 +64,12 @@ Sur notre site internet, nous possédons une Foire au Question (http://hosting.i
 Si vous ne trouvez pas de solution à votre question, vous pouvez aussi nous contacter par email.
 
 == Screenshots ==
+
 1. Article créer à l'aide du plugin et dans lequel on peut retrouver une vidéo.
 2. Screenshot montrant le menu d'administration permettant de gérer ses vidéos/players/playlist
 
 == Changelog ==
+
 = 1.1.7 (22/04/2014) =
 * Récupération des options du player depuis l'interface d'administration
 * Ajout d'un nouvel onglet « Playlists »
