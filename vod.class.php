@@ -1,11 +1,11 @@
 <?php
 	/**
 	 * Classe generale regroupant les differentes fonctions du plugin wordpress.
-	 * En cas de problemes ou de questions, veuillez contacter streaming@infomaniak.ch
+	 * En cas de problemes ou de questions, veuillez contacter support-vod-wordpress@infomaniak.ch
 	 *
-	 * @author Destrem Kevin
+	 * @author Destrem Kevin + Davide Rubini
 	 * @link http://statslive.infomaniak.ch/vod/api/
-	 * @version 1.1.6
+	 * @version 1.1.7
 	 * @copyright infomaniak.ch
 	 *
 	 */
@@ -15,7 +15,7 @@
 	define('VOD_RIGHT_ADMIN', 4);
 
 	class EasyVod {
-		public $version = "0.9";
+		public $version = "1.0";
 		private $local_version;
 		private $plugin_url;
 		private $options;
@@ -187,36 +187,54 @@
 		}
 
 		function searchPlaylist() {
-			$aResult = $this->db->search_playlist($_REQUEST['q'], 12);
+			$aResult = $this->db->search_playlist($_REQUEST['q'], 100);
+			$tReturn = "";
 			if (!empty($aResult)) {
 				foreach ($aResult as $oPlaylist) {
-					echo "<span style='display:none'>" . $oPlaylist->iPlaylistCode . ";;;</span><span>" . $oPlaylist->sPlaylistName . "</span>\n";
+					var_dump($oPlaylist);
+					$sDuration = "";
+					if(!empty($oPlaylist->iTotalDuration)){
+						$iDuration = intval($oPlaylist->iTotalDuration/100);
+						$iHours = intval($iDuration/3600);
+						$iMinutes = intval($iDuration/60) % 60;
+						$iSecondes = intval($iDuration) % 60;
+						$sDuration .= $iHours > 0 ? $iHours."h. " : '';
+						$sDuration .= $iMinutes > 0 ? $iMinutes."m. " : '';
+						$sDuration .= $iSecondes > 0 ? $iSecondes."s. " : '';
+					}
+
+					$tReturn .= '<tr class="vod_element_select" onclick="Vod_selectVideo(this, \''.$oPlaylist->iPlaylistCode.'\',\'\',\'\');">';
+						$tReturn .= '<td>'.ucfirst(stripslashes($oPlaylist->sPlaylistName))."</td>";
+						$tReturn .= '<td>'.stripslashes($oPlaylist->sPlaylistDescription)."</td>";
+						$tReturn .= '<td align="center">'.$oPlaylist->iTotal.'</td>';
+						$tReturn .= '<td align="right">'.$sDuration.'</td>';
+					$tReturn .= '</tr>';
 				}
 			}
+			echo $tReturn;
 			die();
 		}
 
 		function searchVideo() {
 			$aResult = $this->db->search_videos($_REQUEST['q'], 12, $this->options['vod_filter_folder']);
+			$tReturn = "";
 			if (!empty($aResult)) {
 				foreach ($aResult as $oVideo) {
-					$str = "";
-					$duration = intval($oVideo->iDuration / 100);
-					$hour = intval($duration / 3600);
-					$min = intval($duration / 60) % 60;
-					$sec = intval($duration) % 60;
-
-					$str .= $hour > 0 ? $hour . "h. " : '';
-					$str .= $min > 0 ? $min . "m. " : '';
-					$str .= $sec > 0 ? $sec . "s." : '';
-
-					echo "<span style='display:none'>" . $oVideo->sPath . $oVideo->sServerCode . "." . strtolower($oVideo->sExtension) . ";;;";
-					if (!empty($oVideo->sToken)) {
-						echo $oVideo->iFolder . ";;;";
-					}
-					echo "</span><span>" . ucfirst($oVideo->sName) . " ( " . __("Ajout", 'vod_infomaniak') . " : " . date("j F Y ", strtotime($oVideo->dUpload)) . ", " . __("Duree", 'vod_infomaniak') . ": $str )</span>\n";
+					$tReturn .= '<tr class="vod_element_select" onclick="Vod_selectVideo(this, \''.$oVideo->sPath . $oVideo->sServerCode . '.' . strtolower($oVideo->sExtension).'\',\''.$oVideo->sToken.'\',\''.$oVideo->iFolder.'\');">';
+						$tReturn .= '<td><img width="100" src="http://vod.infomaniak.com/redirect/' . $this->options['vod_api_id'] . $oVideo->sPath . $oVideo->sServerCode . '.mini.jpg"/></td>';
+						$tReturn .= '<td>';
+							$tReturn .= ucfirst(stripslashes($oVideo->sName));
+							$tReturn .= '<br/><br/>';
+							$tReturn .= '<img src="'.plugins_url('vod-infomaniak/img/ico-folder-open-16x16.png').'" style="vertical-align:bottom"/>';
+							$tReturn .= $oVideo->sPath;
+						$tReturn .= '</td>';
+						$tReturn .= '<td>'.$oVideo->dUpload.'</td>';
+					$tReturn .= '</tr>';
 				}
+			}else{
+				$tReturn .= "<tr><td colspan='3'>Aucune Resultat</td></tr>";
 			}
+			echo $tReturn;
 			die();
 		}
 
@@ -398,13 +416,14 @@
 			if (!empty($this->options['vod_api_connected']) && $this->options['vod_api_connected'] == 'on') {
 				require_once("vod.template.php");
 				$aPlayers = $this->db->get_players();
-				$aLastVideos = $this->db->get_videos_byPage(0, 50, $this->options['vod_filter_folder']);
+				$aVideos = $this->db->get_videos_byPage(0, 50, $this->options['vod_filter_folder']);
+				$aPlaylists = $this->db->get_playlists();
 				$aFolders = $this->db->get_folders($this->options['vod_filter_folder']);
 				$bCanUpload = false;
 				if ($this->isCurrentUserCan('importation')) {
 					$bCanUpload = true;
 				}
-				EasyVod_Display::buildForm($this->options, $aPlayers, $aLastVideos, $aFolders, $bCanUpload);
+				EasyVod_Display::buildForm($this->options, $aPlayers, $aVideos, $aPlaylists, $aFolders, $bCanUpload);
 			}
 		}
 
@@ -846,7 +865,7 @@
 
 	/**
 	 * Classe permettant la gestion des tables sql utilisé par ce plugin
-	 * En cas de problemes ou de questions, veuillez contacter streaming@infomaniak.ch
+	 * En cas de problemes ou de questions, veuillez contacter support-vod-wordpress@infomaniak.ch
 	 *
 	 * @author Destrem Kevin
 	 * @link http://statslive.infomaniak.ch/vod/api/

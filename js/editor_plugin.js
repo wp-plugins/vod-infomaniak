@@ -7,40 +7,72 @@
  * @copyright infomaniak.ch
  *
  */
+
+ //Centrer l'overlay
+ //jQuery("#dialog-vod-form").dialog( "option", {'position' : 'center'} );
+
+
+//Fonction permettant de cacher l'overlay de configuration
+Vod_dialogOpen = function () {
+	jQuery("#dialog-vod-form").dialog('open');
+	jQuery("#dialog-url-input").value = "";
+	jQuery("#dialog-slide-header").removeClass("selected");
+	jQuery("#dialog-slide").hide();
+	Vod_setPlayerOptions();
+	Vod_selectTab(2);
+}
+
+//Fonction permettant de naviguer entre les onglets
+Vod_selectTab = function (iTabCode) {
+	if (jQuery("#dialog-slide-header").hasClass("selected") ) {
+		jQuery("#dialog-slide-header").removeClass("selected");
+		jQuery("#dialog-slide").slideUp('fast');
+	}
+
+	jQuery('.tabSelected').each(function(index, oTab){
+		jQuery('#'+oTab.id).removeClass("tabSelected");
+		jQuery('#'+oTab.id).fadeOut();
+	});
+
+	if(jQuery('#dialog-tab'+iTabCode)){
+		jQuery('#dialog-tab'+iTabCode).fadeIn();
+		jQuery('#dialog-tab'+iTabCode).addClass("tabSelected");
+	}
+
+	if(parseInt(iTabCode,10) == 2){
+		if(jQuery('#vod_infomaniak_search_videos'))jQuery('#vod_infomaniak_search_videos').focus();
+	}else if(parseInt(iTabCode,10) == 4){
+		if(jQuery('#vod_infomaniak_search_playlists'))jQuery('#vod_infomaniak_search_playlists').focus();
+	}
+};
+
 //Fonction permettant d'afficher ou non les options d'integration
 Vod_dialogToggleSlider = function(){
 	if ( !jQuery("#dialog-slide-header").hasClass("selected") ) {
 		jQuery("#dialog-slide-header").addClass("selected");
-		jQuery("#dialog-slide").show();
+		jQuery('.tabSelected').slideUp();
+		jQuery("#dialog-slide").slideDown();
 	} else {
 		jQuery("#dialog-slide-header").removeClass("selected");
-		jQuery("#dialog-slide").hide();
+		jQuery("#dialog-slide").slideUp();
+		jQuery('.tabSelected').slideDown();
 	}
-	jQuery("#dialog-vod-form").dialog( "option", {'position' : 'center'} );
 };
 
-//Fonction permettant de cacher l'overlay de configuration
-Vod_dialogOpen = function () {
-	jQuery("#dialog-url-input").value = "";
-	jQuery("#dialog-slide-header").removeClass("selected");
-	jQuery("#dialog-vod-form").dialog('open');
-	jQuery("#dialog-url-input").focus();
-}
+Vod_selectVideo = function (oElement, sUrl,sToken,iFolder) {
+	jQuery('#dialog-url-input').val( sUrl );
+	jQuery('#dialog-token').val( "" );
+	if( sToken != "" ){
+		jQuery('#dialog-token').val( iFolder );
+	}
+	jQuery('.vod_element_selected').each(function(index, oElement){jQuery(oElement).removeClass('vod_element_selected')});
+	jQuery(oElement).addClass("vod_element_selected");
+	Vod_dialogToggleSlider();
+};
 
 //Fonction permettant de cacher l'overlay de configuration
 Vod_dialogClose = function () {
 	jQuery("#dialog-vod-form").dialog("close");
-	jQuery("#dialog-slide").hide();
-};
-
-Vod_selectVideo = function (sUrl,sToken,iFolder) {
-	jQuery('#dialog-url-input').val( sUrl );
-	if( sToken != "" ){
-		jQuery('#dialog-token').val( iFolder );
-	}else{
-		jQuery('#dialog-token').val( "" );
-	}
-	jQuery('#dialog-tabs').tabs( "select" , 1 )
 };
 
 sVodUploadParameters = "";
@@ -160,52 +192,16 @@ Vod_dialogValid = function () {
 				//On switch le menu d'implementation et le bouton Ajouter
 				if( jQuery('#dialog-tabs').tabs('option', 'selected') == 0 || jQuery('#dialog-tabs').tabs('option', 'selected') == 2 || jQuery('#dialog-tabs').tabs('option', 'selected') == 3){
 					jQuery('.ui-dialog-buttonpane button').eq(0).button('disable');
-					jQuery('#dialog-config').hide();
+					jQuery('#dialog-config').slideUp();
 					jQuery("#dialog-search-input-video").focus();
 				}else{
 					jQuery('.ui-dialog-buttonpane button').eq(0).button('enable');
-					jQuery('#dialog-config').show();
+					jQuery('#dialog-config').slideDown();
 					jQuery("#dialog-url-input").focus();
 				}
 				jQuery("#dialog-vod-form").dialog( "option", {'position' : 'center'} );
 			}
 		});
-
-		jQuery('#dialog-search-input-video').suggest(jQuery('#url_ajax_search_video').val(), {
-			delay : 150,
-			onSelect : function(){
-			part = this.value.split(';;;');
-			jQuery('#dialog-search-input-video').val('');
-			jQuery('#dialog-url-input').val(part[0]);
-			if( part.length == 3 ){
-				jQuery('#dialog-token').val( part[1] );
-			}else{
-				jQuery('#dialog-token').val("");
-			}
-			jQuery('#dialog-tabs').tabs( "select" , 1 )
-		}
-		});
-
-		jQuery('#dialog-search-input-playlist').suggest(jQuery('#url_ajax_search_playlist').val(), {
-			delay : 150,
-			onSelect : function(){
-			part = this.value.split(';;;');
-			jQuery('#dialog-search-input-playlist').val('');
-			jQuery('#dialog-url-input').val(part[0]);
-			jQuery('#dialog-tabs').tabs( "select" , 1 )
-		}
-		});
-
-		checkSearchType = function(){
-			if( jQuery('input[type=radio][name=searchtype]:checked').attr('value') == "video" ){
-				jQuery('#dialog-search-input-video').show();
-				jQuery('#dialog-search-input-playlist').hide();
-			}else{
-				jQuery('#dialog-search-input-video').hide();
-				jQuery('#dialog-search-input-playlist').show();
-			}
-		};
-		checkSearchType();
 
 		ed.addButton('vodplugin', {
 			title : 'Inserer VOD',

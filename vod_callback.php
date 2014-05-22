@@ -2,7 +2,7 @@
 	/**
 	 * Fichier de callback utilisé comme interface du daemon VOD.
 	 * Cela permet d'avoir immediatement accès aux vidéos qui viennent d'etre envoyés sur l'espace VOD.
-	 * En cas de problemes ou de questions, veuillez contacter streaming@infomaniak.ch
+	 * En cas de problemes ou de questions, veuillez contacter support-vod-wordpress@infomaniak.ch
 	 *
 	 * @author Destrem Kevin
 	 * @link http://statslive.infomaniak.ch/vod/api/

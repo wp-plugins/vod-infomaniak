@@ -1,14 +1,13 @@
 === Plugin Name ===
-Contributors: vod-infomaniak
-Tags: video, manage
+Contributors: Infomaniak Entertainment
+Plugin Name: Vod Infomaniak
+Tags: video, manage, infomaniak, vod
 Requires at least: 2.8.6
-Tested up to: 3.8
-Stable tag: 1.1.4
-
-Easily embed and manage videos from Infomaniak VOD in your posts, comments and RSS feeds. You need an Infomaniak VOD account to use this plugin.
+Tested up to: 3.9
+Stable tag: 1.1.7
+Version: 1.1.7
 
 == Description ==
-
 Ce plugin vous permet de gérer facilement les interactions entre votre blog wordpress et votre espace VOD.
 Il vous permet en toute simplicité de récupérer et de gérer l'ensemble de vos vidéos.
 
@@ -24,21 +23,19 @@ Cet outil va vous permettre d'utiliser simplement depuis votre blog, de nombreus
 * Un outil de recherche de vidéo, lors de l'écriture d'un article ou d'une page pour retrouver facilement une archive
 
 == Installation ==
-
 Il est nécessaire pour utiliser ce plugin d'avoir un compte VOD sur notre interface d'administration http://statslive.infomaniak.ch/
 
 Si vous souhaitez obtenir plus d'informations sur notre solution d'hébergement vidéo, veuillez vous rendre à l'adresse http://streaming.infomaniak.com/stockage-video-en-ligne
 
 Pour installer ce plugin, il vous faut :
 
-1. Envoyer le plugin `vod-infomaniak` dans le dossier `/wp-content/plugins/` de votre blog.
+1. Charger le plugin `vod-infomaniak` dans le dossier `/wp-content/plugins/` de votre blog.
 1. Aller activer ce plugin dans le menu plugins de wordpress.
 1. Se rendre dans Gestion VOD -> Configuration afin de configurer votre compte avec les identifiants fournis sur l'interface d'administration.
 
 Pour les mises à jour, celles-ci sont automatiquement proposées et se font sur le gestionnaire d'extension de wordpress.
 
 == Frequently Asked Questions ==
-
 = Il faut que je fournisse mes identifiants personnels au plugin ? =
 
 Cela fonctionne, mais pour des raisons de sécurités, il est fortement déconseillé de le faire.
@@ -62,11 +59,16 @@ Sur notre site internet, nous possédons une Foire au Question (http://hosting.i
 Si vous ne trouvez pas de solution à votre question, vous pouvez aussi nous contacter par email.
 
 == Screenshots ==
-
 1. Article créer à l'aide du plugin et dans lequel on peut retrouver une vidéo.
 2. Screenshot montrant le menu d'administration permettant de gérer ses vidéos/players/playlist
 
 == Changelog ==
+= 1.1.7 (22/04/2014) =
+* Récupération des options du player depuis l'interface d'administration
+* Ajout d'un nouvel onglet « Playlists »
+* Suppression de l’onglet « Outils de recherche »
+* Intégration de la recherche directement dans les onglets « Vidéos » et « Playlists »
+* Divers petites corrections
 
 = 1.1.6 (15/01/2014) =
 * Renommage d'un des fichiers qui pouvait poser quelques problèmes à certains gestionnaires FTP
@@ -146,4 +148,4 @@ Si vous ne trouvez pas de solution à votre question, vous pouvez aussi nous con
 = Prochainement =
 * Gestion des fichiers audios
 * Gestion des sous-titres
-* URL personnalisable 
+* URL personnalisable

@@ -2,7 +2,7 @@
 	/**
 	 * Classe permettant d'utiliser simplement les differentes fonctions de l'API vod.
 	 * Il est parfaitement possible d'utiliser cette classe independamment du plugin wordpress.
-	 * En cas de problemes ou de questions, veuillez contacter streaming@infomaniak.ch
+	 * En cas de problemes ou de questions, veuillez contacter support-vod-wordpress@infomaniak.ch
 	 *
 	 * @author Destrem Kevin
 	 * @link http://statslive.infomaniak.ch/vod/api/
