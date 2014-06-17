@@ -3,7 +3,7 @@
  *
  * @author Destrem Kevin
  * @link http://statslive.infomaniak.ch/vod/api/
- * @version 1.0
+ * @version 1.1.8
  * @copyright infomaniak.ch
  *
  */
@@ -136,7 +136,7 @@ Vod_dialogValid = function () {
 				//Celles qu'on ajoute à chaque fois
 				var stretch = jQuery("#dialog-stretch").attr('checked') ? 1 : 0;
 				var autostart = jQuery("#dialog-autostart").attr('checked') ? 1 : 0;
-				var loop = jQuery("#dialog-loop").attr('checked') ? 1 : 0;	
+				var loop = jQuery("#dialog-loop").attr('checked') ? 1 : 0;
 				text += " stretch='"+ parseInt(stretch)+"'";
 				text += " autoplay='"+ parseInt(autostart)+"'";
 				text += " loop='"+ parseInt(loop)+"'";
