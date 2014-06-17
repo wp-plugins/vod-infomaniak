@@ -1141,7 +1141,7 @@
 					} else {
 
 						foreach ($aPlaylist as $oPlaylist) {
-							?>
+                            ?>
 							<tr>
 								<td><img src="<?php echo plugins_url('vod-infomaniak/img/ico-display-list.png'); ?>"
 								         style="vertical-align:bottom; padding: 0px 5px;"/> <?php echo ucfirst($oPlaylist->sPlaylistName); ?>
@@ -1167,6 +1167,11 @@
 									   target="_blank"><img
 											src="<?php echo plugins_url('vod-infomaniak/img/ico-information.png'); ?>"
 											alt="<?php _e("Administrer cette playlist", 'vod_infomaniak'); ?>"/></a>
+
+                                    <a href="<?=$actionurl?>&create=<?=$oPlaylist->iPlaylistCode;?>" title="<?php _e("Creer un article", 'vod_infomaniak'); ?>">
+                                        <img src="<?php echo plugins_url('vod-infomaniak/img/ico-edit.png'); ?>"
+                                             alt="<?php _e("Creer un article", 'vod_infomaniak'); ?>"/>
+                                    </a>
 								</td>
 							</tr>
 						<?php

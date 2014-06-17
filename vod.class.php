@@ -108,7 +108,7 @@
 
 		function getRightValue($sValue) {
 			if (is_array($sValue)) {
-				$sValue = $sValue[0];
+				$sValue = reset($sValue);
 			}
 			switch ($sValue) {
 				case 'contributor':
@@ -809,6 +809,27 @@
 		function vod_playlist_menu() {
 			if ($this->plugin_ready()) {
 				require_once("vod.template.php");
+
+                if (isset($_REQUEST['create'])) {
+                    $oPlaylist = $this->db->getPlaylist(intval($_REQUEST['create']));
+
+                    if ($oPlaylist != false) {
+                        $sBalise = "vod";
+                        // Create post object
+                        $my_post = array(
+                            'post_title' => $oPlaylist->sPlaylistName,
+                            'post_content' => '[' . $sBalise . ']' . $oPlaylist->iPlaylistCode . '[/vod]'
+                        );
+
+                        // Insert the post into the database
+                        $id_draft = wp_insert_post($my_post);
+                        echo "<h3>" . __('Article correctement cree. Vous allez etre rediriger sur la page d\'edition', 'vod_infomaniak') . "</h3>";
+                        echo "<script type='text/javascript'>window.location = '" . admin_url('post.php?post=' . $id_draft . '&action=edit') . "';</script>";
+                        exit;
+                    }
+                }
+
+
 				$aPlaylist = $this->db->get_playlists();
 				$actionurl = $_SERVER['REQUEST_URI'];
 				EasyVod_Display::playlistMenu($actionurl, $this->options, $aPlaylist);
@@ -923,7 +944,7 @@
 		 `sServerCode` VARCHAR( 255 ) NOT NULL,
 		 `sExtension` VARCHAR( 4 ) NOT NULL,
 		 `iDuration` INT UNSIGNED NOT NULL,
-		 `dUpload` DATETIME NOT NULL 
+		 `dUpload` DATETIME NOT NULL
 		) CHARACTER SET utf8;";
 			dbDelta($sql_video);
 
@@ -934,7 +955,7 @@
 		 `iTotal` INT UNSIGNED NOT NULL,
 		 `iTotalDuration` INT UNSIGNED NOT NULL,
 		 `sMode` VARCHAR( 255 ) NOT NULL,
-		 `dCreated` DATETIME NOT NULL 
+		 `dCreated` DATETIME NOT NULL
 		) CHARACTER SET utf8;";
 			dbDelta($sql_playlist);
 
@@ -1105,7 +1126,12 @@
 			return $wpdb->get_row("SELECT * FROM " . $this->db_table_video . " WHERE iVideo=" . intval($iVideo) . " LIMIT 1");
 		}
 
-		function get_videos() {
+		function getPlaylist($iPlaylistCode) {
+            global $wpdb;
+            return $wpdb->get_row("SELECT * FROM " . $this->db_table_playlist . " WHERE iPlaylistCode=" . intval($iPlaylistCode) . " LIMIT 1");
+        }
+
+        function get_videos() {
 			global $wpdb;
 			return $wpdb->get_results("SELECT * FROM " . $this->db_table_video . " ORDER BY `dUpload` DESC");
 		}
