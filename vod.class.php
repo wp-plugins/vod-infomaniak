@@ -558,7 +558,7 @@
 
 		function vod_admin_menu() {
 			$site_url = get_option("siteurl");
-
+            $aFolders = array();
 			if (isset($_POST['submitted'])) {
 				$bResult = false;
 				$aFolders = array();
