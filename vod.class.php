@@ -413,8 +413,8 @@
 		}
 
 		function buildForm() {
-			if (!empty($this->options['vod_api_connected']) && $this->options['vod_api_connected'] == 'on') {
-				require_once("vod.template.php");
+			require_once("vod.template.php");
+            if (!empty($this->options['vod_api_connected']) && $this->options['vod_api_connected'] == 'on') {
 				$aPlayers = $this->db->get_players();
 				$aVideos = $this->db->get_videos_byPage(0, 50, $this->options['vod_filter_folder']);
 				$aPlaylists = $this->db->get_playlists();
@@ -424,7 +424,9 @@
 					$bCanUpload = true;
 				}
 				EasyVod_Display::buildForm($this->options, $aPlayers, $aVideos, $aPlaylists, $aFolders, $bCanUpload);
-			}
+			} else {
+                EasyVod_Display::buildFormNoConfig();
+            }
 		}
 
 		function checkAutoUpdate() {
@@ -561,7 +563,7 @@
             $aFolders = array();
 			if (isset($_POST['submitted'])) {
 				$bResult = false;
-				$aFolders = array();
+
 				if (empty($this->options['vod_api_callbackKey'])) {
 					$this->options['vod_api_callbackKey'] = sha1(time() * rand());
 				}
@@ -575,29 +577,29 @@
 				}
 				$this->options['vod_api_id'] = stripslashes(htmlspecialchars($_POST['vod_api_id']));
 				$this->options['vod_api_connected'] = 'off';
-
-				try {
+                try {
 					$oApi = $this->getAPI();
-
-					$bResult = $oApi->ping();
+                	$bResult = $oApi->ping();
 					if ($bResult) {
-
-						$this->options['vod_api_connected'] = 'on';
+                		$this->options['vod_api_connected'] = 'on';
 						$this->options['vod_api_icodeservice'] = $oApi->getServiceItemID();
 						$this->options['vod_api_group'] = $oApi->getGroupID();
 						$this->options['vod_api_lastUpdate'] = 0;
 						$this->options['vod_filter_folder'] = "";
-						//Verification DB et synchro
-						$this->install_db();
-						if (empty($this->options['vod_api_valid_callback']) || $this->options['vod_api_valid_callback'] == 'off') {
 
-							//Clean de callback V1 s'il y en a encore
+                        if (empty($_POST['logout']) === true) {
+                            //Installation de la base de donnée seulement si elle n'est pas à jour
+                            $this->update_db();
+                        }
+
+                        if (empty($this->options['vod_api_valid_callback']) || $this->options['vod_api_valid_callback'] == 'off') {
+                        	//Clean de callback V1 s'il y en a encore
 							$sUrl = $oApi->getCallback();
 							if (!empty($sUrl) && strpos($sUrl, str_replace('http://', '', $site_url)) !== false) {
 								$oApi->setCallback("");
 							}
 
-							//On va essayer d'ajouter un callback V2
+                            //On va essayer d'ajouter un callback V2
 							$sUrl2 = $oApi->getCallbackV2();
 							$bCallbackV2 = true;
 							if ($sUrl2 != false) {
@@ -607,40 +609,52 @@
 									}
 								}
 							}
-							if ($bCallbackV2) {
+
+                            if ($bCallbackV2) {
 								$oApi->setCallbackV2($site_url . "/?vod_page=callback&key=" . $this->options['vod_api_callbackKey']);
 							}
-							$this->options['vod_api_valid_callback'] == 'on';
+
+                            $this->options['vod_api_valid_callback'] == 'on';
 						}
-						if ($this->db->count_video() == 0) {
-							$oApi = $this->getAPI();
+
+                        if ($this->db->count_video() == 0) {
+
+                        	$oApi = $this->getAPI();
 
 							//Update des videos
 							$iNumberVideoApi = 200;
 							$this->db->clean_videos();
 							$iVideo = $oApi->countVideo();
 							$iPageTotal = floor(($iVideo - 1) / $iNumberVideoApi);
-							for ($iPage = 0; $iPage <= $iPageTotal; $iPage++) {
+
+                        	for ($iPage = 0; $iPage <= $iPageTotal; $iPage++) {
 								$aVideos = $oApi->getLastVideo($iNumberVideoApi, $iPage * $iNumberVideoApi);
 								foreach ($aVideos as $oVideo) {
 									$this->db->insert_video($oVideo['iFileCode'], $oVideo['iFolder'], $oVideo['sFileName'], $oVideo['sFileServerCode'], $oVideo['aEncodes'][0]['sPath'], $oVideo['aEncodes'][0]['eConteneur'], $oVideo['fFileDuration'], $oVideo['dFileUpload']);
 								}
 							}
-						}
+                        }
 					}
 				} catch (Exception $oException) {
 					echo "<h4 style='color: red;'>" . __('Erreur : Impossible de se connecter', 'vod_infomaniak') . '</h4>';
 				}
-				update_option($this->key, $this->options);
+
+                if (empty($_POST['logout']) === false) {
+                    $this->options['vod_api_connected'] = 'off';
+                }
+                update_option($this->key, $this->options);
 			}
+
 			if (isset($_POST['updateSynchro']) && $_POST['updateSynchro'] == 1) {
 				$this->options['vod_api_lastUpdate'] = 0;
 				$this->fastSynchro();
 			}
+
 			if (isset($_POST['updateSynchroVideo']) && $_POST['updateSynchroVideo'] == 1) {
 				$this->options['vod_api_lastUpdate'] = 0;
 				$this->fullSynchro();
 			}
+
 			if (isset($_POST['updateFilterFolder']) && $_POST['updateFilterFolder'] == 1) {
 				if ($_POST['sFolderPath'] == -1) {
 					$this->options['vod_filter_folder'] = "";
@@ -649,6 +663,7 @@
 				}
 				update_option($this->key, $this->options);
 			}
+
 			if (isset($_POST['updateRightPlugins']) && $_POST['updateRightPlugins'] == 1) {
 				$this->options['vod_right_integration'] = $this->getRightValue($_POST['integration_role']);
 				$this->options['vod_right_upload'] = $this->getRightValue($_POST['upload_role']);
@@ -656,6 +671,7 @@
 				$this->options['vod_right_playlist'] = $this->getRightValue($_POST['playlist_role']);
 				update_option($this->key, $this->options);
 			}
+
 			if ($this->options['vod_api_connected'] == "on") {
 				$this->options['vod_count_player'] = $this->db->count_player();
 				$this->options['vod_count_folder'] = $this->db->count_folder();

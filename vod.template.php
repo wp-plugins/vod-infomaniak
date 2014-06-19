@@ -14,8 +14,13 @@
 
 		static function buildForm($options, $aPlayers, $aVideos, $aPlaylists, $aFolders, $bCanUpload) {
 			?>
+            <div id="dialog-vod-logout" style="display:none;" title="<?=__('Probleme de configuration', 'vod_infomaniak')?>">
+                <p><?=__("Veuillez-vous rendre dans <a href='admin.php?page=configuration'>Videos -> Configuration</a> afin de configurer votre compte.", 'vod_infomaniak');?></p>
+                ?>
+            </div>
+
 			<div class="hidden">
-				<div id="dialog-vod-form">
+                <div id="dialog-vod-form">
 					<div id="dialog-tabs" class="ui-tabs">
 						<ul class="ui-tabs-nav">
 							<li><a href="#dialog-tab2" onclick="Vod_selectTab(2);"><?php _e('Videos', 'vod_infomaniak'); ?></a></li>
@@ -277,32 +282,6 @@
 
 							<script>
 								(function($) {
-									Vod_setPlayerOptions = function (){
-										var iPlayerCode = parseInt($('#dialog-player').val(),10);
-										if(iPlayerCode > 0 && $('#player_'+iPlayerCode+'_height')){
-											$('#dialog-width-input').val($('#player_'+iPlayerCode+'_width').val());
-											$('#dialog-height-input').val($('#player_'+iPlayerCode+'_height').val());
-
-											if(parseInt($('#player_'+iPlayerCode+'_stretch').val(),10) == 1){
-												$('#dialog-stretch').attr('checked', true);
-											}else{
-												$('#dialog-stretch').attr('checked', false);
-											}
-
-											if(parseInt($('#player_'+iPlayerCode+'_autoload').val(),10) == 1){
-												$('#dialog-autostart').attr('checked', true);
-											}else{
-												$('#dialog-autostart').attr('checked', false);
-											}
-
-											if(parseInt($('#player_'+iPlayerCode+'_loop').val(),10) == 1){
-												$('#dialog-loop').attr('checked', true);
-											}else{
-												$('#dialog-loop').attr('checked', false);
-											}
-										}
-									};
-
 									$('#dialog-player').unbind();
 									$('#dialog-player').change(function(){
 										Vod_setPlayerOptions();
@@ -338,11 +317,26 @@
 		<?php
 		}
 
+        static function buildFormNoConfig() {
+            ?>
+            <div id="dialog-vod-logout" style="display:none;" title="<?=__('Probleme de configuration', 'vod_infomaniak')?>">
+                <p style="padding: 0px 10px 0px">
+                    <?php
+                    echo __("Veuillez-vous rendre dans <a href='admin.php?page=configuration'>Videos -> Configuration</a> afin de configurer votre compte.", 'vod_infomaniak');
+                    ?>
+                </p>
+            </div>
+        <?php
+        }
+
 		static function adminMenu($action_url, $options, $sUrl, $aFolders) {
 			?>
 			<h2><?php _e('Administration du plugin VOD', 'vod_infomaniak'); ?></h2>
 			<form name="adminForm" action="<?php echo $action_url; ?>" method="post">
 				<input type="hidden" name="submitted" value="1"/>
+                <?php if ($options['vod_api_connected'] == "on") { ?>
+                    <input type="hidden" name="logout" value="1"/>
+                <?php } ?>
 
 				<p>
 					<?php _e("Pour fonctionner, le plugin a besoin de s'interfacer avec votre compte VOD infomaniak.<br/>
@@ -382,8 +376,13 @@
 					?>
 				</p>
 
-				<div class="submit"><input class="button" type="submit" name="Submit"
-				                           value="<?php _e('Valider', 'vod_infomaniak'); ?>"/></div>
+                <?php if ($options['vod_api_connected'] == "on") { ?>
+    				<div class="submit"><input class="button" type="submit" name="Submit"
+    				                           value="<?php _e('Deconnexion', 'vod_infomaniak'); ?>"/></div>
+                <?php } else { ?>
+                    <div class="submit"><input class="button" type="submit" name="Submit"
+                                               value="<?php _e('Connexion', 'vod_infomaniak'); ?>"/></div>
+                <?php } ?>
 			</form>
 
 			<?php

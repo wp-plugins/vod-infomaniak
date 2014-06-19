@@ -14,12 +14,47 @@
 
 //Fonction permettant de cacher l'overlay de configuration
 Vod_dialogOpen = function () {
-	jQuery("#dialog-vod-form").dialog('open');
-	jQuery("#dialog-url-input").value = "";
-	jQuery("#dialog-slide-header").removeClass("selected");
-	jQuery("#dialog-slide").hide();
-	Vod_setPlayerOptions();
-	Vod_selectTab(2);
+    if (jQuery('#dialog-player')) {
+        var iPlayerCode = parseInt(jQuery('#dialog-player').val(),10);
+        if(iPlayerCode > 0 && jQuery('#player_'+iPlayerCode+'_height')){
+            jQuery("#dialog-vod-form").dialog('open');
+        	jQuery("#dialog-url-input").value = "";
+        	jQuery("#dialog-slide-header").removeClass("selected");
+        	jQuery("#dialog-slide").hide();
+        	Vod_setPlayerOptions();
+        	Vod_selectTab(2);
+            return true;
+        }
+    }
+    jQuery('#dialog-vod-logout').dialog({modal: true});
+    jQuery("#dialog-vod-logout").dialog( "option", {'position' : 'center'} );
+}
+
+Vod_setPlayerOptions = function (){
+    var iPlayerCode = parseInt(jQuery('#dialog-player').val(),10);
+    if(iPlayerCode > 0 && jQuery('#player_'+iPlayerCode+'_height')){
+        jQuery('#dialog-width-input').val(jQuery('#player_'+iPlayerCode+'_width').val());
+        jQuery('#dialog-height-input').val(jQuery('#player_'+iPlayerCode+'_height').val());
+
+        if(parseInt(jQuery('#player_'+iPlayerCode+'_stretch').val(),10) == 1){
+            jQuery('#dialog-stretch').attr('checked', true);
+        }else{
+            jQuery('#dialog-stretch').attr('checked', false);
+        }
+
+        if(parseInt(jQuery('#player_'+iPlayerCode+'_autoload').val(),10) == 1){
+            jQuery('#dialog-autostart').attr('checked', true);
+        }else{
+            jQuery('#dialog-autostart').attr('checked', false);
+        }
+
+        if(parseInt(jQuery('#player_'+iPlayerCode+'_loop').val(),10) == 1){
+            jQuery('#dialog-loop').attr('checked', true);
+        }else{
+            jQuery('#dialog-loop').attr('checked', false);
+        }
+        return true;
+    }
 }
 
 //Fonction permettant de naviguer entre les onglets
@@ -164,23 +199,23 @@ Vod_dialogValid = function () {
 	tinymce.create('tinymce.plugins.vodplugin', {
 		init : function(ed, url){
 		jQuery('#dialog-vod-form').dialog({
-			title: 'Ajout d\'une video de la VOD',
-			resizable: false,
-			autoOpen: false,
-			width: 750,
-			modal: true,
-			buttons: {
-				"Ajouter": function() {
-					var bValid = true;
-					if ( bValid ) {
-						Vod_dialogValid();
-					}
-				},
-				Cancel: function() {
-					Vod_dialogClose();
-				}
-			}
-		});
+            title: 'Ajout d\'une video de la VOD',
+            resizable: false,
+            autoOpen: false,
+            width: 750,
+            modal: true,
+            buttons: {
+                "Ajouter": function() {
+                    var bValid = true;
+                    if ( bValid ) {
+                        Vod_dialogValid();
+                    }
+                },
+                Cancel: function() {
+                    Vod_dialogClose();
+                }
+            }
+        });
 
 		jQuery('#dialog-tabs').tabs({
 			show: function(event, ui) {
