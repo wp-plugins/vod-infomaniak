@@ -30,7 +30,7 @@
 			$this->db = new EasyVod_db();
 			$this->auto_sync = true;
 			$this->auto_sync_delay = 3600;
-			define("SALT", "SALT");
+			define("SALT", "2saLsNw4s4MCG9BVjXCKxvZA");
 		}
 
 		function add_filters_and_hooks() {
