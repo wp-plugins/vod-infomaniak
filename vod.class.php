@@ -5,7 +5,7 @@
 	 *
 	 * @author Destrem Kevin + Davide Rubini
 	 * @link http://statslive.infomaniak.ch/vod/api/
-	 * @version 1.1.9
+	 * @version 1.2
 	 * @copyright infomaniak.ch
 	 *
 	 */
@@ -191,7 +191,6 @@
 			$tReturn = "";
 			if (!empty($aResult)) {
 				foreach ($aResult as $oPlaylist) {
-					var_dump($oPlaylist);
 					$sDuration = "";
 					if(!empty($oPlaylist->iTotalDuration)){
 						$iDuration = intval($oPlaylist->iTotalDuration/100);
@@ -296,11 +295,12 @@
 			//Recuperation des parametres optionnels des tags
 			$aTagParam = array();
 			if (!empty($params)) {
-				$params = strtolower(str_replace(array("'", '"'), "", $params));
-				$aList = split(" ", $params);
+                $params = html_entity_decode($params);
+                $params = strtolower(str_replace(array("'", '"', '’'), "", $params));
+                $aList = split(" ", $params);
 				foreach ($aList as $param) {
 					if (strpos($param, "=") !== false) {
-						$aCut = split("=", $param);
+                        $aCut = split("=", $param);
 						if (in_array($aCut[0], array("width", "height", "autoplay", "loop", "player", "videoimage", "tokenfolder"))) {
 							$aTagParam[$aCut[0]] = $aCut[1];
 						}
@@ -328,7 +328,7 @@
 			$width = empty($aTagParam['width']) ? $this->options['width'] : intval($aTagParam['width']);
 			$height = empty($aTagParam['height']) ? $this->options['height'] : intval($aTagParam['height']);
 
-			if (is_numeric($file)) {
+            if (is_numeric($file)) {
 				$video_url = $sUrl . "?url=&playlist=" . $file;
 			} else {
 				//Build de l'url finale
@@ -357,6 +357,12 @@
 			if (isset($aTagParam['loop'])) {
 				$video_url .= "&loop=$loop";
 			}
+            if (empty($width)) {
+                $width = 480;
+            }
+            if (empty($height)) {
+                $height = 288;
+            }
 
 			//Build de la balise
 			$html_tag = '<span class="youtube">
