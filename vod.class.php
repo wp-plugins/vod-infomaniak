@@ -5,7 +5,7 @@
 	 *
 	 * @author Destrem Kevin + Davide Rubini
 	 * @link http://statslive.infomaniak.ch/vod/api/
-	 * @version 1.2
+	 * @version 1.2.1
 	 * @copyright infomaniak.ch
 	 *
 	 */
@@ -318,7 +318,7 @@
 				if (!empty($oFolder)) {
 					$fileInfo = pathinfo($file);
 					$sFileName = basename($file, '.' . $fileInfo['extension']);
-					$sKey = "?sKey=" . $this->getTemporaryKey($oFolder->sToken, $sFileName);
+					$sKey = "&sKey=" . $this->getTemporaryKey($oFolder->sToken, $sFileName);
 				}
 			}
 			$videoimage = empty($aTagParam['videoimage']) ? 1 : intval($aTagParam['videoimage']);
@@ -337,7 +337,6 @@
 				} else {
 					$sFile = $file;
 				}
-				$sFile = $sFile . $sKey;
 				$video_url = $sUrl . "?url=" . $sFile;
 				if ($videoimage) {
 					$video_url .= "&preloadImage=" . str_replace(array(".flv", ".mp4"), ".jpg", $sFile);
@@ -357,6 +356,9 @@
 			if (isset($aTagParam['loop'])) {
 				$video_url .= "&loop=$loop";
 			}
+            if (!empty($sKey)) {
+                $video_url .= $sKey;
+            }
             if (empty($width)) {
                 $width = 480;
             }
