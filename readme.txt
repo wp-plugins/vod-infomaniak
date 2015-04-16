@@ -5,7 +5,7 @@ Plugin Name: Vod Infomaniak
 Tags: video, manage, infomaniak, vod
 Requires at least: 2.8.6
 Tested up to: 4.1
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 
 
 
@@ -72,8 +72,14 @@ Si vous ne trouvez pas de solution à votre question, vous pouvez aussi nous con
 
 == Changelog ==
 
+= 1.2.2 (14/04/2015) =
+* Suppresion des données du plugin lors de sa desinstallation
+* Fix bug quand on ajoute une vidéo avec lien direct
+* Fix problèmes d'affichage de paramètres avec certains caractères spéciaux
+* Mise a jours des traductions
+
 = 1.2.1 (08/04/2015) =
-* Fix bug token sKey affiché en double dans url et mauvaise interprétation dans un iframe car paramètre appelé en "?" et non "&"
+* Fix bug vidéo avec token
 
 = 1.2 (08/01/2015) =
 * Vérification de la compatiblité avec Wordpress 4.1

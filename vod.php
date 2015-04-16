@@ -4,7 +4,7 @@
 	Plugin URI: http://wordpress.org/extend/plugins/vod-infomaniak/
 	Description: Easily embed and manage videos from Infomaniak VOD in your posts, comments and RSS feeds. You need an Infomaniak VOD account to use this plugin.
 	Author: Infomaniak Staff
-	Version: 1.2.1
+	Version: 1.2.2
 	Author URI: http://infomaniak.com
 	*/
 

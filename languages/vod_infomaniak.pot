@@ -505,7 +505,7 @@ msgid ""
 "un nouvel utilisateur dedie dans votre admin infomaniak avec uniquement des "
 "droits restreints sur l'API.<br/>\n"
 "\t\t\t\tPour plus d'information, veuillez vous rendre dans la partie "
-"\"Configuration -> Api & Callback\" de votre administration VOD."
+"\"Extensions -> Api & Callback\" de votre administration VOD."
 msgstr ""
 
 #: vod.template.php:386 vod.template.php:889

@@ -5,7 +5,7 @@
 	 *
 	 * @author Destrem Kevin + Davide Rubini
 	 * @link http://statslive.infomaniak.ch/vod/api/
-	 * @version 1.2.1
+	 * @version 1.2.2
 	 * @copyright infomaniak.ch
 	 *
 	 */
@@ -15,7 +15,7 @@
 	define('VOD_RIGHT_ADMIN', 4);
 
 	class EasyVod {
-		public $version = "1.0";
+		public $version = "1.2.2";
 		private $local_version;
 		private $plugin_url;
 		private $options;
@@ -35,7 +35,7 @@
 
 		function add_filters_and_hooks() {
 			register_activation_hook(__FILE__, array(&$this, 'install_db'));
-			register_deactivation_hook(__FILE__, array(&$this, 'uninstall_db'));
+            register_uninstall_hook(__FILE__, array(&$this, 'uninstall_db'));
 			add_action('plugins_loaded', array(&$this, 'update_db'));
 
 			load_plugin_textdomain('vod_infomaniak', FALSE, basename(dirname(__FILE__)) . '/languages');
@@ -135,7 +135,9 @@
 			}
 		}
 
-		function uninstall_db() { }
+		function uninstall_db() {
+            $this->db->uninstall_db();
+        }
 
 		function add_menu_items() {
 			if ($this->auto_sync) {
@@ -280,6 +282,7 @@
 				}
 			}
 
+
 			$width = empty($aTagParam['width']) ? $this->options['width'] : intval($aTagParam['width']);
 			$height = empty($aTagParam['height']) ? $this->options['height'] : intval($aTagParam['height']);
 			return "<div style='background: url(\"" . plugins_url('vod-infomaniak/img/topbg10.png') . "\") repeat;border-radius: 8px; text-align:center; color: #DDDDDD; font-weight: bold; background-color: #222222; width: " . $width . "px; height: " . $height . "px;'>
@@ -290,13 +293,30 @@
 		</div>";
 		}
 
-		function tag($file, $params, $high = 'v', $time = '', $side = 0) {
+		function removeSmartQuotes($sContent){
+			$sContent = htmlentities($sContent);
+			$sContent = str_replace(array(
+				                        "'", '"', '’',
+				                        '&amp;laquo;', '&amp;raquo;',
+				                        '&amp;lsquo;', '&amp;rsquo;',
+				                        '&amp;prime;', '&amp;Prime;',
+				                        '&amp;nbsp;',),
+			                        '"', $sContent);
+			$sContent = preg_replace('/"+/mi', '"', $sContent); // remplace les xquotes
 
+			return $sContent;
+		}
+
+		function tag($file, $params, $high = 'v', $time = '', $side = 0) {
 			//Recuperation des parametres optionnels des tags
 			$aTagParam = array();
 			if (!empty($params)) {
-                $params = html_entity_decode($params);
-                $params = strtolower(str_replace(array("'", '"', '’'), "", $params));
+
+				$params = $this->removeSmartQuotes($params); // remplace les xquotes
+
+				$params = html_entity_decode($params);
+                $params = strtolower(str_replace('"', "", $params));
+
                 $aList = split(" ", $params);
 				foreach ($aList as $param) {
 					if (strpos($param, "=") !== false) {
@@ -325,14 +345,14 @@
 			$player = empty($aTagParam['player']) ? $this->options['player'] : intval($aTagParam['player']);
 			$autoplay = empty($aTagParam['autoplay']) ? $this->options['autoplay'] : intval($aTagParam['autoplay']);
 			$loop = empty($aTagParam['loop']) ? $this->options['loop'] : intval($aTagParam['loop']);
-			$width = empty($aTagParam['width']) ? $this->options['width'] : intval($aTagParam['width']);
-			$height = empty($aTagParam['height']) ? $this->options['height'] : intval($aTagParam['height']);
+			$width = empty($aTagParam['width']) ? $this->options['width'] : trim($aTagParam['width']);
+			$height = empty($aTagParam['height']) ? $this->options['height'] : trim($aTagParam['height']);
 
             if (is_numeric($file)) {
 				$video_url = $sUrl . "?url=&playlist=" . $file;
 			} else {
 				//Build de l'url finale
-				if (strpos($file, "http://") === false) {
+                if (!preg_match('/^http(s)?:\/\//', $file) ) {
 					$sFile = $sAccountBase . "/" . $file;
 				} else {
 					$sFile = $file;
@@ -995,6 +1015,16 @@
 
 			update_option("vod_db_version", $this->db_version);
 		}
+
+        function uninstall_db() {
+            global $wpdb;
+            $wpdb->query("DROP TABLE IF EXISTS " . $this->db_table_player);
+            $wpdb->query("DROP TABLE IF EXISTS " . $this->db_table_folder);
+            $wpdb->query("DROP TABLE IF EXISTS " . $this->db_table_video);
+            $wpdb->query("DROP TABLE IF EXISTS " . $this->db_table_playlist);
+            $wpdb->query("DROP TABLE IF EXISTS " . $this->db_table_upload);
+            delete_option('vod_db_version');
+        }
 
 		/*
 		* Gestion des players
