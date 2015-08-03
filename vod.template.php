@@ -5,11 +5,10 @@
 	 *
 	 * @author Destrem Kevin + Davide Rubini
 	 * @link http://statslive.infomaniak.ch/vod/api/
-	 * @version 1.2
+	 * @version 1.2.4
 	 * @copyright infomaniak.ch
 	 *
 	 */
-
 	class EasyVod_Display {
 
 		static function buildForm($options, $aPlayers, $aVideos, $aPlaylists, $aFolders, $bCanUpload) {

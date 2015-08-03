@@ -73,7 +73,7 @@ Si vous ne trouvez pas de solution à votre question, vous pouvez aussi nous con
 == Changelog ==
 
 = 1.2.4 (03/08/2015) =
-* Fix version
+* Fix numéro version
 
 = 1.2.3 (03/08/2015) =
 * Fix accent sur le module de langues
