@@ -5,17 +5,17 @@
 	 *
 	 * @author Destrem Kevin + Davide Rubini
 	 * @link http://statslive.infomaniak.ch/vod/api/
-	 * @version 1.2.2
+	 * @version 1.2.4
 	 * @copyright infomaniak.ch
-	 *
 	 */
+
 	define('VOD_RIGHT_CONTRIBUTOR', 1);
 	define('VOD_RIGHT_AUTHOR', 2);
 	define('VOD_RIGHT_EDITOR', 3);
 	define('VOD_RIGHT_ADMIN', 4);
 
 	class EasyVod {
-		public $version = "1.2.2";
+		public $version = "1.2.4";
 		private $local_version;
 		private $plugin_url;
 		private $options;
@@ -35,7 +35,7 @@
 
 		function add_filters_and_hooks() {
 			register_activation_hook(__FILE__, array(&$this, 'install_db'));
-            register_uninstall_hook(__FILE__, array(&$this, 'uninstall_db'));
+
 			add_action('plugins_loaded', array(&$this, 'update_db'));
 
 			load_plugin_textdomain('vod_infomaniak', FALSE, basename(dirname(__FILE__)) . '/languages');
@@ -134,10 +134,6 @@
 				$this->install_db();
 			}
 		}
-
-		function uninstall_db() {
-            $this->db->uninstall_db();
-        }
 
 		function add_menu_items() {
 			if ($this->auto_sync) {
@@ -352,6 +348,7 @@
 				$video_url = $sUrl . "?url=&playlist=" . $file;
 			} else {
 				//Build de l'url finale
+                $file = ltrim($file);
                 if (!preg_match('/^http(s)?:\/\//', $file) ) {
 					$sFile = $sAccountBase . "/" . $file;
 				} else {
@@ -1015,16 +1012,6 @@
 
 			update_option("vod_db_version", $this->db_version);
 		}
-
-        function uninstall_db() {
-            global $wpdb;
-            $wpdb->query("DROP TABLE IF EXISTS " . $this->db_table_player);
-            $wpdb->query("DROP TABLE IF EXISTS " . $this->db_table_folder);
-            $wpdb->query("DROP TABLE IF EXISTS " . $this->db_table_video);
-            $wpdb->query("DROP TABLE IF EXISTS " . $this->db_table_playlist);
-            $wpdb->query("DROP TABLE IF EXISTS " . $this->db_table_upload);
-            delete_option('vod_db_version');
-        }
 
 		/*
 		* Gestion des players
