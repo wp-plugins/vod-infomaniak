@@ -5,13 +5,12 @@
 	 *
 	 * @author Destrem Kevin + Davide Rubini
 	 * @link http://statslive.infomaniak.ch/vod/api/
-	 * @version 1.2
+	 * @version 1.2.4
 	 * @copyright infomaniak.ch
 	 *
 	 */
 
 	class EasyVod_Display {
-
 		static function buildForm($options, $aPlayers, $aVideos, $aPlaylists, $aFolders, $bCanUpload) {
 			?>
             <div id="dialog-vod-logout" style="display:none;" title="<?=__('Probleme de configuration', 'vod_infomaniak')?>">
@@ -332,6 +331,9 @@
 		static function adminMenu($action_url, $options, $sUrl, $aFolders) {
 			?>
 			<h2><?php _e('Administration du plugin VOD', 'vod_infomaniak'); ?></h2>
+
+			<iframe frameborder="0" width="512" height="384" src="http://vod.infomaniak.com/iframe.php?url=https://vod.infomaniak.com/redirect/faq_vod/racine-1594/mp4-319/1539_72_1397483621_2934.mp4&duration=&player=299&vod=86&preloadImage=https://vod.infomaniak.com/redirect/faq_vod/racine-1594/mp4-319/1539_72_1397483621_2934.jpg?1438234073197&lg=fr&wmode=direct"></iframe>
+
 			<form name="adminForm" action="<?php echo $action_url; ?>" method="post">
 				<input type="hidden" name="submitted" value="1"/>
                 <?php if ($options['vod_api_connected'] == "on") { ?>
@@ -1328,5 +1330,4 @@
 			return $page_list;
 		}
 	}
-
 ?>
