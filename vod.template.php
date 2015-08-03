@@ -5,12 +5,13 @@
 	 *
 	 * @author Destrem Kevin + Davide Rubini
 	 * @link http://statslive.infomaniak.ch/vod/api/
-	 * @version 1.2.4
+	 * @version 1.2
 	 * @copyright infomaniak.ch
 	 *
 	 */
 
 	class EasyVod_Display {
+
 		static function buildForm($options, $aPlayers, $aVideos, $aPlaylists, $aFolders, $bCanUpload) {
 			?>
             <div id="dialog-vod-logout" style="display:none;" title="<?=__('Probleme de configuration', 'vod_infomaniak')?>">
@@ -1330,4 +1331,5 @@
 			return $page_list;
 		}
 	}
+
 ?>

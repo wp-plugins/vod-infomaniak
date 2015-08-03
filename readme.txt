@@ -5,7 +5,7 @@ Plugin Name: Vod Infomaniak
 Tags: video, manage, infomaniak, vod
 Requires at least: 2.8.6
 Tested up to: 4.1
-Stable tag: 1.2.2
+Stable tag: 1.2.4
 
 
 
@@ -71,6 +71,13 @@ Si vous ne trouvez pas de solution à votre question, vous pouvez aussi nous con
 2. Screenshot montrant le menu d'administration permettant de gérer ses vidéos/players/playlist
 
 == Changelog ==
+
+= 1.2.4 (03/08/2015) =
+* Fix version
+
+= 1.2.3 (03/08/2015) =
+* Fix accent sur le module de langues
+* Ajout tuto video dans la page de config du plugin
 
 = 1.2.2 (14/04/2015) =
 * Suppresion des données du plugin lors de sa desinstallation
