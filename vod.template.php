@@ -5,7 +5,7 @@
 	 *
 	 * @author Destrem Kevin + Davide Rubini
 	 * @link http://statslive.infomaniak.ch/vod/api/
-	 * @version 1.2
+	 * @version 1.2.4
 	 * @copyright infomaniak.ch
 	 *
 	 */
